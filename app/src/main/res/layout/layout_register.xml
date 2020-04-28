@@ -53,9 +53,11 @@
                 android:maxLines="1"
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
+
         <Button
             style="@style/loginButton"
             android:layout_gravity="center"
+            android:onClick="register"
             android:text="Register" />
         <TextView
             style="@style/parent"
@@ -63,6 +65,7 @@
             android:textStyle="bold"
             android:textColor="@color/primaryTextColor"
             android:text="@string/signup_login_hint"
+            android:onClick="goToLogin"
             android:layout_marginTop="@dimen/loginViewsMargin"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
