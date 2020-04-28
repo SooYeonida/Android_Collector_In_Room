@@ -24,25 +24,8 @@
                 style="@style/modifiedEditText"
                 android:inputType="text"
                 android:maxLines="1"
-                android:hint="Name"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
-            <EditText
-                style="@style/modifiedEditText"
-                android:inputType="text"
-                android:maxLines="1"
-                android:hint="Mobile Number"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
-            <EditText
-                style="@style/modifiedEditText"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:hint="@string/login_email_hint"/>
+                android:hint="ID"/>
+
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
@@ -53,12 +36,85 @@
                 android:maxLines="1"
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+            <EditText
+                style="@style/modifiedEditText"
+                android:inputType="text"
+                android:maxLines="1"
+                android:hint="Name"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+
+            <EditText
+                style="@style/modifiedEditText"
+                android:hint="Mobile Number"
+                android:inputType="phone"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+
+            <EditText
+                style="@style/modifiedEditText"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+
+            <EditText
+                style="@style/modifiedEditText"
+                android:hint="Affiliation"
+                android:inputType="text"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+
+            <EditText
+                style="@style/modifiedEditText"
+                android:hint="Account"
+                android:inputType="number"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/button"
+                style="@style/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Check" />
+        </LinearLayout>
 
         <Button
             style="@style/loginButton"
             android:layout_gravity="center"
             android:onClick="register"
+            android:layout_marginTop="@dimen/loginViewsMargin"
             android:text="Register" />
+
         <TextView
             style="@style/parent"
             android:textAlignment="center"
