@@ -1,4 +1,4 @@
-package com.ajou.capstone_design_freitag.ui.notifications;
+package com.ajou.capstone_design_freitag.ui.plus;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,15 +14,15 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.ajou.capstone_design_freitag.R;
 
-public class NotificationsFragment extends Fragment {
+public class PlusFragment extends Fragment {
 
-    private NotificationsViewModel notificationsViewModel;
+    private PlusViewModel notificationsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         notificationsViewModel =
-                ViewModelProviders.of(this).get(NotificationsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_notifications, container, false);
+                ViewModelProviders.of(this).get(PlusViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_plus, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
         notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

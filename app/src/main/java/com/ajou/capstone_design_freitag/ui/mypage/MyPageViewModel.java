@@ -1,19 +1,20 @@
-package com.ajou.capstone_design_freitag.ui.dashboard;
+package com.ajou.capstone_design_freitag.ui.mypage;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
+public class MyPageViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public DashboardViewModel() {
+    public MyPageViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is mypage fragment");
     }
 
     public LiveData<String> getText() {
         return mText;
     }
+
 }
