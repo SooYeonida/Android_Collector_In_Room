@@ -3,17 +3,20 @@ package com.ajou.capstone_design_freitag;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ViewFlipper;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
-    private ViewFlipper login_view_flipper;
+    View layout_login;
+    View layout_register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        login_view_flipper = findViewById(R.id.login_view_flipper);
+        layout_login = findViewById(R.id.layout_login);
+        layout_register = findViewById(R.id.layout_register);
     }
 
     public void register(View view) {
@@ -25,10 +28,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToLogin(View view) {
-        login_view_flipper.setDisplayedChild(2);
+        layout_login.setVisibility(View.VISIBLE);
+        layout_register.setVisibility(View.GONE);
     }
 
     public void goToRegister(View view) {
-        login_view_flipper.setDisplayedChild(1);
+        layout_login.setVisibility(View.GONE);
+        layout_register.setVisibility(View.VISIBLE);
     }
 }
