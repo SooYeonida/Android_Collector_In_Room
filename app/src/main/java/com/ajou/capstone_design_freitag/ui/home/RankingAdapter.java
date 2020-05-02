@@ -16,12 +16,12 @@ import java.util.ArrayList;
 
 public class RankingAdapter extends BaseAdapter {
 
-    private ArrayList<Ranking> rankingArrayList = new ArrayList<Ranking>();
+    private ArrayList<User> rankingArrayList = new ArrayList<User>();
 
-    public RankingAdapter(ArrayList<Ranking> rankingList)
+    public RankingAdapter(ArrayList<User> rankingList)
     {
         if (rankingList == null) {
-            rankingArrayList = new ArrayList<Ranking>() ;
+            rankingArrayList = new ArrayList<User>() ;
         } else {
             rankingArrayList = rankingList ;
         }
@@ -49,10 +49,10 @@ public class RankingAdapter extends BaseAdapter {
         TextView userPointView = (TextView) convertView.findViewById(R.id.user_point);
         TextView userTotalTaskView = (TextView) convertView.findViewById(R.id.total_task);
 
-        Ranking ranking = rankingArrayList.get(position);
+        User ranking = rankingArrayList.get(position);
 
         userIconView.setImageDrawable(ranking.getUserIcon());
-        userNameView.setText(ranking.getUserName());
+        userNameView.setText(ranking.getName());
         userPointView.setText(Integer.toString(ranking.getTotalPoint()));
         userTotalTaskView.setText(Integer.toString(ranking.getAccuracy()));
 
@@ -70,10 +70,10 @@ public class RankingAdapter extends BaseAdapter {
     }
 
     public void addItem(Drawable user_icon, String user_name, int user_point, int user_accuracy){
-        Ranking ranking = new Ranking();
+        User ranking = new User();
 
         ranking.setUserIcon(user_icon);
-        ranking.setUserName(user_name);
+        ranking.setName(user_name);
         ranking.setTotalPoint(user_point);
         ranking.setAccuracy(user_accuracy);
 

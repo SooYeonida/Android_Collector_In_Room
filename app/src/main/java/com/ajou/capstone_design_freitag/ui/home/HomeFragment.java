@@ -21,19 +21,19 @@ public class HomeFragment extends Fragment {
     RankingAdapter adapter_list1;
     RankingAdapter adpater_list2;
 
-    ArrayList<Ranking> rankingArrayList1 = new ArrayList<Ranking>();
-    ArrayList<Ranking> rankingArrayList2 = new ArrayList<Ranking>();
+    ArrayList<User> rankingArrayList1 = new ArrayList<User>();
+    ArrayList<User> rankingArrayList2 = new ArrayList<User>();
 
-    Comparator<Ranking> comparator_point = new Comparator<Ranking>() {
+    Comparator<User> comparator_point = new Comparator<User>() {
         @Override
-        public int compare(Ranking o1, Ranking o2) {
+        public int compare(User o1, User o2) {
             return (o2.getTotalPoint()-o1.getTotalPoint());
         }
     };
 
-    Comparator<Ranking> comparator_accuracy = new Comparator<Ranking>() {
+    Comparator<User> comparator_accuracy = new Comparator<User>() {
         @Override
-        public int compare(Ranking o1, Ranking o2) {
+        public int compare(User o1, User o2) {
             return (o2.getAccuracy()-o1.getAccuracy());
         }
     };
