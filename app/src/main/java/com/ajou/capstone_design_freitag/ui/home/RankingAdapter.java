@@ -80,5 +80,4 @@ public class RankingAdapter extends BaseAdapter {
         rankingArrayList.add(ranking);
     }
 
-
 }

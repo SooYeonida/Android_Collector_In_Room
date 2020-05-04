@@ -71,10 +71,27 @@ public class HomeFragment extends Fragment {
         adapter_list1.notifyDataSetChanged();
         adpater_list2.notifyDataSetChanged();
 
-        return view;
+        setListViewHeightBasedOnChildren(listView1);
+        setListViewHeightBasedOnChildren(listView2);
 
+        return view;
     }
 
+    public static void setListViewHeightBasedOnChildren(@NonNull ListView listView) {
+        RankingAdapter rankingAdapter = (RankingAdapter) listView.getAdapter();
 
+        int totalHeight = 0;
+        for (int i = 0; i < rankingAdapter.getCount(); i++) {
+            View listItem = rankingAdapter.getView(i, null, listView);
+            listItem.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (rankingAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
 
 }

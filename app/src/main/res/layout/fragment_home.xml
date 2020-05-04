@@ -6,49 +6,53 @@
     tools:context=".ui.home.HomeFragment"
     android:orientation="vertical"
     >
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-            <LinearLayout
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="114dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/home_logo" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="#8028ADFC"
+                android:gravity="center"
+                android:text="누적 포인트별 랭킹"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="114dp"
-                    android:scaleType="fitStart"
-                    android:src="@drawable/home_logo" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#8028ADFC"
-                    android:gravity="center"
-                    android:text="누적 포인트별 랭킹"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+            <ListView
+                android:id="@+id/ranking_list_total_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="10dp" />
 
-                <ListView
-                    android:id="@+id/ranking_list_total_point"
-                    android:layout_width="match_parent"
-                    android:layout_height="334dp"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="10dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#8028ADFC"
+                android:gravity="center"
+                android:text="정확도별 랭킹"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                   <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#8028ADFC"
-                    android:gravity="center"
-                    android:text="정확도별 랭킹"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-                   <ListView
-                    android:id="@+id/ranking_list_accuracy"
-                    android:layout_width="match_parent"
-                    android:layout_height="1106dp"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="10dp"/>
-                    </LinearLayout>
-                </ScrollView>
+            <ListView
+                android:id="@+id/ranking_list_accuracy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
