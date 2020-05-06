@@ -25,12 +25,13 @@ public class MyPageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_page, container, false);
 
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
+        tabs.addTab(tabs.newTab().setText("의뢰한 프로젝트 목록"));
         tabs.addTab(tabs.newTab().setText("완료한 작업 목록"));
         tabs.setTabGravity(tabs.GRAVITY_FILL);
 
         //어뎁터 부분
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        final PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(),1);
+        final PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(),2);
         viewPager.setAdapter(pagerAdapter);
 
         //탭 선택 이벤트처리

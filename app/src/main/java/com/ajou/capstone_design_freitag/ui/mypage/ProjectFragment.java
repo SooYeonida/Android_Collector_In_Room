@@ -10,19 +10,19 @@ import android.view.ViewGroup;
 
 import com.ajou.capstone_design_freitag.R;
 
-public class ProgressProjectFragment extends Fragment {
-
-//나중에 여기다가 작업 리스트 뷰
+public class ProjectFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        }
 
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_progress_project, container, false);
+        View view;
+        view = inflater.inflate(R.layout.fragment_project, container, false);
+        return view;
     }
 }
