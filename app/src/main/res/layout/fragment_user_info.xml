@@ -3,39 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:id="@+id/fragment_user_info"
     tools:context=".ui.mypage.UserInfoFragment">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="user email"
-        android:textSize="35sp"
-        android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+    <ImageView
+        android:layout_width="99dp"
+        android:layout_height="92dp"
+        android:src="@drawable/mypage_user_icon"
+        android:layout_gravity="center"/>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <TextView
+          android:id="@+id/user_email_mypage"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="left"
+          android:paddingLeft="20dp"
+          android:text="user email"
+          android:textSize="20sp"
+          android:textStyle="bold" />
 
         <TextView
-            android:layout_width="15dp"
+            android:id="@+id/user_name_mypage"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:paddingLeft="20dp"
             android:text="user name"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="122dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="user level"
             android:textSize="20sp"
             android:textStyle="bold" />
-    </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,12 +45,28 @@
         <ImageView
             android:layout_width="45dp"
             android:layout_height="match_parent"
+            android:paddingLeft="20dp"
             android:src="@drawable/point" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/user_point_mypage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="left"
             android:text="user point"
+            android:textColor="#DF0101"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/user_level_mypage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="left"
+            android:paddingLeft="20dp"
+            android:text="user level"
+            android:textColor="#2196F3"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -63,7 +80,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="비밀번호 수정"
+            android:text="개인정보 수정"
             android:textSize="15sp"
             android:id="@+id/change_user_info_btn"/>
 
@@ -74,5 +91,6 @@
             android:textSize="15sp"
             android:id="@+id/exchange_point_btn"/>
     </LinearLayout>
+  </LinearLayout>
 
 </LinearLayout>
