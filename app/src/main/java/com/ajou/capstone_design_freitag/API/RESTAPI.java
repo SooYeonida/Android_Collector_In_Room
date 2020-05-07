@@ -2,7 +2,7 @@ package com.ajou.capstone_design_freitag.API;
 
 public class RESTAPI {
     private static RESTAPI instance = null;
-    private String baseURL = "http://localhost:8080";
+    private String baseURL = "http://10.0.2.2:8080";
     private String token = null;
 
     private RESTAPI() {
@@ -22,7 +22,7 @@ public class RESTAPI {
         return true;
     }
 
-    public boolean signup(String userId, String userPassword, String userName, String userBank, String userAccount, String userPhone, String userEmail, String userAffiliation) {
+    public boolean signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation, String userAccount, String userBank) {
         APICaller signup = new APICaller("GET", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
         signup.setQueryParameter("userPassword", userPassword);

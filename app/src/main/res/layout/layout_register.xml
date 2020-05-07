@@ -20,36 +20,43 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
             android:layout_marginTop="@dimen/signup_text_margin_top">
+
             <EditText
+                android:id="@+id/registerID"
                 style="@style/modifiedEditText"
+                android:hint="ID"
                 android:inputType="text"
-                android:maxLines="1"
-                android:hint="ID"/>
+                android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
             android:layout_marginTop="@dimen/signup_text_margin_top">
+
             <EditText
+                android:id="@+id/registerPassword"
                 style="@style/modifiedEditText"
                 android:hint="@string/login_password_hint"
-                android:maxLines="1"
-                android:inputType="textPassword"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
-            <EditText
-                style="@style/modifiedEditText"
-                android:inputType="text"
-                android:maxLines="1"
-                android:hint="Name"/>
+                android:inputType="textPassword"
+                android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
             android:layout_marginTop="@dimen/signup_text_margin_top">
 
             <EditText
+                android:id="@+id/registerName"
+                style="@style/modifiedEditText"
+                android:hint="Name"
+                android:inputType="text"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+
+            <EditText
+                android:id="@+id/registerPhone"
                 style="@style/modifiedEditText"
                 android:hint="Mobile Number"
                 android:inputType="phone"
@@ -60,6 +67,7 @@
             android:layout_marginTop="@dimen/signup_text_margin_top">
 
             <EditText
+                android:id="@+id/registerEmail"
                 style="@style/modifiedEditText"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
@@ -70,6 +78,7 @@
             android:layout_marginTop="@dimen/signup_text_margin_top">
 
             <EditText
+                android:id="@+id/registerAffiliation"
                 style="@style/modifiedEditText"
                 android:hint="Affiliation"
                 android:inputType="text"
@@ -80,6 +89,7 @@
             android:layout_marginTop="@dimen/signup_text_margin_top">
 
             <EditText
+                android:id="@+id/registerAccount"
                 style="@style/modifiedEditText"
                 android:hint="Account"
                 android:inputType="number"
@@ -88,19 +98,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
-
-            <EditText
-                style="@style/modifiedEditText"
-                android:hint="Birthday"
-                android:inputType="number"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="@dimen/signup_text_margin_top"/>
 
         <Spinner
             style="@style/parent"
             android:layout_marginTop="@dimen/signup_text_margin_top"
-            android:id="@+id/spinner"
+            android:id="@+id/registerBank"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />
