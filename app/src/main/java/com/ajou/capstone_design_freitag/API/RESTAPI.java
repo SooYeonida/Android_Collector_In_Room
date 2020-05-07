@@ -1,8 +1,12 @@
 package com.ajou.capstone_design_freitag.API;
 
+import java.util.List;
+import java.util.Map;
+
 public class RESTAPI {
     private static RESTAPI instance = null;
     private String baseURL = "http://10.0.2.2:8080";
+    //private String baseURL = "http://localhost:8080";
     private String token = null;
 
     private RESTAPI() {
@@ -17,25 +21,34 @@ public class RESTAPI {
 
     public boolean login(String userID, String userPassword) {
         APICaller login = new APICaller("GET", baseURL + "/api/login");
-        login.setQueryParameter("userID", userID);
+        login.setQueryParameter("userId", userID);
         login.setQueryParameter("userPassword", userPassword);
+
+        Map<String, List<String>> result;
+        try {
+            login.request();
+            result = login.getHeader();
+            token = result.get("Authorization").get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 
-    public boolean signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation, String userAccount, String userBank) {
+    public boolean signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
         APICaller signup = new APICaller("GET", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
         signup.setQueryParameter("userPassword", userPassword);
         signup.setQueryParameter("userName", userName);
-        signup.setQueryParameter("userBank", userBank);
-        signup.setQueryParameter("userAccount", userAccount);
         signup.setQueryParameter("userPhone", userPhone);
         signup.setQueryParameter("userEmail", userEmail);
         signup.setQueryParameter("userAffiliation", userAffiliation);
 
         String result;
         try {
-            result = signup.getResponse();
+            signup.request();
+            result = signup.getBody();
         } catch (Exception e) {
             e.printStackTrace();
             return false;

@@ -84,29 +84,6 @@
                 android:inputType="text"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
-
-            <EditText
-                android:id="@+id/registerAccount"
-                style="@style/modifiedEditText"
-                android:hint="Account"
-                android:inputType="number"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top"/>
-
-        <Spinner
-            style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top"
-            android:id="@+id/registerBank"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
 
         <Button
             style="@style/loginButton"

@@ -15,14 +15,15 @@ public class MainActivity extends AppCompatActivity {
     View layout_login;
     View layout_register;
 
+    EditText logindID;
+    EditText loginPassword;
+
     EditText registerID;
     EditText registerPassword;
     EditText registerName;
     EditText registerPhone;
     EditText registerEmail;
     EditText registerAffiliation;
-    EditText registerAccount;
-    Spinner registerBank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +32,15 @@ public class MainActivity extends AppCompatActivity {
         layout_login = findViewById(R.id.layout_login);
         layout_register = findViewById(R.id.layout_register);
 
+        logindID = findViewById(R.id.loginID);
+        loginPassword = findViewById(R.id.loginPassword);
+
         registerID = findViewById(R.id.registerID);
         registerPassword = findViewById(R.id.registerPassword);
         registerName = findViewById(R.id.registerName);
         registerPhone = findViewById(R.id.registerPhone);
         registerEmail = findViewById(R.id.registerEmail);
         registerAffiliation = findViewById(R.id.registerAffiliation);
-        registerAccount = findViewById(R.id.registerAccount);
-        registerBank = findViewById(R.id.registerBank);
     }
 
     public void register(final View view) {
@@ -48,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
         final String userPhone = registerPhone.getText().toString();
         final String userEmail = registerEmail.getText().toString();
         final String userAffiliation = registerAffiliation.getText().toString();
-        final String userAccount = registerAccount.getText().toString();
-        final String userBank = "090";
 
         AsyncTask<String, Void, Boolean> singupTask = new AsyncTask<String, Void, Boolean>() {
             @Override
@@ -59,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         registerInfos[2],
                         registerInfos[3],
                         registerInfos[4],
-                        registerInfos[5],
-                        registerInfos[6],
-                        registerInfos[7]);
+                        registerInfos[5]);
                 return new Boolean(result);
             }
 
@@ -86,19 +84,60 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         };
-        singupTask.execute(userID, userPassword, userName, userPhone, userEmail, userAffiliation, userAccount, userBank);
+        singupTask.execute(userID, userPassword, userName, userPhone, userEmail, userAffiliation);
     }
 
-    public void login(View view) {
-        //RESTful API 때려
+    public void login(final View view) {
+        final String userID = logindID.getText().toString();
+        final String userPassword = loginPassword.getText().toString();
+
+        AsyncTask<String, Void, Boolean> singupTask = new AsyncTask<String, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(String... registerInfos) {
+                boolean result = RESTAPI.getInstance().login(registerInfos[0], registerInfos[1]);
+                return new Boolean(result);
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if (result) {
+                    showToast("로그인 성공!");
+                    goToLogin(view);
+                } else {
+                    showToast("로그인 실패...");
+                }
+            }
+
+            private void showToast(final String text)
+            {
+                MainActivity.this.runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+        singupTask.execute(userID, userPassword);
     }
 
     public void goToLogin(View view) {
+        logindID.setText("");
+        loginPassword.setText("");
+
         layout_login.setVisibility(View.VISIBLE);
         layout_register.setVisibility(View.GONE);
     }
 
     public void goToRegister(View view) {
+        registerID.setText("");
+        registerPassword.setText("");
+        registerName.setText("");
+        registerPhone.setText("");
+        registerEmail.setText("");
+        registerAffiliation.setText("");
+
         layout_login.setVisibility(View.GONE);
         layout_register.setVisibility(View.VISIBLE);
     }
