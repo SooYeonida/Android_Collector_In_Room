@@ -2,9 +2,14 @@ package com.ajou.capstone_design_freitag;
 
 import android.os.Bundle;
 
+import com.ajou.capstone_design_freitag.ui.search.CollectionDataTypeFragment;
+import com.ajou.capstone_design_freitag.ui.search.LabellingTypeFragment;
+import com.ajou.capstone_design_freitag.ui.search.ProjectListFragment;
+import com.ajou.capstone_design_freitag.ui.search.ProjectTypeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -26,5 +31,6 @@ public class MenuActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
     }
+
 
 }

@@ -29,27 +29,19 @@ public class ProjectTypeFragment extends Fragment {
         data_collection_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("수집버튼호출");
-                goToDataType(v);
+                searchFragment = (SearchFragment)getParentFragment();
+                searchFragment.replaceFragment(1);
             }
         });
         data_labelling_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("라벨링버튼호출");
-                goToProjectList(v);
+                searchFragment = (SearchFragment)getParentFragment();
+                searchFragment.replaceFragment(2);
             }
         });
 
         return view;
     }
 
-    public void goToDataType(View view){
-        searchFragment = (SearchFragment)getParentFragment();
-        searchFragment.replaceFragment(1);
-    }
-    public void goToProjectList(View view){
-        searchFragment = (SearchFragment)getParentFragment();
-        searchFragment.replaceFragment(2);
-    }
 }
