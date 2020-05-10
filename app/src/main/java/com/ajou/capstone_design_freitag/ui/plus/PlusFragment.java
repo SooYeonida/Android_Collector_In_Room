@@ -26,7 +26,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class PlusFragment extends Fragment implements View.OnClickListener{
     private static final int EXAMPLE_PICTURE_IMAGE_REQUEST_CODE = 100;
-    private static final int LABELING_PICTURE_IMAGE_REQUEST_CODE = 100;
+    private static final int LABELING_PICTURE_IMAGE_REQUEST_CODE = 101;
 
     private ArrayList<Uri> examplePictures;
     private ArrayList<Uri> labelingPictures;
