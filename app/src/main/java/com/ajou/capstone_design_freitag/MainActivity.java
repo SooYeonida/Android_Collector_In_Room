@@ -6,23 +6,24 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 
 public class MainActivity extends AppCompatActivity {
-    private View layout_login;
-    private View layout_register;
+    View layout_login;
+    View layout_register;
 
-    private EditText logindID;
-    private EditText loginPassword;
+    EditText logindID;
+    EditText loginPassword;
 
-    private EditText registerID;
-    private EditText registerPassword;
-    private EditText registerName;
-    private EditText registerPhone;
-    private EditText registerEmail;
-    private EditText registerAffiliation;
+    EditText registerID;
+    EditText registerPassword;
+    EditText registerName;
+    EditText registerPhone;
+    EditText registerEmail;
+    EditText registerAffiliation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     goToLogin(view);
                 } else {
                     showToast("로그인 실패...");
-               }
+                }
             }
 
             private void showToast(final String text)
