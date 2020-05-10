@@ -52,6 +52,13 @@
                         android:id="@+id/layout_register"
                         layout="@layout/layout_register"
                         android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/layout_register_openbanking"
+                        layout="@layout/layout_register_openbanking"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -1,13 +1,21 @@
 package com.ajou.capstone_design_freitag.API;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+
+import com.ajou.capstone_design_freitag.LoginActivity;
+
 import java.util.List;
 import java.util.Map;
 
 public class RESTAPI {
+    public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
     private String baseURL = "http://wodnd999999.iptime.org:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
+    private String state = null;
 
     public String getToken() {
         return this.token;
@@ -59,9 +67,29 @@ public class RESTAPI {
         }
 
         if(result.equals("success")) {
+            try {
+                state = signup.getHeader().get("state").get(0);
+            } catch (Exception e) {
+                return false;
+            }
             return true;
         } else {
             return false;
         }
+    }
+
+    public void registerOpenBanking(Activity activity) {
+        APICaller registerOpenBanking = new APICaller("GET", "https://testapi.openbanking.or.kr/oauth/2.0/authorize");
+        registerOpenBanking.setQueryParameter("auth_type", "0");
+        registerOpenBanking.setQueryParameter("scope", "login+transfer+inquiry");
+        registerOpenBanking.setQueryParameter("response_type", "code");
+        registerOpenBanking.setQueryParameter("redirect_uri", "http%3a%2f%2fwodnd999999.iptime.org%3a8080%2fexternalapi%2fopenbanking%2foauth%2ftoken&lang=kor");
+        registerOpenBanking.setQueryParameter("client_id", clientID);
+        registerOpenBanking.setQueryParameter("state", state);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(registerOpenBanking.getUrl());
+        intent.setData(uri);
+        activity.startActivity(intent);
     }
 }
