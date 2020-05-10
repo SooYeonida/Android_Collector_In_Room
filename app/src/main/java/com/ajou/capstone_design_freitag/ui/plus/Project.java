@@ -1,14 +1,17 @@
 package com.ajou.capstone_design_freitag.ui.plus;
 
+import android.graphics.drawable.Drawable;
+
 public class Project {
 
+    private Drawable projectIcon; //빼도됨
     private int projectID;
     private int userID;
     private String name;
     private int bucket;
     private String status;
-    private int workType;
-    private int dataType;
+    private String projectType;
+    private String workType;
     private String subject;
     private Double difficulty;
     private String wayContent;
@@ -18,6 +21,15 @@ public class Project {
     private int totalData;
     private int progressData;
     private int cost;
+
+
+    public Drawable getProjectIcon() {
+        return projectIcon;
+    }
+
+    public void setProjectIcon(Drawable projectIcon) {
+        this.projectIcon = projectIcon;
+    }
 
     public int getProjectID() {
         return projectID;
@@ -59,20 +71,20 @@ public class Project {
         this.status = status;
     }
 
-    public int getWorkType() {
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
+
+    public String getWorkType() {
         return workType;
     }
 
-    public void setWorkType(int workType) {
+    public void setWorkType(String workType) {
         this.workType = workType;
-    }
-
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(int dataType) {
-        this.dataType = dataType;
     }
 
     public String getSubject() {

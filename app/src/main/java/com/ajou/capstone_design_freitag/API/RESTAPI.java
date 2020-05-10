@@ -9,6 +9,10 @@ public class RESTAPI {
     //private String baseURL = "http://localhost:8080";
     private String token = null;
 
+    public String getToken() {
+        return this.token;
+    }
+
     private RESTAPI() {
     }
 

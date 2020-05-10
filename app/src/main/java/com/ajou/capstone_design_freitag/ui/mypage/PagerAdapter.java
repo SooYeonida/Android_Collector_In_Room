@@ -16,8 +16,11 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position){
         switch (position){
             case 0 :
-               ProgressProjectFragment progressProjectFragment = new ProgressProjectFragment();
-               return progressProjectFragment;
+                ProjectFragment projectFragment = new ProjectFragment();
+                return projectFragment;
+            case 1:
+                ProgressWorkFragment progressWorkFragment = new ProgressWorkFragment();
+                return progressWorkFragment;
             default:
                 return null;
         }

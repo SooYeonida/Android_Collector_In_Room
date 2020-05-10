@@ -16,6 +16,7 @@ public class User {
     private int totalPoint;
     private int point;
     private int accuracy;
+    private String level;
 
     public Drawable getUserIcon() {
         return userIcon;
@@ -104,6 +105,16 @@ public class User {
     public void setAccuracy(int accuracy) {
         this.accuracy = accuracy;
     }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+
 
 
 

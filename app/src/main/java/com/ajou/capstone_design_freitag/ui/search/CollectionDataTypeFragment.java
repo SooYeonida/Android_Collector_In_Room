@@ -11,17 +11,18 @@ import androidx.fragment.app.Fragment;
 
 import com.ajou.capstone_design_freitag.R;
 
-public class DataTypeFragment extends Fragment {
+public class CollectionDataTypeFragment extends Fragment {
 
     Button data_image_btn;
     Button data_text_btn;
     Button data_voice_btn;
     View view;
+    SearchFragment searchFragment;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.fragment_data_type,container,false);
+        view = inflater.inflate(R.layout.fragment_collection_data_type,container,false);
         data_image_btn = (Button) view.findViewById(R.id.data_image_btn);
         data_text_btn = (Button) view.findViewById(R.id.data_text_btn);
         data_voice_btn = (Button) view.findViewById(R.id.data_voice_btn);
@@ -29,28 +30,26 @@ public class DataTypeFragment extends Fragment {
         data_image_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProjectList(view);
+                searchFragment = (SearchFragment)getParentFragment();
+                searchFragment.replaceFragment(3);
             }
         });
         data_text_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProjectList(view);
+                searchFragment = (SearchFragment)getParentFragment();
+                searchFragment.replaceFragment(4);
             }
         });
         data_voice_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProjectList(view);
+                searchFragment = (SearchFragment)getParentFragment();
+                searchFragment.replaceFragment(5);
             }
         });
 
         return view;
-    }
-
-    public void goToProjectList(View view){
-        SearchFragment searchFragment = (SearchFragment)getParentFragment();
-        searchFragment.replaceFragment(2);
     }
 
 }
