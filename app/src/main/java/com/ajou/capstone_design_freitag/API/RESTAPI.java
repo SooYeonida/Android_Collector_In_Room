@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class RESTAPI {
     private static RESTAPI instance = null;
-    private String baseURL = "http://10.0.2.2:8080";
+    private String baseURL = "http://wodnd999999.iptime.org:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
 
