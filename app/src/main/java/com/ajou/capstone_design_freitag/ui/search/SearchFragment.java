@@ -1,7 +1,6 @@
 package com.ajou.capstone_design_freitag.ui.search;
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

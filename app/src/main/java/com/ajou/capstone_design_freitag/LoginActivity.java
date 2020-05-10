@@ -1,13 +1,13 @@
 package com.ajou.capstone_design_freitag;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 
@@ -68,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (result) {
                     showToast("회원 가입 성공!");
                     goToLogin(view);
-
                 } else {
                     showToast("회원 가입 실패...");
                 }
@@ -103,7 +102,10 @@ public class LoginActivity extends AppCompatActivity {
             protected void onPostExecute(Boolean result) {
                 if (result) {
                     showToast("로그인 성공!");
-                    goToLogin(view);
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("result",result);
+                    setResult(LoginActivity.RESULT_OK,returnIntent);
+                    finish();
                 } else {
                     showToast("로그인 실패...");
                 }
@@ -119,6 +121,16 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            /*private void finishActivity(final int result) {
+                LoginActivity.this.runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        LoginActivity.this.finishActivity(result);
+                    }
+                });
+            }*/
         };
         loginTask.execute(userID, userPassword);
     }
@@ -129,12 +141,6 @@ public class LoginActivity extends AppCompatActivity {
 
         layout_login.setVisibility(View.VISIBLE);
         layout_register.setVisibility(View.GONE);
-
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        //뒤로가기하면 로그인화면이 다시 나옴
     }
 
     public void goToRegister(View view) {

@@ -1,13 +1,12 @@
 package com.ajou.capstone_design_freitag.ui.search;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
 
 import com.ajou.capstone_design_freitag.R;
 
