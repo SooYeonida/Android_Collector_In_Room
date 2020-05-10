@@ -9,10 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.ajou.capstone_design_freitag.MenuActivity;
 import com.ajou.capstone_design_freitag.R;
-
-import java.sql.BatchUpdateException;
 
 public class LabellingTypeFragment extends Fragment {
 

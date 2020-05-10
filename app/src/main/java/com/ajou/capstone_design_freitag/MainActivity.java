@@ -1,144 +1,74 @@
 package com.ajou.capstone_design_freitag;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.view.Menu;
 
-import com.ajou.capstone_design_freitag.API.RESTAPI;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import android.view.MenuItem;
+import android.widget.SearchView;
 
 public class MainActivity extends AppCompatActivity {
-    View layout_login;
-    View layout_register;
 
-    EditText logindID;
-    EditText loginPassword;
 
-    EditText registerID;
-    EditText registerPassword;
-    EditText registerName;
-    EditText registerPhone;
-    EditText registerEmail;
-    EditText registerAffiliation;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_login:
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            default :
+                return super.onOptionsItemSelected(item) ;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actionbar_action, menu) ;
+        SearchView searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint("주제별 검색");
+
+        //검색 리스너
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String query) { //검색어 완료시
+                System.out.println(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) { //검색어 입력시
+                System.out.println(query);
+                return true;
+            }
+        });
+
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        layout_login = findViewById(R.id.layout_login);
-        layout_register = findViewById(R.id.layout_register);
-
-        logindID = findViewById(R.id.loginID);
-        loginPassword = findViewById(R.id.loginPassword);
-
-        registerID = findViewById(R.id.registerID);
-        registerPassword = findViewById(R.id.registerPassword);
-        registerName = findViewById(R.id.registerName);
-        registerPhone = findViewById(R.id.registerPhone);
-        registerEmail = findViewById(R.id.registerEmail);
-        registerAffiliation = findViewById(R.id.registerAffiliation);
+        setContentView(R.layout.activity_menu);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_search, R.id.navigation_plus,R.id.navigation_my_page)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
     }
 
-    public void register(final View view) {
-        final String userID = registerID.getText().toString();
-        final String userPassword = registerPassword.getText().toString();
-        final String userName = registerName.getText().toString();
-        final String userPhone = registerPhone.getText().toString();
-        final String userEmail = registerEmail.getText().toString();
-        final String userAffiliation = registerAffiliation.getText().toString();
 
-        AsyncTask<String, Void, Boolean> singupTask = new AsyncTask<String, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(String... registerInfos) {
-                boolean result = RESTAPI.getInstance().signup(registerInfos[0],
-                        registerInfos[1],
-                        registerInfos[2],
-                        registerInfos[3],
-                        registerInfos[4],
-                        registerInfos[5]);
-                return new Boolean(result);
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
-                    showToast("회원 가입 성공!");
-                    goToLogin(view);
-                } else {
-                    showToast("회원 가입 실패...");
-                }
-            }
-
-            private void showToast(final String text)
-            {
-                MainActivity.this.runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
-                        Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        };
-        singupTask.execute(userID, userPassword, userName, userPhone, userEmail, userAffiliation);
-    }
-
-    public void login(final View view) {
-        final String userID = logindID.getText().toString();
-        final String userPassword = loginPassword.getText().toString();
-
-        AsyncTask<String, Void, Boolean> singupTask = new AsyncTask<String, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(String... registerInfos) {
-                boolean result = RESTAPI.getInstance().login(registerInfos[0], registerInfos[1]);
-                return new Boolean(result);
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
-                    showToast("로그인 성공!");
-                    goToLogin(view);
-                } else {
-                    showToast("로그인 실패...");
-                }
-            }
-
-            private void showToast(final String text)
-            {
-                MainActivity.this.runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
-                        Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        };
-        singupTask.execute(userID, userPassword);
-    }
-
-    public void goToLogin(View view) {
-        logindID.setText("");
-        loginPassword.setText("");
-
-        layout_login.setVisibility(View.VISIBLE);
-        layout_register.setVisibility(View.GONE);
-    }
-
-    public void goToRegister(View view) {
-        registerID.setText("");
-        registerPassword.setText("");
-        registerName.setText("");
-        registerPhone.setText("");
-        registerEmail.setText("");
-        registerAffiliation.setText("");
-
-        layout_login.setVisibility(View.GONE);
-        layout_register.setVisibility(View.VISIBLE);
-    }
 }

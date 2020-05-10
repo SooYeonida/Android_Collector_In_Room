@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     style="@style/loginParent"
-    tools:context="com.ajou.capstone_design_freitag.MainActivity">
+    tools:context="com.ajou.capstone_design_freitag.LoginActivity">
     <ScrollView
         style="@style/parent">
         <RelativeLayout
