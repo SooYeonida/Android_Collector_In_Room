@@ -71,8 +71,8 @@ public class ProjectListFragment extends Fragment {
         projectAdapter.notifyDataSetChanged();
 
         sort = new ProjectAdapter(projectAdapter.sort(project,work));
-        listView.setAdapter(sort);
 
+        listView.setAdapter(sort);
         setListViewHeightBasedOnChildren(listView);
 
         return view;

@@ -1,21 +1,46 @@
 package com.ajou.capstone_design_freitag;
 
 import android.os.Bundle;
+import android.view.Menu;
 
-import com.ajou.capstone_design_freitag.ui.search.CollectionDataTypeFragment;
-import com.ajou.capstone_design_freitag.ui.search.LabellingTypeFragment;
-import com.ajou.capstone_design_freitag.ui.search.ProjectListFragment;
-import com.ajou.capstone_design_freitag.ui.search.ProjectTypeFragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.widget.SearchView;
+
 public class MenuActivity extends AppCompatActivity {
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actionbar_action, menu) ;
+        SearchView searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint("주제별 검색");
+
+        //리스너
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String query) { //검색어 완료시
+                System.out.println(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) { //검색어 입력시
+                System.out.println(query);
+                return true;
+            }
+        });
+
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

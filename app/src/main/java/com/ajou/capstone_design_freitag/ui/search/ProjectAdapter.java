@@ -45,12 +45,11 @@ public class ProjectAdapter  extends BaseAdapter {
         TextView projectType = (TextView) convertView.findViewById(R.id.project_type);
         TextView workType = (TextView) convertView.findViewById(R.id.data_type);
 
-
         Project project = projectArrayList.get(position);
 
         projectTypeView.setImageDrawable(project.getProjectIcon());
         projectName.setText(project.getName());
-        projectType.setText(project.getWorkType());
+        projectType.setText(project.getProjectType());
         workType.setText(project.getWorkType());
 
         return convertView;
@@ -69,7 +68,7 @@ public class ProjectAdapter  extends BaseAdapter {
     public ArrayList<Project> sort(String projecttype, String worktype){
         ArrayList<Project> list = new ArrayList<Project>();
         for(Project element:projectArrayList){
-            if(element.getWorkType().equals(projecttype)&&element.getWorkType().equals(worktype)){
+            if(element.getProjectType().equals(projecttype) && element.getWorkType().equals(worktype)){
                 list.add(element);
             }
         }
@@ -81,7 +80,7 @@ public class ProjectAdapter  extends BaseAdapter {
 
         project.setProjectIcon(project_icon);
         project.setName(project_name);
-        project.setWorkType(project_type);
+        project.setProjectType(project_type);
         project.setWorkType(project_data_type);
 
         projectArrayList.add(project);
