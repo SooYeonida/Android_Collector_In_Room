@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.LoginActivity;
+import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class PlusFragment extends Fragment implements View.OnClickListener{
     private static final int EXAMPLE_PICTURE_IMAGE_REQUEST_CODE = 100;
-    private static final int LABELING_PICTURE_IMAGE_REQUEST_CODE = 100;
+    private static final int LABELING_PICTURE_IMAGE_REQUEST_CODE = 101;
+    private static final int LOGIN_REQUEST_CODE = 102;
 
     private ArrayList<Uri> examplePictures;
     private ArrayList<Uri> labelingPictures;
@@ -47,10 +49,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
         //토큰 받아오는데 null이면 로그인
         if(instance.getToken()==null){
             Intent intent = new Intent(getActivity(), LoginActivity.class);
-            //화면전환했을때 뒤로가기하면 프로젝트 생성화면이 보이는 문제생김 방지
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            startActivityForResult(intent, LOGIN_REQUEST_CODE);
         }
     }
 
@@ -123,6 +122,11 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
                         labelingPictures.add(clipData.getItemAt(i).getUri());
                     }
                 }
+            }
+        } else if(requestCode == LOGIN_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                Toast.makeText(context, "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
+                ((MainActivity)getActivity()).goToHome();
             }
         }
     }
