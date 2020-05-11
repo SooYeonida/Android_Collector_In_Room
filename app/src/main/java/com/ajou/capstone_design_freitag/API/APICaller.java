@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -81,15 +82,7 @@ public class APICaller {
 
 
     public void request() throws IOException {
-        if(!queryParameters.isEmpty()) {
-            Iterator<String> iterator = queryParameters.keySet().iterator();
-            String key = iterator.next();
-            url += "?" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(queryParameters.get(key), "UTF-8");
-            while(iterator.hasNext()) {
-                key = iterator.next();
-                url += "&" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(queryParameters.get(key), "UTF-8");
-            }
-        }
+        makeURL();
 
         con = (HttpURLConnection) new URL(url).openConnection();
         con.setRequestMethod(method);
@@ -106,5 +99,28 @@ public class APICaller {
         }
 
         con.getResponseCode();
+    }
+
+    public String getUrl() {
+        try {
+            makeURL();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return url;
+    }
+
+    private void makeURL() throws UnsupportedEncodingException {
+        if(!queryParameters.isEmpty()) {
+            Iterator<String> iterator = queryParameters.keySet().iterator();
+            String key = iterator.next();
+            url += "?" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(queryParameters.get(key), "UTF-8");
+            while(iterator.hasNext()) {
+                key = iterator.next();
+                url += "&" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(queryParameters.get(key), "UTF-8");
+            }
+        }
     }
 }
