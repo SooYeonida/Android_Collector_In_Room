@@ -21,6 +21,7 @@ import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
@@ -96,7 +97,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
     public void upload_example_data(View view){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, EXAMPLE_PICTURE_IMAGE_REQUEST_CODE);
     }
@@ -118,6 +119,11 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
                     if (requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE) {
                         examplePictures.add(clipData.getItemAt(i).getUri());
                         examplePicturesURI.setText(examplePicturesURI.getText() + "\n" + clipData.getItemAt(i).getUri());
+                        try {
+                            RESTAPI.getInstance().uploadFile(new File(clipData.getItemAt(i).getUri().toString()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else if (requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
                         labelingPictures.add(clipData.getItemAt(i).getUri());
                     }

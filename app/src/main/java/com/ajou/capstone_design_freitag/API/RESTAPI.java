@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.ajou.capstone_design_freitag.LoginActivity;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -91,5 +92,11 @@ public class RESTAPI {
         Uri uri = Uri.parse(registerOpenBanking.getUrl());
         intent.setData(uri);
         activity.startActivity(intent);
+    }
+
+    public boolean uploadFile(File file) throws Exception {
+        APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
+        uploadFile.multipart(file, "image/jpeg");
+        return true;
     }
 }
