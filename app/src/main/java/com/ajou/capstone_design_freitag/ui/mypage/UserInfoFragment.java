@@ -41,6 +41,7 @@ public class UserInfoFragment extends Fragment  {
         super.onCreate(savedInstanceState);
         RESTAPI instance = RESTAPI.getInstance();
         user_id = instance.getId();
+        System.out.println("user id in userinfofragment:" + user_id);
     }
 
     @Override
@@ -93,8 +94,8 @@ public class UserInfoFragment extends Fragment  {
                     jsonObject = new JSONObject(result);
                     user.setName(jsonObject.getString("userName"));
                     user.setEmail(jsonObject.getString("userEmail"));
-                    user.setAccount(jsonObject.getString("userAccount"));
-                    user.setBank(jsonObject.getInt("userBank"));
+                    user.setAccount(jsonObject.getString("userOpenBankingAccessToken"));
+                    user.setBank(jsonObject.getInt("userOpenBankingNum"));
                     user.setPhonenumber(jsonObject.getString("userPhone"));
                     user.setAffiliation(jsonObject.getString("userAffiliation"));
                     user.setUserID(jsonObject.getString("username")); //이거 고침
