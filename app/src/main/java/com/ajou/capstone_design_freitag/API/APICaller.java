@@ -72,13 +72,13 @@ public class APICaller {
             }
             in.close();
             con.disconnect();
-
             return response.toString();
         } else {
             con.disconnect();
             throw new Exception(responseCode + " Error");
         }
     }
+
 
     public void request() throws IOException {
         if(!queryParameters.isEmpty()) {

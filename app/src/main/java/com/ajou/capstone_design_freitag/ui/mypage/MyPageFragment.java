@@ -20,9 +20,6 @@ import com.ajou.capstone_design_freitag.R;
 import com.google.android.material.tabs.TabLayout;
 
 public class MyPageFragment extends Fragment {
-
-    UserInfoFragment userInfoFragment = new UserInfoFragment();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
