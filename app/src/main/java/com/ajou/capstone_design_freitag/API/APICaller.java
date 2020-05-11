@@ -1,5 +1,8 @@
 package com.ajou.capstone_design_freitag.API;
 
+import android.content.ContentResolver;
+import android.net.Uri;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -7,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -128,40 +132,38 @@ public class APICaller {
         }
     }
 
-    public boolean multipart(File file, String type) throws Exception {
+    public boolean multipart(InputStream inputStream, String fileName, String type) throws Exception {
         String CRLF = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****b*o*u*n*d*a*r*y*****";
 
         con = (HttpURLConnection) new URL(url).openConnection();
-        FileInputStream fileInputStream = new FileInputStream(file);
         con.setDoOutput(true);
         con.setRequestMethod(method);
         con.setRequestProperty("Content-Type","multipart/form-data;boundary=" + boundary);
 
         DataOutputStream dataStream = new DataOutputStream(con.getOutputStream());
         dataStream.writeBytes(twoHyphens + boundary + CRLF);
-        dataStream.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\"" + file.getName() + "\"" + CRLF);
+        dataStream.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\"" + fileName + "\"" + CRLF);
         dataStream.writeBytes("Content-Type: " + type +  CRLF);
         dataStream.writeBytes(CRLF);
 
-        int bytesAvailable = fileInputStream.available();
+        int bytesAvailable = inputStream.available();
         int maxBufferSize = 1024;
         int bufferSize = Math.min(bytesAvailable, maxBufferSize);
         byte[] buffer = new byte[bufferSize];
-        int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+        int bytesRead = inputStream.read(buffer, 0, bufferSize);
         while (bytesRead > 0)   {
             dataStream.write(buffer, 0, bufferSize);
-            bytesAvailable = fileInputStream.available();
+            bytesAvailable = inputStream.available();
             bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            bytesRead = inputStream.read(buffer, 0, bufferSize);
         }
         dataStream.writeBytes(CRLF);
         dataStream.writeBytes(twoHyphens + boundary + twoHyphens + CRLF);
-        fileInputStream.close();
+        inputStream.close();
         dataStream.flush();
         dataStream.close();
-        dataStream = null;
         if(con.getResponseCode() == 200) {
             return true;
         } else {

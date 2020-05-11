@@ -7,13 +7,14 @@ import android.net.Uri;
 import com.ajou.capstone_design_freitag.LoginActivity;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://wodnd999999.iptime.org:8080";
+    private String baseURL = "http://wodnd999999.iptime.org";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
@@ -33,7 +34,7 @@ public class RESTAPI {
     }
 
     public boolean login(String userID, String userPassword) {
-        APICaller login = new APICaller("GET", baseURL + "/api/login");
+        APICaller login = new APICaller("GET", baseURL + ":8080/api/login");
         login.setQueryParameter("userId", userID);
         login.setQueryParameter("userPassword", userPassword);
 
@@ -50,7 +51,7 @@ public class RESTAPI {
     }
 
     public boolean signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
-        APICaller signup = new APICaller("GET", baseURL + "/api/signup");
+        APICaller signup = new APICaller("GET", baseURL + ":8080/api/signup");
         signup.setQueryParameter("userId", userId);
         signup.setQueryParameter("userPassword", userPassword);
         signup.setQueryParameter("userName", userName);
@@ -94,9 +95,9 @@ public class RESTAPI {
         activity.startActivity(intent);
     }
 
-    public boolean uploadFile(File file) throws Exception {
-        APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
-        uploadFile.multipart(file, "image/jpeg");
+    public boolean uploadExampleFile(InputStream inputStream) throws Exception {
+        APICaller uploadFile = new APICaller("POST", baseURL + ":8081/api/project/upload/example");
+        uploadFile.multipart(inputStream, "example.jpeg", "image/jpeg");
         return true;
     }
 }

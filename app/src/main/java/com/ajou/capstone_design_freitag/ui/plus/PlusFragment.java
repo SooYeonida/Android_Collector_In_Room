@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
@@ -120,7 +123,20 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
                         examplePictures.add(clipData.getItemAt(i).getUri());
                         examplePicturesURI.setText(examplePicturesURI.getText() + "\n" + clipData.getItemAt(i).getUri());
                         try {
-                            RESTAPI.getInstance().uploadFile(new File(clipData.getItemAt(i).getUri().toString()));
+                            AsyncTask<Uri, Void, Boolean> loginTask = new AsyncTask<Uri, Void, Boolean>() {
+                                @Override
+                                protected Boolean doInBackground(Uri... uris) {
+                                    try {
+                                        InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
+                                        boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream);
+                                        return new Boolean(result);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        return new Boolean(false);
+                                    }
+                                }
+                            };
+                            loginTask.execute(clipData.getItemAt(i).getUri());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -136,5 +152,4 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
             }
         }
     }
-
 }
