@@ -168,9 +168,34 @@ public class RESTAPI {
 
     }
 
-    public void makeProject(Project project, String userId) throws Exception {
-       //하눈즁 ㅠ
+    public boolean makeProject(String projectName,String workType,String dataType,String subject,String wayContent,String conditionContent,String description,String totalData)
+    {
+        APICaller makeProject = new APICaller("GET",baseURL+"/api/project/collection");
+        makeProject.setQueryParameter("projectName",projectName);
+        makeProject.setQueryParameter("workType",workType);
+        makeProject.setQueryParameter("dataType",dataType);
+        makeProject.setQueryParameter("subject",subject);
+        makeProject.setQueryParameter("wayContent",wayContent);
+        makeProject.setQueryParameter("conditionContent",conditionContent);
+        makeProject.setQueryParameter("description",description);
+        makeProject.setQueryParameter("totalData",totalData);
+        makeProject.setHeader("Authorization",token);
+        String result = null; //헤더에서 버킷네임 null이면 실패 아니면 성공
+        try {
+            makeProject.request();
+            result = makeProject.getHeader().get("bucketName").get(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        if(result.getBytes().length!=0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 }

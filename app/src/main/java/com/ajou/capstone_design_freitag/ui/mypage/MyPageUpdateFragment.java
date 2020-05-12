@@ -85,11 +85,11 @@ public class MyPageUpdateFragment extends Fragment{
 
         AsyncTask<String, Void, Boolean> updateTask = new AsyncTask<String, Void, Boolean>() {
             @Override
-            protected Boolean doInBackground(String... registerInfos) {
-                boolean result = RESTAPI.getInstance().update(registerInfos[0],
-                        registerInfos[1],
-                        registerInfos[2],
-                        registerInfos[3]);
+            protected Boolean doInBackground(String... userInfos) {
+                boolean result = RESTAPI.getInstance().update(userInfos[0],
+                        userInfos[1],
+                        userInfos[2],
+                        userInfos[3]);
                 return new Boolean(result);
             }
 

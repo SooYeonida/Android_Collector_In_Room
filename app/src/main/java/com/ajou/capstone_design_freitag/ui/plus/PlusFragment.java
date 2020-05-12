@@ -24,6 +24,9 @@ import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
+import com.ajou.capstone_design_freitag.ui.home.User;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -52,11 +55,13 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
     private RadioButton image;
     private RadioButton audio;
     private RadioButton text;
+
     private EditText project_name;
     private EditText project_subject;
     private EditText description;
     private EditText way_content;
     private EditText condition_content;
+    private EditText total_data;
 
     String worktype = null;
     String datatype = null;
@@ -117,6 +122,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
         description = view.findViewById(R.id.description);
         way_content = view.findViewById(R.id.waycontent);
         condition_content = view.findViewById(R.id.condition_content);
+        total_data = view.findViewById(R.id.total_data);
 
         make_button.setOnClickListener(this);
         example_data_button.setOnClickListener(this);
@@ -145,6 +151,32 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
     }
 
     public void make_project(final View view){
+        final String projectName = project_name.getText().toString();
+        final String projectSubject = project_subject.getText().toString();
+        final String wayContent = way_content.getText().toString();
+        final String conditionContent = condition_content.getText().toString();
+        final String projectDescription = description.getText().toString();
+        final String projectTotalData = total_data.getText().toString();
+
+        AsyncTask<String, Void,Boolean > projectTask = new AsyncTask<String, Void, Boolean>() {
+            protected Boolean doInBackground(String... userInfos) {
+                boolean result = RESTAPI.getInstance().makeProject(userInfos[0],
+                        userInfos[1],userInfos[2],userInfos[3],userInfos[4],userInfos[5]
+                        ,userInfos[6],userInfos[7]);
+                return result;
+            }
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if(result){
+                   System.out.println("프로젝트 생성 성공");
+                }
+                else{
+                    System.out.println("프로젝트 생성 실패");
+                }
+            }
+
+        };
+        projectTask.execute(projectName,worktype,datatype,projectSubject,wayContent,conditionContent,projectDescription,projectTotalData);
     }
 
     public void upload_example_data(View view){
