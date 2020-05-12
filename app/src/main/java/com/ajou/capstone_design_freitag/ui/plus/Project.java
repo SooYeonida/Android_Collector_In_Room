@@ -5,15 +5,15 @@ import android.graphics.drawable.Drawable;
 public class Project {
 
     private Drawable projectIcon; //빼도됨
-    private int projectID;
-    private int userID;
-    private String name;
-    private int bucket;
+    private int projectId;
+    private String userId;
+    private String projectName;
+    private String bucketName;
     private String status;
-    private String projectType;
-    private String workType;
+    private String workType; //collection, boundingBox, classification
+    private String dataType; //image, audio, text
     private String subject;
-    private Double difficulty;
+    private int difficulty;
     private String wayContent;
     private String conditionContent;
     private String exampleContent;
@@ -31,36 +31,36 @@ public class Project {
         this.projectIcon = projectIcon;
     }
 
-    public int getProjectID() {
-        return projectID;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setProjectID(int projectID) {
-        this.projectID = projectID;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
-    public int getUserID() {
-        return userID;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
-    public int getBucket() {
-        return bucket;
+    public String getBucketName() {
+        return bucketName;
     }
 
-    public void setBucket(int bucket) {
-        this.bucket = bucket;
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
     }
 
     public String getStatus() {
@@ -71,20 +71,20 @@ public class Project {
         this.status = status;
     }
 
-    public String getProjectType() {
-        return projectType;
-    }
-
-    public void setProjectType(String projectType) {
-        this.projectType = projectType;
-    }
-
     public String getWorkType() {
         return workType;
     }
 
     public void setWorkType(String workType) {
         this.workType = workType;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
     public String getSubject() {
@@ -95,11 +95,11 @@ public class Project {
         this.subject = subject;
     }
 
-    public Double getDifficulty() {
+    public int getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(Double difficulty) {
+    public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
 

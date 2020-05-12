@@ -4,12 +4,16 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +45,22 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
     TextView examplePicturesURI;
     private Context context;
 
+    private RadioGroup work;
+    private RadioGroup data;
+    private RadioButton collection;
+    private RadioButton labelling;
+    private RadioButton image;
+    private RadioButton audio;
+    private RadioButton text;
+    private EditText project_name;
+    private EditText project_subject;
+    private EditText description;
+    private EditText way_content;
+    private EditText condition_content;
+
+    String worktype = null;
+    String datatype = null;
+    Project project = new Project();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +83,41 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
         example_data_button = (Button) view.findViewById(R.id.example_data_selection);
         labelling_data_button = (Button) view.findViewById(R.id.labelling_data_selection);
 
+        work = view.findViewById(R.id.radioGroup_work);
+        collection = view.findViewById(R.id.data_collection);
+        labelling = view.findViewById(R.id.labelling);
+        work.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+               if(checkedId == R.id.data_collection)
+                        worktype = collection.getText().toString();
+                if(checkedId == R.id.labelling)
+                        worktype = labelling.getText().toString();
+            }
+        });
+
+        data = view.findViewById(R.id.radioGroup_data);
+        image = view.findViewById(R.id.image_btn);
+        audio = view.findViewById(R.id.audio_btn);
+        text = view.findViewById(R.id.text_btn);
+        data.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.image_btn)
+                        datatype = image.getText().toString();
+                if(checkedId == R.id.audio_btn)
+                        datatype = audio.getText().toString();
+                if(checkedId == R.id.text_btn)
+                        datatype = text.getText().toString();
+                }
+        });
+
+        project_name = view.findViewById(R.id.projectName);
+        project_subject = view.findViewById(R.id.subject);
+        description = view.findViewById(R.id.description);
+        way_content = view.findViewById(R.id.waycontent);
+        condition_content = view.findViewById(R.id.condition_content);
+
         make_button.setOnClickListener(this);
         example_data_button.setOnClickListener(this);
         labelling_data_button.setOnClickListener(this);
@@ -70,6 +125,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
         examplePicturesURI = (TextView) view.findViewById(R.id.examplePicturesURI);
 
         context = container.getContext();
+
         return view;
     }
 
@@ -88,9 +144,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    public void make_project(View view){
-        //RESTful API
-        Toast.makeText(context,"프로젝트 생성 완료",Toast.LENGTH_LONG).show();
+    public void make_project(final View view){
     }
 
     public void upload_example_data(View view){
