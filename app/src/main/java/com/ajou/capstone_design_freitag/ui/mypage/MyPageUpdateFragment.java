@@ -89,9 +89,7 @@ public class MyPageUpdateFragment extends Fragment{
                 boolean result = RESTAPI.getInstance().update(registerInfos[0],
                         registerInfos[1],
                         registerInfos[2],
-                        registerInfos[3],
-                        registerInfos[4],
-                        registerInfos[5]);
+                        registerInfos[3]);
                 return new Boolean(result);
             }
 
@@ -101,13 +99,12 @@ public class MyPageUpdateFragment extends Fragment{
                     Toast.makeText(getContext(),"수정 완료",Toast.LENGTH_LONG).show();
                     ((MainActivity)getActivity()).goToHome();
                 } else {
-                    Toast.makeText(getContext(),"수정 실패 또르륵",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"수정 실패",Toast.LENGTH_LONG).show();
                     ((MainActivity)getActivity()).goToHome();
                 }
             }
         };
-        updateTask.execute(user_id,user_password,userName,userPhone,userEmail,userAffiliation);
-        //서버 고치기 전은 아이디 패스워드 날려야함.
+        updateTask.execute(userName,userPhone,userEmail,userAffiliation);
     }
 
 }

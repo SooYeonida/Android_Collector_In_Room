@@ -107,7 +107,7 @@ public class TotalInfoFragment extends Fragment {
                 userPhoneNumber.setText(user.getPhonenumber());
                 userAffiliation.setText(user.getAffiliation());
                 userLevel.setText(user.getLevel());
-                userPoint.setText(Integer.toString(user.getBank()));
+                userPoint.setText("0"); //포인트 안받아와서 일단은 이렇게 해놓음
             }
 
         };

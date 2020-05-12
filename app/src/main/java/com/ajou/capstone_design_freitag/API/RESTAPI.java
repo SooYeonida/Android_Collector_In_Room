@@ -132,23 +132,19 @@ public class RESTAPI {
         jsonObject = new JSONObject(result);
         user.setName(jsonObject.getString("userName"));
         user.setEmail(jsonObject.getString("userEmail"));
-        user.setAccount(jsonObject.getString("userOpenBankingAccessToken"));
-        user.setBank(jsonObject.getInt("userOpenBankingNum"));
         user.setPhonenumber(jsonObject.getString("userPhone"));
         user.setAffiliation(jsonObject.getString("userAffiliation"));
         user.setUserID(jsonObject.getString("username"));
         //level임의로
-        user.setLevel("starter"); //이걸 보내고 밑에만 살리기
+        user.setLevel("starter");
 
         info = user;
         System.out.println("유저정보 in restapi:"+info.getName()+" "+info.getEmail());
         return user;
     }
 
-    public boolean update(String userId,String userPassword,String userName,String userPhone,String userEmail,String userAffiliation){
+    public boolean update(String userName,String userPhone,String userEmail,String userAffiliation){
         APICaller update = new APICaller("PUT",baseURL+"/api/mypage/update");
-        update.setQueryParameter("userId",userId);
-        update.setQueryParameter("userPassword",userPassword);
         update.setQueryParameter("userName",userName);
         update.setQueryParameter("userPhone",userPhone);
         update.setQueryParameter("userEmail",userEmail);
@@ -157,14 +153,14 @@ public class RESTAPI {
         String result = null;
         try {
             update.request();
-            result = update.getBody();
+            result = update.getHeader().get("update").get(0);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(result.equals("수정 완료")) {
+        if(result.equals("success")) {
             return true;
         } else {
             return false;
