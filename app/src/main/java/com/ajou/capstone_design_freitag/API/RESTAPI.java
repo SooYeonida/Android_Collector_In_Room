@@ -44,9 +44,13 @@ public class RESTAPI {
         try {
             login.request();
             result = login.getHeader();
-            User.getUserinstance().setUserID(userID);
-            User.getUserinstance().setUserPwd(userPassword);
-            token = result.get("Authorization").get(0);
+            if(result.get("login").get(0).equals("success")) {
+                User.getUserinstance().setUserID(userID);
+                User.getUserinstance().setUserPwd(userPassword);
+                token = result.get("Authorization").get(0);
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
