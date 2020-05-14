@@ -3,14 +3,11 @@ package com.ajou.capstone_design_freitag.API;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.renderscript.ScriptIntrinsicYuvToRGB;
-
 import com.ajou.capstone_design_freitag.ui.home.User;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -18,28 +15,16 @@ import java.util.Map;
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
+    private static User userinstance = null;
+    private static Project projectinstance = null;
+
     private String baseURL = "http://172.30.1.27:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
 
-    private String id = null;
-    private String password = null;
-
-    JSONObject jsonObject = null;
-    private User info = null;
-
     public String getToken() {
         return this.token;
-    }
-    public String getId() {
-        return this.id;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public User getInfo() {
-        return this.info;
     }
 
     private RESTAPI() {
@@ -51,6 +36,18 @@ public class RESTAPI {
         }
         return instance;
     }
+    public static User getUserinstance(){
+        if(userinstance == null){
+            userinstance = new User();
+        }
+        return userinstance;
+    }
+    public static Project getProjectinstance(){
+        if(projectinstance == null){
+            projectinstance = new Project();
+        }
+        return projectinstance;
+    }
 
     public boolean login(String userID, String userPassword) {
         APICaller login = new APICaller("GET", baseURL + "/api/login");
@@ -61,8 +58,8 @@ public class RESTAPI {
         try {
             login.request();
             result = login.getHeader();
-            id = userID;
-            password = userPassword;
+            getUserinstance().setUserID(userID);
+            getUserinstance().setUserPwd(userPassword);
             token = result.get("Authorization").get(0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,17 +126,20 @@ public class RESTAPI {
             e.printStackTrace();
             return null;
         }
-        jsonObject = new JSONObject(result);
+        JSONObject jsonObject = new JSONObject(result);
         user.setName(jsonObject.getString("userName"));
+        getUserinstance().setName(user.getName());
         user.setEmail(jsonObject.getString("userEmail"));
+        getUserinstance().setEmail(user.getEmail());
         user.setPhonenumber(jsonObject.getString("userPhone"));
+        getUserinstance().setPhonenumber(user.getPhonenumber());
         user.setAffiliation(jsonObject.getString("userAffiliation"));
+        getUserinstance().setAffiliation(user.getAffiliation());
         user.setUserID(jsonObject.getString("username"));
+        getUserinstance().setUserID(user.getUserID());
         //level임의로
         user.setLevel("starter");
 
-        info = user;
-        System.out.println("유저정보 in restapi:"+info.getName()+" "+info.getEmail());
         return user;
     }
 
@@ -181,6 +181,7 @@ public class RESTAPI {
         makeProject.setQueryParameter("totalData",totalData);
         makeProject.setHeader("Authorization",token);
         String result = null; //헤더에서 버킷네임 null이면 실패 아니면 성공
+        getProjectinstance().setProjectName(projectName);
         try {
             makeProject.request();
             result = makeProject.getHeader().get("bucketName").get(0);
@@ -197,5 +198,22 @@ public class RESTAPI {
             return false;
         }
     }
+    //example 콘텐트에서 cost 받는거 해야됨.
+
+    public Boolean pointPayment() throws Exception {
+        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/pointPayment");
+        pointPayment.setHeader("Authorization",token);
+        pointPayment.request();
+        String result = null;
+        result = pointPayment.getHeader().get("payment").get(0);
+
+        if(result.equals("success")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
 }
