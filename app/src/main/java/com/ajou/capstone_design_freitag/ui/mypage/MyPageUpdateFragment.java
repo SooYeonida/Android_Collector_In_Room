@@ -25,9 +25,7 @@ public class MyPageUpdateFragment extends Fragment{
     EditText user_email;
     EditText user_affiliation;
 
-    String user_id;
-    String user_password;
-    User user= new User();
+    User user;
 
     public static MyPageUpdateFragment newInstance(){
         return new MyPageUpdateFragment();
@@ -36,10 +34,8 @@ public class MyPageUpdateFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RESTAPI instance = RESTAPI.getInstance();
-        user_id = instance.getId();
-        user_password = instance.getPassword();
-        user = instance.getInfo();
+        User userinstance = RESTAPI.getUserinstance();
+        user = userinstance;
     }
 
     @Override
@@ -61,7 +57,6 @@ public class MyPageUpdateFragment extends Fragment{
         user_affiliation = view.findViewById(R.id.update_user_affiliation);
 
         return view;
-
     }
 
     public void update(final View view){

@@ -39,8 +39,8 @@ public class TotalInfoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RESTAPI instance = RESTAPI.getInstance();
-        user_id = instance.getId();
+        User userinstance = RESTAPI.getUserinstance();
+        user_id = userinstance.getUserID();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
