@@ -9,6 +9,7 @@ import com.ajou.capstone_design_freitag.ui.plus.Project;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,7 @@ public class RESTAPI {
     private static RESTAPI instance = null;
     private static User userinstance = null;
     private static Project projectinstance = null;
-
-    private String baseURL = "http://172.30.1.27:8080";
+    private String baseURL = "http://wodnd999999.iptime.org:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
@@ -50,7 +50,7 @@ public class RESTAPI {
     }
 
     public boolean login(String userID, String userPassword) {
-        APICaller login = new APICaller("GET", baseURL + "/api/login");
+        APICaller login = new APICaller("POST", baseURL + "/api/login");
         login.setQueryParameter("userId", userID);
         login.setQueryParameter("userPassword", userPassword);
 
@@ -77,25 +77,20 @@ public class RESTAPI {
         signup.setQueryParameter("userEmail", userEmail);
         signup.setQueryParameter("userAffiliation", userAffiliation);
 
-        String result;
+        Map<String, List<String>> result;
         try {
             signup.request();
-            result = signup.getBody();
+            result = signup.getHeader();
+            if(result.get("update").get(0).equals("success")) {
+                state = signup.getHeader().get("state").get(0);
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-
-        if(result.equals("success")) {
-            try {
-                state = signup.getHeader().get("state").get(0);
-            } catch (Exception e) {
-                return false;
-            }
-            return true;
-        } else {
-            return false;
-        }
+        return true;
     }
 
     public void registerOpenBanking(Activity activity) {
@@ -103,7 +98,8 @@ public class RESTAPI {
         registerOpenBanking.setQueryParameter("auth_type", "0");
         registerOpenBanking.setQueryParameter("scope", "login+transfer+inquiry");
         registerOpenBanking.setQueryParameter("response_type", "code");
-        registerOpenBanking.setQueryParameter("redirect_uri", "http%3a%2f%2fwodnd999999.iptime.org%3a8080%2fexternalapi%2fopenbanking%2foauth%2ftoken&lang=kor");
+        registerOpenBanking.setQueryParameter("redirect_uri", "http%3a%2f%2fwodnd999999.iptime.org%3a8080%2fexternalapi%2fopenbanking%2foauth%2ftoken");
+        registerOpenBanking.setQueryParameter("lang", "kor");
         registerOpenBanking.setQueryParameter("client_id", clientID);
         registerOpenBanking.setQueryParameter("state", state);
 
@@ -111,6 +107,12 @@ public class RESTAPI {
         Uri uri = Uri.parse(registerOpenBanking.getUrl());
         intent.setData(uri);
         activity.startActivity(intent);
+    }
+
+    public boolean uploadExampleFile(InputStream inputStream) throws Exception {
+        APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
+        uploadFile.multipart(inputStream, "example.jpeg", "image/jpeg");
+        return true;
     }
 
     public User mypage(String userId) throws JSONException {
