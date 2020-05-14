@@ -25,9 +25,7 @@ public class MyPageUpdateFragment extends Fragment{
     EditText user_email;
     EditText user_affiliation;
 
-    String user_id;
-    String user_password;
-    User user= new User();
+    User user;
 
     public static MyPageUpdateFragment newInstance(){
         return new MyPageUpdateFragment();
@@ -36,10 +34,8 @@ public class MyPageUpdateFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RESTAPI instance = RESTAPI.getInstance();
-        user_id = instance.getId();
-        user_password = instance.getPassword();
-        user = instance.getInfo();
+        User userinstance = RESTAPI.getUserinstance();
+        user = userinstance;
     }
 
     @Override
@@ -61,7 +57,6 @@ public class MyPageUpdateFragment extends Fragment{
         user_affiliation = view.findViewById(R.id.update_user_affiliation);
 
         return view;
-
     }
 
     public void update(final View view){
@@ -85,11 +80,11 @@ public class MyPageUpdateFragment extends Fragment{
 
         AsyncTask<String, Void, Boolean> updateTask = new AsyncTask<String, Void, Boolean>() {
             @Override
-            protected Boolean doInBackground(String... registerInfos) {
-                boolean result = RESTAPI.getInstance().update(registerInfos[0],
-                        registerInfos[1],
-                        registerInfos[2],
-                        registerInfos[3]);
+            protected Boolean doInBackground(String... userInfos) {
+                boolean result = RESTAPI.getInstance().update(userInfos[0],
+                        userInfos[1],
+                        userInfos[2],
+                        userInfos[3]);
                 return new Boolean(result);
             }
 

@@ -7,6 +7,7 @@ public class User {
 
     private Drawable userIcon; //빼도됨
     private String userID;
+    private String userPwd;
     private String name;
     private String account;
     private String phonenumber;
@@ -33,6 +34,13 @@ public class User {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+    public String getUserPwd() {
+        return userPwd;
+    }
+
+    public void setUserPwd(String userPwd) {
+        this.userPwd = userPwd;
     }
 
     public String getName() {

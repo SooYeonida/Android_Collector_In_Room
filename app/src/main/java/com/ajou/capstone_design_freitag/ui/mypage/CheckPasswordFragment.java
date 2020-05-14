@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
+import com.ajou.capstone_design_freitag.ui.home.User;
 
 public class CheckPasswordFragment extends Fragment {
 
@@ -25,8 +26,8 @@ public class CheckPasswordFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RESTAPI instance = RESTAPI.getInstance();
-        user_password = instance.getPassword();
+        User userinstance = RESTAPI.getUserinstance();
+        user_password = userinstance.getUserPwd();
     }
 
     @Override
@@ -51,8 +52,6 @@ public class CheckPasswordFragment extends Fragment {
         String user_input_pwd = user_input.getText().toString();
         myPageFragment = (MyPageFragment) getParentFragment();
 
-        System.out.println(user_password);
-        System.out.println(user_input_pwd);
         if(!user_password.equals(user_input_pwd)){
             Toast.makeText(getContext(),"비밀번호가 틀렸습니다",Toast.LENGTH_LONG).show();
             myPageFragment.replaceFragment(0);

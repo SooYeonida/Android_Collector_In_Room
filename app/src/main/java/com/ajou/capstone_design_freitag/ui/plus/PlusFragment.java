@@ -1,28 +1,16 @@
 package com.ajou.capstone_design_freitag.ui.plus;
 
-import android.content.ClipData;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.ajou.capstone_design_freitag.API.RESTAPI;
-import com.ajou.capstone_design_freitag.LoginActivity;
-import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 
 import java.io.File;
@@ -39,7 +27,11 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
 
     private ArrayList<Uri> examplePictures;
     private ArrayList<Uri> labelingPictures;
-    //라벨링일 경우 사용자가 클래스 입력?
+
+     ProjectMakeFragment projectMakeFragment = new ProjectMakeFragment();
+    PayFragment payFragment = new PayFragment();
+  
+   FragmentTransaction fragmentTransaction;
 
     Button make_button;
     Button example_data_button;
@@ -48,106 +40,29 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
     TextView examplePicturesURI;
     private Context context;
 
-    private RadioGroup work;
-    private RadioGroup data;
-    private RadioButton collection;
-    private RadioButton labelling;
-    private RadioButton image;
-    private RadioButton audio;
-    private RadioButton text;
-    private EditText project_name;
-    private EditText project_subject;
-    private EditText description;
-    private EditText way_content;
-    private EditText condition_content;
-
-    String worktype = null;
-    String datatype = null;
-    Project project = new Project();
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        RESTAPI instance = RESTAPI.getInstance();
-        //토큰 받아오는데 null이면 로그인
-        if(instance.getToken()==null){
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivityForResult(intent, LOGIN_REQUEST_CODE);
-        }
-    }
-
     public View onCreateView (@NonNull LayoutInflater inflater,
                               ViewGroup container, Bundle savedInstanceState){
-        examplePictures = new ArrayList<>();
-        labelingPictures = new ArrayList<>();
+       View view = inflater.inflate(R.layout.fragment_plus,container,false);
+        replaceFragment(0);
+       return view;
+    }
 
-        View view = inflater.inflate(R.layout.fragment_plus,container,false);
-        make_button = (Button) view.findViewById(R.id.make_button);
-        example_data_button = (Button) view.findViewById(R.id.example_data_selection);
-        labelling_data_button = (Button) view.findViewById(R.id.labelling_data_selection);
 
-        work = view.findViewById(R.id.radioGroup_work);
-        collection = view.findViewById(R.id.data_collection);
-        labelling = view.findViewById(R.id.labelling);
-        work.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-               if(checkedId == R.id.data_collection)
-                        worktype = collection.getText().toString();
-                if(checkedId == R.id.labelling)
-                        worktype = labelling.getText().toString();
-            }
-        });
+    public void replaceFragment(int index) {
+        fragmentTransaction = getChildFragmentManager().beginTransaction();
 
-        data = view.findViewById(R.id.radioGroup_data);
-        image = view.findViewById(R.id.image_btn);
-        audio = view.findViewById(R.id.audio_btn);
-        text = view.findViewById(R.id.text_btn);
-        data.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.image_btn)
-                        datatype = image.getText().toString();
-                if(checkedId == R.id.audio_btn)
-                        datatype = audio.getText().toString();
-                if(checkedId == R.id.text_btn)
-                        datatype = text.getText().toString();
+        if (index == 0) {
+            if (!projectMakeFragment.isAdded()) {
+                fragmentTransaction.replace(R.id.fragment_plus, projectMakeFragment);
+                fragmentTransaction.commit();
                 }
-        });
-
-        project_name = view.findViewById(R.id.projectName);
-        project_subject = view.findViewById(R.id.subject);
-        description = view.findViewById(R.id.description);
-        way_content = view.findViewById(R.id.waycontent);
-        condition_content = view.findViewById(R.id.condition_content);
-
-        make_button.setOnClickListener(this);
-        example_data_button.setOnClickListener(this);
-        labelling_data_button.setOnClickListener(this);
-
-        examplePicturesURI = (TextView) view.findViewById(R.id.examplePicturesURI);
-
-        context = container.getContext();
-
-        return view;
-    }
-
-    @Override
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.make_button:
-                make_project(view);
-                break;
-            case R.id.example_data_selection:
-                upload_example_data(view);
-                break;
-            case R.id.labelling_data_selection:
-                upload_labelling_data(view);
-                break;
+        } else if (index == 1) {
+            if (!payFragment.isAdded()) {
+                fragmentTransaction.replace(R.id.fragment_plus, payFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
         }
-    }
-
-    public void make_project(final View view){
     }
 
     public void upload_example_data(View view){
@@ -197,12 +112,5 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
                         labelingPictures.add(clipData.getItemAt(i).getUri());
                     }
                 }
-            }
-        } else if(requestCode == LOGIN_REQUEST_CODE) {
-            if (resultCode != RESULT_OK) {
-                Toast.makeText(context, "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
-                ((MainActivity)getActivity()).goToHome();
-            }
-        }
-    }
+
 }
