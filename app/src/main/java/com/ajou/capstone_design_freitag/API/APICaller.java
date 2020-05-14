@@ -144,7 +144,7 @@ public class APICaller {
 
         DataOutputStream dataStream = new DataOutputStream(con.getOutputStream());
         dataStream.writeBytes(twoHyphens + boundary + CRLF);
-        dataStream.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\"" + fileName + "\"" + CRLF);
+        dataStream.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + fileName + "\"" + CRLF);
         dataStream.writeBytes("Content-Type: " + type +  CRLF);
         dataStream.writeBytes(CRLF);
 
@@ -153,7 +153,7 @@ public class APICaller {
         int bufferSize = Math.min(bytesAvailable, maxBufferSize);
         byte[] buffer = new byte[bufferSize];
         int bytesRead = inputStream.read(buffer, 0, bufferSize);
-        while (bytesRead > 0)   {
+        while (bytesRead > 0) {
             dataStream.write(buffer, 0, bufferSize);
             bytesAvailable = inputStream.available();
             bufferSize = Math.min(bytesAvailable, maxBufferSize);
