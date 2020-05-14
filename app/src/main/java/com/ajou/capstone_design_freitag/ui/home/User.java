@@ -6,10 +6,10 @@ import android.graphics.drawable.Drawable;
 public class User {
 
     private Drawable userIcon; //빼도됨
-    private int userID;
+    private String userID;
     private String name;
-    private int account;
-    private int phonenumber;
+    private String account;
+    private String phonenumber;
     private String email;
     private String affiliation;
     private int visit;
@@ -17,6 +17,7 @@ public class User {
     private int point;
     private int accuracy;
     private String level;
+    private int bank;
 
     public Drawable getUserIcon() {
         return userIcon;
@@ -26,11 +27,11 @@ public class User {
         this.userIcon = userIcon;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
@@ -42,19 +43,19 @@ public class User {
         this.name = name;
     }
 
-    public int getAccount() {
+    public String getAccount() {
         return account;
     }
 
-    public void setAccount(int account) {
+    public void setAccount(String account) {
         this.account = account;
     }
 
-    public int getPhonenumber() {
+    public String getPhonenumber() {
         return phonenumber;
     }
 
-    public void setPhonenumber(int phonenumber) {
+    public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
     }
 
@@ -114,7 +115,13 @@ public class User {
         this.level = level;
     }
 
+    public int getBank() {
+        return bank;
+    }
 
+    public void setBank(int bank) {
+        this.bank = bank;
+    }
 
 
 
