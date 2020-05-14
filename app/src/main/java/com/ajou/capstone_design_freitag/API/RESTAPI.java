@@ -3,7 +3,6 @@ package com.ajou.capstone_design_freitag.API;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.renderscript.ScriptIntrinsicYuvToRGB;
 
 import com.ajou.capstone_design_freitag.ui.home.User;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
@@ -12,13 +11,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://172.30.1.27:8080";
+    private String baseURL = "http://wodnd999999.iptime.org:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
@@ -26,7 +26,6 @@ public class RESTAPI {
     private String id = null;
     private String password = null;
 
-    JSONObject jsonObject = null;
     private User info = null;
 
     public String getToken() {
@@ -53,7 +52,7 @@ public class RESTAPI {
     }
 
     public boolean login(String userID, String userPassword) {
-        APICaller login = new APICaller("GET", baseURL + "/api/login");
+        APICaller login = new APICaller("POST", baseURL + "/api/login");
         login.setQueryParameter("userId", userID);
         login.setQueryParameter("userPassword", userPassword);
 
@@ -61,9 +60,13 @@ public class RESTAPI {
         try {
             login.request();
             result = login.getHeader();
-            id = userID;
-            password = userPassword;
-            token = result.get("Authorization").get(0);
+            if(result.get("login").get(0).equals("success")) {
+                id = userID;
+                password = userPassword;
+                token = result.get("Authorization").get(0);
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -80,25 +83,20 @@ public class RESTAPI {
         signup.setQueryParameter("userEmail", userEmail);
         signup.setQueryParameter("userAffiliation", userAffiliation);
 
-        String result;
+        Map<String, List<String>> result;
         try {
             signup.request();
-            result = signup.getBody();
+            result = signup.getHeader();
+            if(result.get("update").get(0).equals("success")) {
+                state = signup.getHeader().get("state").get(0);
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-
-        if(result.equals("success")) {
-            try {
-                state = signup.getHeader().get("state").get(0);
-            } catch (Exception e) {
-                return false;
-            }
-            return true;
-        } else {
-            return false;
-        }
+        return true;
     }
 
     public void registerOpenBanking(Activity activity) {
@@ -106,7 +104,8 @@ public class RESTAPI {
         registerOpenBanking.setQueryParameter("auth_type", "0");
         registerOpenBanking.setQueryParameter("scope", "login+transfer+inquiry");
         registerOpenBanking.setQueryParameter("response_type", "code");
-        registerOpenBanking.setQueryParameter("redirect_uri", "http%3a%2f%2fwodnd999999.iptime.org%3a8080%2fexternalapi%2fopenbanking%2foauth%2ftoken&lang=kor");
+        registerOpenBanking.setQueryParameter("redirect_uri", "http%3a%2f%2fwodnd999999.iptime.org%3a8080%2fexternalapi%2fopenbanking%2foauth%2ftoken");
+        registerOpenBanking.setQueryParameter("lang", "kor");
         registerOpenBanking.setQueryParameter("client_id", clientID);
         registerOpenBanking.setQueryParameter("state", state);
 
@@ -114,6 +113,12 @@ public class RESTAPI {
         Uri uri = Uri.parse(registerOpenBanking.getUrl());
         intent.setData(uri);
         activity.startActivity(intent);
+    }
+
+    public boolean uploadExampleFile(InputStream inputStream) throws Exception {
+        APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
+        uploadFile.multipart(inputStream, "example.jpeg", "image/jpeg");
+        return true;
     }
 
     public User mypage(String userId) throws JSONException {
@@ -129,7 +134,7 @@ public class RESTAPI {
             e.printStackTrace();
             return null;
         }
-        jsonObject = new JSONObject(result);
+        JSONObject jsonObject = new JSONObject(result);
         user.setName(jsonObject.getString("userName"));
         user.setEmail(jsonObject.getString("userEmail"));
         user.setPhonenumber(jsonObject.getString("userPhone"));
