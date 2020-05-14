@@ -1,16 +1,25 @@
 package com.ajou.capstone_design_freitag.ui.plus;
 
+import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
 
 import java.io.File;
@@ -20,7 +29,7 @@ import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
-public class PlusFragment extends Fragment implements View.OnClickListener{
+public class PlusFragment extends Fragment  {
     private static final int EXAMPLE_PICTURE_IMAGE_REQUEST_CODE = 100;
     private static final int LABELING_PICTURE_IMAGE_REQUEST_CODE = 101;
     private static final int LOGIN_REQUEST_CODE = 102;
@@ -28,10 +37,10 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
     private ArrayList<Uri> examplePictures;
     private ArrayList<Uri> labelingPictures;
 
-     ProjectMakeFragment projectMakeFragment = new ProjectMakeFragment();
+    ProjectMakeFragment projectMakeFragment = new ProjectMakeFragment();
     PayFragment payFragment = new PayFragment();
-  
-   FragmentTransaction fragmentTransaction;
+
+    FragmentTransaction fragmentTransaction;
 
     Button make_button;
     Button example_data_button;
@@ -40,11 +49,11 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
     TextView examplePicturesURI;
     private Context context;
 
-    public View onCreateView (@NonNull LayoutInflater inflater,
-                              ViewGroup container, Bundle savedInstanceState){
-       View view = inflater.inflate(R.layout.fragment_plus,container,false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_plus, container, false);
         replaceFragment(0);
-       return view;
+        return view;
     }
 
 
@@ -55,7 +64,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
             if (!projectMakeFragment.isAdded()) {
                 fragmentTransaction.replace(R.id.fragment_plus, projectMakeFragment);
                 fragmentTransaction.commit();
-                }
+            }
         } else if (index == 1) {
             if (!payFragment.isAdded()) {
                 fragmentTransaction.replace(R.id.fragment_plus, payFragment);
@@ -65,7 +74,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    public void upload_example_data(View view){
+    public void upload_example_data(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
@@ -73,7 +82,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
         startActivityForResult(intent, EXAMPLE_PICTURE_IMAGE_REQUEST_CODE);
     }
 
-    public void upload_labelling_data(View view){
+    public void upload_labelling_data(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -83,7 +92,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE || requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
+        if (requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE || requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 ClipData clipData = data.getClipData();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
@@ -113,4 +122,7 @@ public class PlusFragment extends Fragment implements View.OnClickListener{
                     }
                 }
 
+            }
+        }
+    }
 }
