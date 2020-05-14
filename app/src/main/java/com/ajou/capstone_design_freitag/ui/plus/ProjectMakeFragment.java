@@ -26,6 +26,7 @@ import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
@@ -268,6 +269,24 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                     if (requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE) {
                         examplePictures.add(clipData.getItemAt(i).getUri());
                         examplePicturesURI.setText(examplePicturesURI.getText() + "\n" + clipData.getItemAt(i).getUri());
+                        try {
+                            AsyncTask<Uri, Void, Boolean> loginTask = new AsyncTask<Uri, Void, Boolean>() {
+                                @Override
+                                protected Boolean doInBackground(Uri... uris) {
+                                    try {
+                                        InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
+                                        boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream);
+                                        return new Boolean(result);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        return new Boolean(false);
+                                    }
+                                }
+                            };
+                            loginTask.execute(clipData.getItemAt(i).getUri());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else if (requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
                         labelingPictures.add(clipData.getItemAt(i).getUri());
                     }

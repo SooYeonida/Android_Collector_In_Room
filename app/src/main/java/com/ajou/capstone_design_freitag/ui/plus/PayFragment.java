@@ -27,12 +27,10 @@ public class PayFragment extends Fragment {
      Button pay_point;
      Button pay_account;
 
-     PlusFragment plusFragment;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Project projectinstance = RESTAPI.getProjectinstance();
+        Project projectinstance = Project.getProjectinstance();
         cost =  Integer.toString(projectinstance.getCost());
         projectName = projectinstance.getProjectName();
     }

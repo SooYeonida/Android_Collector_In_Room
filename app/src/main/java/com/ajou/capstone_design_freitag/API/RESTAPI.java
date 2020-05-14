@@ -16,8 +16,6 @@ import java.util.Map;
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private static User userinstance = null;
-    private static Project projectinstance = null;
     private String baseURL = "http://wodnd999999.iptime.org:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
@@ -36,18 +34,6 @@ public class RESTAPI {
         }
         return instance;
     }
-    public static User getUserinstance(){
-        if(userinstance == null){
-            userinstance = new User();
-        }
-        return userinstance;
-    }
-    public static Project getProjectinstance(){
-        if(projectinstance == null){
-            projectinstance = new Project();
-        }
-        return projectinstance;
-    }
 
     public boolean login(String userID, String userPassword) {
         APICaller login = new APICaller("POST", baseURL + "/api/login");
@@ -58,8 +44,8 @@ public class RESTAPI {
         try {
             login.request();
             result = login.getHeader();
-            getUserinstance().setUserID(userID);
-            getUserinstance().setUserPwd(userPassword);
+            User.getUserinstance().setUserID(userID);
+            User.getUserinstance().setUserPwd(userPassword);
             token = result.get("Authorization").get(0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,15 +116,15 @@ public class RESTAPI {
         }
         JSONObject jsonObject = new JSONObject(result);
         user.setName(jsonObject.getString("userName"));
-        getUserinstance().setName(user.getName());
+        User.getUserinstance().setName(user.getName());
         user.setEmail(jsonObject.getString("userEmail"));
-        getUserinstance().setEmail(user.getEmail());
+        User.getUserinstance().setEmail(user.getEmail());
         user.setPhonenumber(jsonObject.getString("userPhone"));
-        getUserinstance().setPhonenumber(user.getPhonenumber());
+        User.getUserinstance().setPhonenumber(user.getPhonenumber());
         user.setAffiliation(jsonObject.getString("userAffiliation"));
-        getUserinstance().setAffiliation(user.getAffiliation());
+        User.getUserinstance().setAffiliation(user.getAffiliation());
         user.setUserID(jsonObject.getString("username"));
-        getUserinstance().setUserID(user.getUserID());
+        User.getUserinstance().setUserID(user.getUserID());
         //level임의로
         user.setLevel("starter");
 
@@ -183,7 +169,7 @@ public class RESTAPI {
         makeProject.setQueryParameter("totalData",totalData);
         makeProject.setHeader("Authorization",token);
         String result = null; //헤더에서 버킷네임 null이면 실패 아니면 성공
-        getProjectinstance().setProjectName(projectName);
+        Project.getProjectinstance().setProjectName(projectName);
         try {
             makeProject.request();
             result = makeProject.getHeader().get("bucketName").get(0);

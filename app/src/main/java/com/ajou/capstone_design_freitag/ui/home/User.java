@@ -5,6 +5,15 @@ import android.graphics.drawable.Drawable;
 
 public class User {
 
+    private static User userinstance = null;
+
+    public static User getUserinstance(){
+        if(userinstance == null){
+            userinstance = new User();
+        }
+        return userinstance;
+    }
+
     private Drawable userIcon; //빼도됨
     private String userID;
     private String userPwd;

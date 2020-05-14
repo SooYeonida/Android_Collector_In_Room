@@ -34,7 +34,7 @@ public class MyPageUpdateFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        User userinstance = RESTAPI.getUserinstance();
+        User userinstance = User.getUserinstance();
         user = userinstance;
     }
 

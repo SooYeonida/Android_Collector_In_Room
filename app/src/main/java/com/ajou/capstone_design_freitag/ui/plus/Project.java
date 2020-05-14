@@ -3,6 +3,14 @@ package com.ajou.capstone_design_freitag.ui.plus;
 import android.graphics.drawable.Drawable;
 
 public class Project {
+    private static Project projectinstance = null;
+
+    public static Project getProjectinstance(){
+        if(projectinstance == null){
+            projectinstance = new Project();
+        }
+        return projectinstance;
+    }
 
     private Drawable projectIcon; //빼도됨
     private int projectId;
