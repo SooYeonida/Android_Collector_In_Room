@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
+import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.ProjectDetailActivity;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectListFragment extends Fragment {
-
+    private static final int LOGIN_REQUEST_CODE = 102;
     ArrayList<Project> projectArrayList = new ArrayList<Project>();
     ProjectAdapter projectAdapter;
     ListView listView;
@@ -70,6 +71,12 @@ public class ProjectListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RESTAPI instance = RESTAPI.getInstance();
+        //토큰 받아오는데 null이면 로그인
+        if(instance.getToken()==null){
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivityForResult(intent, LOGIN_REQUEST_CODE);
+        }
         if (getArguments() != null) {
             button_result = getArguments().getString("worktype");
         }
