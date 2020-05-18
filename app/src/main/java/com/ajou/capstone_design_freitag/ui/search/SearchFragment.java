@@ -14,11 +14,7 @@ import com.ajou.capstone_design_freitag.R;
 public class SearchFragment extends Fragment {
 
     ProjectTypeFragment projectTypeFragment = new ProjectTypeFragment();
-    CollectionDataTypeFragment dataTypeFragment = new CollectionDataTypeFragment();
     ProjectListFragment projectListFragment = new ProjectListFragment();
-    LabellingTypeFragment labellingTypeFragment = new LabellingTypeFragment();
-
-
     FragmentTransaction fragmentTransaction;
 
 
@@ -38,50 +34,17 @@ public class SearchFragment extends Fragment {
                 fragmentTransaction.replace(R.id.fragment_search, projectTypeFragment);
                 fragmentTransaction.commit();
             }
-        } else if (index == 1) {
-            if (!dataTypeFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_search, dataTypeFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        } else if (index == 2) {
-            if (!labellingTypeFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_search, labellingTypeFragment);
+        }
+        else if (index == 1) { //리스트
+            if (!projectListFragment.isAdded()) {
+                fragmentTransaction.replace(R.id.fragment_search, ProjectListFragment.newInstance("수집"));
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         }
-        else if (index == 3) { //이미지
+        else if (index == 2) { //리스트
             if (!projectListFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_search,ProjectListFragment.newInstance("수집","이미지"));
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        }
-        else if (index == 4) { //텍스트
-            if (!projectListFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_search, ProjectListFragment.newInstance("수집","텍스트"));
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        }
-        else if (index == 5) { //음성
-            if (!projectListFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_search, ProjectListFragment.newInstance("수집","음성"));
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        }
-        else if (index == 6) { //바운딩박스
-            if (!projectListFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_search, ProjectListFragment.newInstance("라벨링","바운딩박스"));
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        }
-        else if (index == 7) { //분류
-            if (!projectListFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_search, ProjectListFragment.newInstance("라벨링","분류"));
+                fragmentTransaction.replace(R.id.fragment_search, ProjectListFragment.newInstance("라벨링"));
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

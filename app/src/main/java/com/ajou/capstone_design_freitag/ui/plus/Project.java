@@ -1,9 +1,16 @@
 package com.ajou.capstone_design_freitag.ui.plus;
 
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Project {
+
+public class Project implements Parcelable {
     private static Project projectinstance = null;
+
+    public Project() {
+
+    }
 
     public static Project getProjectinstance(){
         if(projectinstance == null){
@@ -11,6 +18,61 @@ public class Project {
         }
         return projectinstance;
     }
+
+    protected Project(Parcel in) {
+        projectId = in.readInt();
+        userId = in.readString();
+        projectName = in.readString();
+        bucketName = in.readString();
+        status = in.readString();
+        workType = in.readString();
+        dataType = in.readString();
+        subject = in.readString();
+        difficulty = in.readInt();
+        wayContent = in.readString();
+        conditionContent = in.readString();
+        exampleContent = in.readString();
+        description = in.readString();
+        totalData = in.readInt();
+        progressData = in.readInt();
+        cost = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(projectId);
+        dest.writeString(userId);
+        dest.writeString(projectName);
+        dest.writeString(bucketName);
+        dest.writeString(status);
+        dest.writeString(workType);
+        dest.writeString(dataType);
+        dest.writeString(subject);
+        dest.writeInt(difficulty);
+        dest.writeString(wayContent);
+        dest.writeString(conditionContent);
+        dest.writeString(exampleContent);
+        dest.writeString(description);
+        dest.writeInt(totalData);
+        dest.writeInt(progressData);
+        dest.writeInt(cost);
+    }
+
+    public static final Creator<Project> CREATOR = new Creator<Project>() {
+        @Override
+        public Project createFromParcel(Parcel in) {
+            return new Project(in);
+        }
+
+        @Override
+        public Project[] newArray(int size) {
+            return new Project[size];
+        }
+    };
 
     private Drawable projectIcon; //빼도됨
     private int projectId;

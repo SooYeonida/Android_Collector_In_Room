@@ -51,7 +51,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
 
     PlusFragment plusFragment;
 
-    int num = 0;
+    int id_class = 0;
     private RadioGroup work;
     private RadioGroup labelling_work;
     private RadioGroup collection_data;
@@ -209,8 +209,8 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(param);
         input.setHint("class");
-        input.setId(num);
-        num++;
+        input.setId(id_class);
+        id_class++;
         layout_plus.addView(input);
     }
 

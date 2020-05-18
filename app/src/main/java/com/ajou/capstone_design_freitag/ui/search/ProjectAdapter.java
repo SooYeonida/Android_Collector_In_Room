@@ -65,23 +65,12 @@ public class ProjectAdapter  extends BaseAdapter {
         return projectArrayList.get(position);
     }
 
-    public ArrayList<Project> sort(String projecttype, String worktype){
-        ArrayList<Project> list = new ArrayList<Project>();
-        for(Project element:projectArrayList){
-            if(element.getWorkType().equals(projecttype) && element.getDataType().equals(worktype)){
-                list.add(element);
-            }
-        }
-        return list;
-    }
+    public void addItem(Project project){
 
-    public void addItem(Drawable project_icon, String project_name,String project_type,String project_data_type){
-        Project project = new Project();
-
-        project.setProjectIcon(project_icon);
-        project.setProjectName(project_name);
-        project.setWorkType(project_type);
-        project.setDataType(project_data_type);
+        project.setProjectIcon(project.getProjectIcon());
+        project.setProjectName(project.getProjectName());
+        project.setWorkType(project.getWorkType());
+        project.setDataType(project.getDataType());
 
         projectArrayList.add(project);
     }
