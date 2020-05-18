@@ -51,7 +51,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
 
     PlusFragment plusFragment;
 
-    int num = 0;
+    int id_class = 0;
     private RadioGroup work;
     private RadioGroup labelling_work;
     private RadioGroup collection_data;
@@ -209,8 +209,8 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(param);
         input.setHint("class");
-        input.setId(num);
-        num++;
+        input.setId(id_class);
+        id_class++;
         layout_plus.addView(input);
     }
 
@@ -221,6 +221,11 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         final String conditionContent = condition_content.getText().toString();
         final String projectDescription = description.getText().toString();
         final String projectTotalData = total_data.getText().toString();
+
+        if(projectName.equals("") || projectSubject.equals("")|| wayContent.equals("")||conditionContent.equals("")||projectDescription.equals("") ||projectTotalData.equals("")){
+            Toast.makeText(context, "빈칸없이 입력하세요.",Toast.LENGTH_LONG).show();
+            return;
+        }
 
         AsyncTask<String, Void,Boolean > projectTask = new AsyncTask<String, Void, Boolean>() {
             protected Boolean doInBackground(String... userInfos) {
@@ -241,7 +246,8 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
             }
 
         };
-        projectTask.execute(projectName,worktype,datatype,projectSubject,wayContent,conditionContent,projectDescription,projectTotalData);
+
+            projectTask.execute(projectName, worktype, datatype, projectSubject, wayContent, conditionContent, projectDescription, projectTotalData);
     }
 
     public void upload_example_data(View view){

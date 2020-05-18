@@ -58,14 +58,14 @@
                 android:layout_width="65dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="데이터 수집" />
+                android:text="collection" />
 
             <RadioButton
                 android:id="@+id/labelling"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="라벨링" />
+                android:text="labelling" />
         </RadioGroup>
 
         <LinearLayout

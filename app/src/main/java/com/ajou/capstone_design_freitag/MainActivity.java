@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -33,25 +32,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_action, menu) ;
-        SearchView searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint("주제별 검색");
-
-        //검색 리스너
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
-
-            @Override
-            public boolean onQueryTextSubmit(String query) { //검색어 완료시
-                System.out.println(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String query) { //검색어 입력시
-                System.out.println(query);
-                return true;
-            }
-        });
-
         return true;
     }
 

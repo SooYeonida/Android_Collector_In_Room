@@ -3,20 +3,23 @@ package com.ajou.capstone_design_freitag.API;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+
 import com.ajou.capstone_design_freitag.ui.home.User;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://wodnd999999.iptime.org:8080";
+    private String baseURL = "http://10.0.2.2:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
@@ -162,7 +165,7 @@ public class RESTAPI {
 
     public boolean makeProject(String projectName,String workType,String dataType,String subject,String wayContent,String conditionContent,String description,String totalData)
     {
-        APICaller makeProject = new APICaller("GET",baseURL+"/api/project/collection");
+        APICaller makeProject = new APICaller("GET",baseURL+"/api/project/create");
         makeProject.setQueryParameter("projectName",projectName);
         makeProject.setQueryParameter("workType",workType);
         makeProject.setQueryParameter("dataType",dataType);
@@ -193,7 +196,7 @@ public class RESTAPI {
     //example 콘텐트에서 cost 받는거 해야됨.
 
     public Boolean pointPayment() throws Exception {
-        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/pointPayment");
+        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/point/payment");
         pointPayment.setHeader("Authorization",token);
         pointPayment.request();
         String result = null;
@@ -205,6 +208,37 @@ public class RESTAPI {
             return false;
         }
     }
+
+    public List<Project> projectList(String workType,String dataType,String subject, String difficulty) throws Exception {
+     APICaller projectList = new APICaller("GET",baseURL+"/api/project/list");
+     projectList.setHeader("Authorization",token);
+     projectList.setQueryParameter("workType",workType);
+     projectList.setQueryParameter("dataType",dataType);
+     projectList.setQueryParameter("subject",subject);
+     projectList.setQueryParameter("difficulty",difficulty);
+     projectList.request();
+     String result;
+     List<Project> project_list = new ArrayList<Project>();
+     result = projectList.getBody();
+     JSONArray jsonArray = new JSONArray(result);
+     for(int i=0;i<jsonArray.length();i++){
+         Project project = new Project();
+         JSONObject jsonObject;
+         jsonObject = jsonArray.getJSONObject(i);
+         project.setUserId(jsonObject.getString("userId"));
+         project.setProjectName(jsonObject.getString("projectName"));
+         project.setWorkType(jsonObject.getString("workType"));
+         project.setDataType(jsonObject.getString("dataType"));
+         project.setSubject(jsonObject.getString("subject"));
+         project.setDifficulty(jsonObject.getInt("difficulty"));
+         project.setWayContent(jsonObject.getString("wayContent"));
+         project.setConditionContent(jsonObject.getString("conditionContent"));
+         project.setExampleContent(jsonObject.getString("description"));
+         project_list.add(project);
+     }
+     return project_list;
+    }
+
 
 
 
