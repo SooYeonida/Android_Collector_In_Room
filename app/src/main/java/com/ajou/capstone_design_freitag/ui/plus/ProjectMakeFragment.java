@@ -222,6 +222,11 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         final String projectDescription = description.getText().toString();
         final String projectTotalData = total_data.getText().toString();
 
+        if(projectName.equals("") || projectSubject.equals("")|| wayContent.equals("")||conditionContent.equals("")||projectDescription.equals("") ||projectTotalData.equals("")){
+            Toast.makeText(context, "빈칸없이 입력하세요.",Toast.LENGTH_LONG).show();
+            return;
+        }
+
         AsyncTask<String, Void,Boolean > projectTask = new AsyncTask<String, Void, Boolean>() {
             protected Boolean doInBackground(String... userInfos) {
                 boolean result = RESTAPI.getInstance().makeProject(userInfos[0],
@@ -241,7 +246,8 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
             }
 
         };
-        projectTask.execute(projectName,worktype,datatype,projectSubject,wayContent,conditionContent,projectDescription,projectTotalData);
+
+            projectTask.execute(projectName, worktype, datatype, projectSubject, wayContent, conditionContent, projectDescription, projectTotalData);
     }
 
     public void upload_example_data(View view){

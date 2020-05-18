@@ -192,7 +192,7 @@ public class RESTAPI {
     //example 콘텐트에서 cost 받는거 해야됨.
 
     public Boolean pointPayment() throws Exception {
-        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/pointPayment");
+        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/point/payment");
         pointPayment.setHeader("Authorization",token);
         pointPayment.request();
         String result = null;
