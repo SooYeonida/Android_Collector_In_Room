@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +17,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.LoginActivity;
@@ -281,7 +280,8 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                                 protected Boolean doInBackground(Uri... uris) {
                                     try {
                                         InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
-                                        boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream);
+                                        String contentType = context.getContentResolver().getType(uris[0]);
+                                        boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream, contentType);
                                         return new Boolean(result);
                                     } catch (Exception e) {
                                         e.printStackTrace();

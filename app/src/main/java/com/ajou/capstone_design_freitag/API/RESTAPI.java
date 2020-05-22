@@ -7,9 +7,17 @@ import android.net.Uri;
 import com.ajou.capstone_design_freitag.ui.home.User;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -19,7 +27,7 @@ import java.util.Map;
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://10.0.2.2:8080";
+    private String baseURL = "http://wodnd999999.iptime.org:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
@@ -102,10 +110,20 @@ public class RESTAPI {
         activity.startActivity(intent);
     }
 
-    public boolean uploadExampleFile(InputStream inputStream) throws Exception {
-        APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
-        uploadFile.multipart(inputStream, "example.jpeg", "image/jpeg");
-        return true;
+    public boolean uploadExampleFile(InputStream inputStream, String contentType) throws Exception {
+        HttpClient httpClient = new DefaultHttpClient();
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.addBinaryBody("file", inputStream, ContentType.create(contentType), "test");
+        HttpPost httpPost = new HttpPost(baseURL + "/api/project/upload/example");
+        httpPost.setHeader("Authorization", token);
+        httpPost.setEntity(builder.build());
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public User mypage(String userId) throws JSONException {
