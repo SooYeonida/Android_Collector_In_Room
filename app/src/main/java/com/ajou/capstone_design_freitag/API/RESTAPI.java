@@ -215,6 +215,7 @@ public class RESTAPI {
         header = uploadFile.multipart(inputStream, fileName, fileType);
         String result;
         result = Objects.requireNonNull(header.get("example")).get(0);
+        Project.getProjectinstance().setProjectId(header.get("projectId").get(0));//아이디 받아
         Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
         if(!result.equals("success")){
             return false;
@@ -226,6 +227,7 @@ public class RESTAPI {
     public Boolean pointPayment() throws Exception {
         APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/point/payment");
         pointPayment.setHeader("Authorization",token);
+        pointPayment.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
         pointPayment.request();
         String result = null;
         result = pointPayment.getHeader().get("payment").get(0);
@@ -239,7 +241,7 @@ public class RESTAPI {
 
     public List<Project> projectList(String workType,String dataType,String subject, String difficulty) throws Exception {
      APICaller projectList = new APICaller("GET",baseURL+"/api/project/list");
-     projectList.setHeader("Authorization",token);
+     //projectList.setHeader("Authorization",token);
      projectList.setQueryParameter("workType",workType);
      projectList.setQueryParameter("dataType",dataType);
      projectList.setQueryParameter("subject",subject);
@@ -253,8 +255,8 @@ public class RESTAPI {
          Project project = new Project();
          JSONObject jsonObject;
          jsonObject = jsonArray.getJSONObject(i);
-         project.setUserId(jsonObject.getString("userId"));
-         project.setProjectName(jsonObject.getString("projectName"));
+       //  project.setUserId(jsonObject.getString("userId"));
+       //  project.setProjectName(jsonObject.getString("projectName"));
          project.setWorkType(jsonObject.getString("workType"));
          project.setDataType(jsonObject.getString("dataType"));
          project.setSubject(jsonObject.getString("subject"));
