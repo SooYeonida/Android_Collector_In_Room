@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
@@ -42,7 +43,6 @@ public class RESTAPI {
         APICaller login = new APICaller("POST", baseURL + "/api/login");
         login.setQueryParameter("userId", userID);
         login.setQueryParameter("userPassword", userPassword);
-
         Map<String, List<String>> result;
         try {
             login.request();
@@ -96,12 +96,6 @@ public class RESTAPI {
         Uri uri = Uri.parse(registerOpenBanking.getUrl());
         intent.setData(uri);
         activity.startActivity(intent);
-    }
-
-    public boolean uploadExampleFile(InputStream inputStream) throws Exception {
-        APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
-        uploadFile.multipart(inputStream, "example.jpeg", "image/jpeg");
-        return true;
     }
 
     public User mypage(String userId) throws JSONException {
@@ -161,7 +155,7 @@ public class RESTAPI {
 
     public boolean makeProject(String projectName,String workType,String dataType,String subject,String wayContent,String conditionContent,String description,String totalData)
     {
-        APICaller makeProject = new APICaller("GET",baseURL+"/api/project/create");
+        APICaller makeProject = new APICaller("POST",baseURL+"/api/project/create");
         makeProject.setQueryParameter("projectName",projectName);
         makeProject.setQueryParameter("workType",workType);
         makeProject.setQueryParameter("dataType",dataType);
@@ -171,25 +165,63 @@ public class RESTAPI {
         makeProject.setQueryParameter("description",description);
         makeProject.setQueryParameter("totalData",totalData);
         makeProject.setHeader("Authorization",token);
-        String result = null; //헤더에서 버킷네임 null이면 실패 아니면 성공
+        String result = null;
+
         Project.getProjectinstance().setProjectName(projectName);
         try {
             makeProject.request();
-            result = makeProject.getHeader().get("bucketName").get(0);
-        } catch (IOException e) {
-            e.printStackTrace();
+            result = makeProject.getHeader().get("create").get(0);
+            Project.getProjectinstance().setProjectId(makeProject.getHeader().get("projectId").get(0));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(result.getBytes().length!=0){
+        if(result.equals("success")){
             return true;
         }
         else{
             return false;
         }
     }
-    //example 콘텐트에서 cost 받는거 해야됨.
+
+    public Boolean createClass(List<String> classList) throws Exception {
+        APICaller classname = new APICaller("POST",baseURL+"/api/project/class");
+        classname.setHeader("Authorization",token);
+
+        List<String> id = new ArrayList<>();
+        id.add(Project.getProjectinstance().getProjectId());
+        classname.setQueryParameter_class("className",classList);//안들
+        classname.setQueryParameter_class("projectId",id);
+
+        classname.request_class();
+
+        String result;
+        result = classname.getHeader().get("class").get(0);
+        Project.getProjectinstance().setBucketName(classname.getHeader().get("bucketName").get(0));
+        if(result.equals("success")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean uploadExampleFile(InputStream inputStream,String fileName,String fileType) throws Exception {
+        APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
+        Map<String, List<String>> header;
+        uploadFile.setHeader("Authorization",token);
+        uploadFile.setHeader("bucketName",Project.getProjectinstance().getBucketName());
+        header = uploadFile.multipart(inputStream, fileName, fileType);
+        String result;
+        result = Objects.requireNonNull(header.get("example")).get(0);
+        Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
+        if(!result.equals("success")){
+            return false;
+        }
+        return true;
+    }
+
 
     public Boolean pointPayment() throws Exception {
         APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/point/payment");

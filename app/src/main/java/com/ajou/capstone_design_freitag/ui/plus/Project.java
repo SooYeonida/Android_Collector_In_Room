@@ -20,7 +20,7 @@ public class Project implements Parcelable {
     }
 
     protected Project(Parcel in) {
-        projectId = in.readInt();
+        projectId = in.readString();
         userId = in.readString();
         projectName = in.readString();
         bucketName = in.readString();
@@ -44,7 +44,7 @@ public class Project implements Parcelable {
     }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(projectId);
+        dest.writeString(projectId);
         dest.writeString(userId);
         dest.writeString(projectName);
         dest.writeString(bucketName);
@@ -75,7 +75,7 @@ public class Project implements Parcelable {
     };
 
     private Drawable projectIcon; //빼도됨
-    private int projectId;
+    private String projectId;
     private String userId;
     private String projectName;
     private String bucketName;
@@ -101,11 +101,11 @@ public class Project implements Parcelable {
         this.projectIcon = projectIcon;
     }
 
-    public int getProjectId() {
+    public String getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
+    public void setProjectId(String projectId) {
         this.projectId = projectId;
     }
 

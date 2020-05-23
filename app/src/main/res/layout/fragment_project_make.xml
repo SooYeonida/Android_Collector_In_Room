@@ -268,25 +268,67 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/text_upload_way"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="예시 데이 업로드 방법" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup_text_example"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/user_input_text"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="직접 입력" />
+
+                <RadioButton
+                    android:id="@+id/text_file_upload"
+                    android:layout_width="114dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="파일 업로드" />
+
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/example_content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
-                android:text="예시:" />
+                android:text="예시 데이터 입력:" />
 
             <EditText
+                android:id="@+id/examplecontent"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="example"
                 android:inputType="textMultiLine"
                 android:maxLines="10" />
+            <Button
+                android:id="@+id/text_example_data_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#8028ADFC"
+                android:text="업로드" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/example_data_upload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -302,7 +344,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#8028ADFC"
-                android:text="이미지 선택" />
+                android:text="파일 업로드" />
         </LinearLayout>
 
         <TextView

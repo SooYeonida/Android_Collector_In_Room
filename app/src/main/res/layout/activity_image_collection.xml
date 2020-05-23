@@ -17,6 +17,7 @@ tools:context=".ImageCollectionActivity">
         android:src="@drawable/home_logo" />
 
         <TextView
+            android:id="@+id/image_collection_project_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -34,6 +35,7 @@ tools:context=".ImageCollectionActivity">
         android:textSize="20sp"
         android:textStyle="bold" />
     <TextView
+        android:id="@+id/image_collection_way_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -51,6 +53,7 @@ tools:context=".ImageCollectionActivity">
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/image_collection_condition_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
