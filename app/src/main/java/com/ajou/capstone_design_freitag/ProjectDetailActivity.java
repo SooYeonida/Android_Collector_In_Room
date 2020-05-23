@@ -32,6 +32,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
     TextView wayContent;
     TextView conditionContent;
     TextView exampleContent;
+    TextView classlist;
     CheckBox agree_check;
     TextView date;
     Button start;
@@ -53,6 +54,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
         wayContent = (TextView)findViewById(R.id.work_waycontent);
         conditionContent = (TextView)findViewById(R.id.work_conditioncontent);
         exampleContent = (TextView)findViewById(R.id.work_examplecontent);
+        classlist = (TextView)findViewById(R.id.classlist_project_detail);
         agree_check = findViewById(R.id.work_agree_check); //동의 안하면 작업 안넘어가게
         start = findViewById(R.id.work_start);
 
@@ -64,7 +66,6 @@ public class ProjectDetailActivity extends AppCompatActivity {
         dataType.setText(project.getDataType());
         subject.setText(project.getSubject());
         requester.setText(project.getUserId());
-        //클래스네임 저장하는 부분 아직 없윰
         wayContent.setText(project.getWayContent());
         conditionContent.setText(project.getConditionContent());
         exampleContent.setText(project.getExampleContent());

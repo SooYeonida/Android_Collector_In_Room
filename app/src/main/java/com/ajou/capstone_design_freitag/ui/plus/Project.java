@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 
 public class Project implements Parcelable {
     private static Project projectinstance = null;

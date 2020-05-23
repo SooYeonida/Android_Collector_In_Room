@@ -71,12 +71,6 @@ public class ProjectListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    //    RESTAPI instance = RESTAPI.getInstance();
-        //토큰 받아오는데 null이면 로그인
-//        if(instance.getToken()==null){
-//            Intent intent = new Intent(getActivity(), LoginActivity.class);
-//            startActivityForResult(intent, LOGIN_REQUEST_CODE);
-//        }
         if (getArguments() != null) {
             button_result = getArguments().getString("worktype");
         }
@@ -192,6 +186,7 @@ public class ProjectListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Project project = (Project)projectAdapter.getItem(position);
+
                 Intent intent = new Intent(getActivity(), ProjectDetailActivity.class);
                 intent.putExtra("project", project);
                 startActivity(intent);

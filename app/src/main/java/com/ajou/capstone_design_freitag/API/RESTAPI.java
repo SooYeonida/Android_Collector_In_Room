@@ -248,23 +248,43 @@ public class RESTAPI {
      projectList.setQueryParameter("difficulty",difficulty);
      projectList.request();
      String result;
-     List<Project> project_list = new ArrayList<Project>();
+     List<Project> project_list = new ArrayList<>();
+     List<Class> classlist = new ArrayList<>();
      result = projectList.getBody();
+     //jsonarray-안에 object / object안에 projectdt 오브젝트랑 class array안에 오브젝
      JSONArray jsonArray = new JSONArray(result);
      for(int i=0;i<jsonArray.length();i++){
+
          Project project = new Project();
          JSONObject jsonObject;
-         jsonObject = jsonArray.getJSONObject(i);
-       //  project.setUserId(jsonObject.getString("userId"));
-       //  project.setProjectName(jsonObject.getString("projectName"));
-         project.setWorkType(jsonObject.getString("workType"));
-         project.setDataType(jsonObject.getString("dataType"));
-         project.setSubject(jsonObject.getString("subject"));
-         project.setDifficulty(jsonObject.getInt("difficulty"));
-         project.setWayContent(jsonObject.getString("wayContent"));
-         project.setConditionContent(jsonObject.getString("conditionContent"));
-         project.setExampleContent(jsonObject.getString("description"));
+         JSONObject project_object;
+         JSONArray class_array;
+
+         jsonObject = jsonArray.getJSONObject(i);//dto랑 classlist담고 있는 object
+         project_object = jsonObject.getJSONObject("projectDto");
+
+         project.setProjectId(project_object.getString("projectId"));
+         project.setUserId(project_object.getString("userId"));
+         project.setProjectName(project_object.getString("projectName"));
+         project.setWorkType(project_object.getString("workType"));
+         project.setDataType(project_object.getString("dataType"));
+         project.setSubject(project_object.getString("subject"));
+         project.setDifficulty(project_object.getInt("difficulty"));
+         project.setWayContent(project_object.getString("wayContent"));
+         project.setConditionContent(project_object.getString("conditionContent"));
+         project.setExampleContent(project_object.getString("exampleContent"));
+         project.setDescription(project_object.getString("description"));
          project_list.add(project);
+
+         class_array = jsonObject.getJSONArray("classNameList");
+         for(int j=0;j<class_array.length();j++){
+//             Project project_class = new Class();
+//             JSONObject classobject = new JSONObject();
+//             classobject = class_array.getJSONObject(j);
+//             project_class.setProjectId(classobject.getString("projectId"));
+//             project_class.setClassName(classobject.getString("className"));
+//             classlist.add(project_class);
+         }
      }
      return project_list;
     }

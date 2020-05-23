@@ -112,13 +112,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="&lt;프로젝트 수집 데이터 목록&lt;"
+            android:text="&lt;프로젝트 수집 데이터 목록&gt;"
             android:textSize="15sp"
             android:textStyle="bold"/>
         <TextView
+            android:id="@+id/classlist_project_detail"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="1.귀야운 푸리"
+            android:text="클래스"
             android:textSize="15sp" />
     </LinearLayout>
     <TextView
