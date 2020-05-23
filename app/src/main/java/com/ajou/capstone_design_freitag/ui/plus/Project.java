@@ -14,13 +14,6 @@ public class Project implements Parcelable {
 
     }
 
-    public static Project getProjectinstance(){
-        if(projectinstance == null){
-            projectinstance = new Project();
-        }
-        return projectinstance;
-    }
-
     protected Project(Parcel in) {
         projectId = in.readString();
         userId = in.readString();
@@ -38,30 +31,7 @@ public class Project implements Parcelable {
         totalData = in.readInt();
         progressData = in.readInt();
         cost = in.readInt();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(projectId);
-        dest.writeString(userId);
-        dest.writeString(projectName);
-        dest.writeString(bucketName);
-        dest.writeString(status);
-        dest.writeString(workType);
-        dest.writeString(dataType);
-        dest.writeString(subject);
-        dest.writeInt(difficulty);
-        dest.writeString(wayContent);
-        dest.writeString(conditionContent);
-        dest.writeString(exampleContent);
-        dest.writeString(description);
-        dest.writeInt(totalData);
-        dest.writeInt(progressData);
-        dest.writeInt(cost);
+        class_list = in.createStringArrayList();
     }
 
     public static final Creator<Project> CREATOR = new Creator<Project>() {
@@ -75,6 +45,13 @@ public class Project implements Parcelable {
             return new Project[size];
         }
     };
+
+    public static Project getProjectinstance(){
+        if(projectinstance == null){
+            projectinstance = new Project();
+        }
+        return projectinstance;
+    }
 
     private Drawable projectIcon; //빼도됨
     private String projectId;
@@ -93,6 +70,16 @@ public class Project implements Parcelable {
     private int totalData;
     private int progressData;
     private int cost;
+    private List<String> class_list;
+
+    public List<String> getClass_list() {
+        return class_list;
+    }
+
+    public void setClass_list(List<String> class_list) {
+        this.class_list = class_list;
+    }
+
 
 
     public Drawable getProjectIcon() {
@@ -231,4 +218,30 @@ public class Project implements Parcelable {
         this.cost = cost;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(projectId);
+        dest.writeString(userId);
+        dest.writeString(projectName);
+        dest.writeString(bucketName);
+        dest.writeString(status);
+        dest.writeString(workType);
+        dest.writeString(dataType);
+        dest.writeString(subject);
+        dest.writeInt(difficulty);
+        dest.writeString(wayContent);
+        dest.writeString(conditionContent);
+        dest.writeString(exampleContent);
+        dest.writeString(description);
+        dest.writeInt(totalData);
+        dest.writeInt(progressData);
+        dest.writeInt(cost);
+        dest.writeStringList(class_list);
+    }
 }

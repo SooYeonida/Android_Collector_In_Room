@@ -214,7 +214,7 @@ public class RESTAPI {
         uploadFile.setHeader("bucketName",Project.getProjectinstance().getBucketName());
         header = uploadFile.multipart(inputStream, fileName, fileType);
         String result;
-        result = Objects.requireNonNull(header.get("example")).get(0);
+        result = header.get("example").get(0);
         Project.getProjectinstance().setProjectId(header.get("projectId").get(0));//아이디 받아
         Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
         if(!result.equals("success")){
@@ -249,9 +249,7 @@ public class RESTAPI {
      projectList.request();
      String result;
      List<Project> project_list = new ArrayList<>();
-     List<Class> classlist = new ArrayList<>();
      result = projectList.getBody();
-     //jsonarray-안에 object / object안에 projectdt 오브젝트랑 class array안에 오브젝
      JSONArray jsonArray = new JSONArray(result);
      for(int i=0;i<jsonArray.length();i++){
 
@@ -277,14 +275,12 @@ public class RESTAPI {
          project_list.add(project);
 
          class_array = jsonObject.getJSONArray("classNameList");
+         List<String> class_list = new ArrayList<>();
          for(int j=0;j<class_array.length();j++){
-//             Project project_class = new Class();
-//             JSONObject classobject = new JSONObject();
-//             classobject = class_array.getJSONObject(j);
-//             project_class.setProjectId(classobject.getString("projectId"));
-//             project_class.setClassName(classobject.getString("className"));
-//             classlist.add(project_class);
+             JSONObject classobject = class_array.getJSONObject(j);
+             class_list.add(classobject.getString("className"));
          }
+         project.setClass_list(class_list);
      }
      return project_list;
     }

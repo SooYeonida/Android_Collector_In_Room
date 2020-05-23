@@ -69,6 +69,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
         wayContent.setText(project.getWayContent());
         conditionContent.setText(project.getConditionContent());
         exampleContent.setText(project.getExampleContent());
+        classlist.setText(project.getClass_list().toString());
 
         date = (TextView)findViewById(R.id.current_date);
         Date currenTime = Calendar.getInstance().getTime();
