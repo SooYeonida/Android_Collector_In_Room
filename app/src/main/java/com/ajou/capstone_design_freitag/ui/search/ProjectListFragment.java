@@ -1,5 +1,6 @@
 package com.ajou.capstone_design_freitag.ui.search;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.LoginActivity;
+import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.ProjectDetailActivity;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
@@ -27,8 +30,11 @@ import com.ajou.capstone_design_freitag.ui.plus.Project;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ProjectListFragment extends Fragment {
-    private static final int LOGIN_REQUEST_CODE = 102;
+   // private static final int LOGIN_REQUEST_CODE = 102;
+  // private Context context;
     ArrayList<Project> projectArrayList = new ArrayList<Project>();
     ProjectAdapter projectAdapter;
     ListView listView;
@@ -38,7 +44,6 @@ public class ProjectListFragment extends Fragment {
     String dataType = "";
     String subject = "";
     String difficulty = "-1";
-    //일케해야 서버에서 먹음
 
     LinearLayout datatype;
     LinearLayout worktype;
@@ -103,6 +108,8 @@ public class ProjectListFragment extends Fragment {
         difficulty_3 = view.findViewById(R.id.difficulty_3);
         difficulty_4 = view.findViewById(R.id.difficulty_4);
         difficulty_5 = view.findViewById(R.id.difficulty_5);
+
+       // context = container.getContext();
 
         if(button_result.equals("수집")){//수집 버튼 누르면
             worktype.setVisibility(View.GONE);
@@ -185,6 +192,7 @@ public class ProjectListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RESTAPI instance = RESTAPI.getInstance();
                 Project project = (Project)projectAdapter.getItem(position);
 
                 Intent intent = new Intent(getActivity(), ProjectDetailActivity.class);
@@ -255,5 +263,15 @@ public class ProjectListFragment extends Fragment {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if(requestCode == LOGIN_REQUEST_CODE) {
+//            if (resultCode != RESULT_OK) {
+//                Toast.makeText(context, "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
+//                ((MainActivity)getActivity()).goToHome();
+//            }
+//        }
+//    }
 
 }

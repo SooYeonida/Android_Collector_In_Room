@@ -31,7 +31,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
     LinearLayout className; //텍스트뷰 추가할 레이아웃
     TextView wayContent;
     TextView conditionContent;
-    TextView exampleContent;
+    TextView exampleContent; //데이터 종류에 따라 바꿔야함
     TextView classlist;
     CheckBox agree_check;
     TextView date;
@@ -99,17 +99,23 @@ public class ProjectDetailActivity extends AppCompatActivity {
         });
     }
 
+    //이미지, 음성, 텍스트 , 바운딩박스, 분류냐에 따라 작업 화면 다름
+
         private void goToImageCollectionWork(View v) {
-        //이미지, 음성, 텍스트 , 바운딩박스, 분류냐에 따라 작업 화면 다름
         Intent intent = new Intent(getApplicationContext(),ImageCollectionActivity.class);
         intent.putExtra("project",project);
         startActivity(intent);
     }
 
     private void goToTextCollectionWork(View v) {
-
+        Intent intent = new Intent(getApplicationContext(), TextCollectionActivity.class);
+        intent.putExtra("project", project);
+        startActivity(intent);
     }
     private void goToAudioCollectionWork(View v) {
+        Intent intent = new Intent(getApplicationContext(), AudioCollectionActivity.class);
+        intent.putExtra("project", project);
+        startActivity(intent);
 
     }
 

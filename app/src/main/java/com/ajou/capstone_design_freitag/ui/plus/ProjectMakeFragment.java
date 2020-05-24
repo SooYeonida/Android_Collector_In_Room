@@ -356,7 +356,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         fileOutputStream.close();
         File file = new File("/data/data/com.ajou.capstone_design_freitag/files/example.txt");
 
-        AsyncTask<File, Void, Boolean> loginTask = new AsyncTask<File, Void, Boolean>() {
+        AsyncTask<File, Void, Boolean> uploadUserTextTask = new AsyncTask<File, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(File... files) {
                 try {
@@ -376,7 +376,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                 }
             }
         };
-        loginTask.execute(file);
+        uploadUserTextTask.execute(file);
     }
 
     public void upload_image_example_data(View view){
@@ -429,7 +429,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
             Uri uri = data.getData();
             final String fileName = getFileNameToUri(data.getData());//이름
             exampleURI.setText(exampleURI.getText() + "\n" + uri);
-            AsyncTask<Uri, Void, Boolean> loginTask = new AsyncTask<Uri, Void, Boolean>() {
+            AsyncTask<Uri, Void, Boolean> uploadAudioTask = new AsyncTask<Uri, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Uri... uris) {
                     try {
@@ -442,13 +442,13 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                     }
                 }
             };
-            loginTask.execute(uri);
+            uploadAudioTask.execute(uri);
         }
         else if(requestCode == EXAMPLE_TEXT_REQUEST_CODE){
             Uri uri = data.getData();
             final String fileName = getFileNameToUri(data.getData());//이름
             exampleURI.setText(exampleURI.getText() + "\n" + uri);
-            AsyncTask<Uri, Void, Boolean> loginTask = new AsyncTask<Uri, Void, Boolean>() {
+            AsyncTask<Uri, Void, Boolean> uploadTextTask = new AsyncTask<Uri, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Uri... uris) {
                     try {
@@ -461,7 +461,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                     }
                 }
             };
-            loginTask.execute(uri);
+            uploadTextTask.execute(uri);
 
         }
         else if(requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE || requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
@@ -471,9 +471,10 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                     if (requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE) {
                         examplePictures.add(clipData.getItemAt(i).getUri());
                         final String fileName = getFileNameToUri(data.getData());//이름
-                        exampleURI.setText(exampleURI.getText() + "\n" + clipData.getItemAt(i).getUri());
+                        exampleURI.setText(exampleURI.getText() + "\n" + fileName);
+                        //clipData.getItemAt(i).getUri()
                         try {
-                            AsyncTask<Uri, Void, Boolean> loginTask = new AsyncTask<Uri, Void, Boolean>() {
+                            AsyncTask<Uri, Void, Boolean> uploadImageTask = new AsyncTask<Uri, Void, Boolean>() {
                                 @Override
                                 protected Boolean doInBackground(Uri... uris) {
                                     try {
@@ -486,7 +487,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                                     }
                                 }
                             };
-                            loginTask.execute(clipData.getItemAt(i).getUri());
+                            uploadImageTask.execute(clipData.getItemAt(i).getUri());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

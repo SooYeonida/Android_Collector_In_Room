@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".ImageCollectionActivity">
+    <ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AudioCollectionActivity">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,15 +16,15 @@ tools:context=".ImageCollectionActivity">
         android:scaleType="fitStart"
         android:src="@drawable/home_logo" />
 
-        <TextView
-            android:id="@+id/image_collection_project_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="프로젝트 이름"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/audio_collection_project_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="프로젝트 이름"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@ tools:context=".ImageCollectionActivity">
         android:textSize="20sp"
         android:textStyle="bold" />
     <TextView
-        android:id="@+id/image_collection_way_content"
+        android:id="@+id/audio_collection_way_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -53,7 +53,7 @@ tools:context=".ImageCollectionActivity">
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/image_collection_condition_content"
+        android:id="@+id/audio_collection_condition_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -85,38 +85,62 @@ tools:context=".ImageCollectionActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_attach_file_black_24dp"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="음성 파일 업로드"
+            android:gravity="center"/>
+        <Button
+            android:id="@+id/collection_audio_upload"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/ic_add_box_black_24dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_image_black_24dp" />
+            android:src="@drawable/ic_voice_black_24dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:text="음성 녹음"
             android:gravity="center"
-            android:text="이미지 데이터 추가" />
-
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
         <Button
-            android:id="@+id/collection_image_upload"
+            android:id="@+id/collection_audio_record"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/ic_add_box_black_24dp" />
+            android:background="@drawable/ic_add_box_black_24dp"/>
     </LinearLayout>
+
     <TextView
-        android:id="@+id/collection_image_uri"
+        android:id="@+id/collection_audio_uri"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text=""
         android:layout_gravity="center"/>
 
     <Button
-        android:id="@+id/work_done_image"
+        android:id="@+id/work_done_audio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
