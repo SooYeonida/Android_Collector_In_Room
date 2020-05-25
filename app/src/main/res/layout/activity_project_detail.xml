@@ -48,13 +48,12 @@
         android:textSize="15sp"
         android:textStyle="bold"/>
         <ImageView
-            android:id="@+id/project_icon"
+            android:id="@+id/project_icon_detail"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:adjustViewBounds="true"
             android:maxWidth="50dp"
-            android:maxHeight="50dp"
-            android:src="@drawable/ic_image_black_24dp"/>
+            android:maxHeight="50dp" />
         <TextView
             android:id="@+id/work_data_type"
             android:layout_width="wrap_content"

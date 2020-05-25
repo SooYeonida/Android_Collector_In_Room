@@ -113,7 +113,13 @@ public class AudioCollectionActivity extends AppCompatActivity {
     }
 
     public void upload_user_record_audio_data(String path){
-        File file = new File(path); //이게 permission denied
+        if (checkStoragePermission()) {
+            startActivityForResult(new Intent(AudioCollectionActivity.this, AudioTrimmerActivity.class), ADD_AUDIO);
+            overridePendingTransition(0, 0);
+        } else {
+            requestStoragePermission();
+        }
+        File file = new File(path);
         final String fileName = file.getName();
         dataURI.setText(dataURI.getText() + "\n" + fileName);
         AsyncTask<File, Void, Boolean> uploadUserAudioTask = new AsyncTask<File, Void, Boolean>() {
@@ -141,7 +147,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void upload_audio_collection_data(View view){
+    public void upload_audio_collection_data(View view){ //파일 선택하면 바로 올라가는게 아니라 편집 화면 뜨게해야함
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("file/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -170,6 +176,13 @@ public class AudioCollectionActivity extends AppCompatActivity {
                 @Override
                 protected Boolean doInBackground(Uri... uris) {
                     try {
+                        //여기서 파일을 트리머 액티비티로 보내야함.
+                        if (checkStoragePermission()) {
+                            startActivityForResult(new Intent(AudioCollectionActivity.this, AudioTrimmerActivity.class), ADD_AUDIO);
+                            overridePendingTransition(0, 0);
+                        } else {
+                            requestStoragePermission();
+                        }
                         InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
                        // boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream, fileName, "audio/mp3");
                         boolean result = true;
@@ -188,7 +201,6 @@ public class AudioCollectionActivity extends AppCompatActivity {
                     String path = data.getExtras().getString("INTENT_AUDIO_FILE");
                     upload_user_record_audio_data(path);
                     Toast.makeText(AudioCollectionActivity.this, "Audio stored at " + path, Toast.LENGTH_LONG).show();
-                    System.out.println("path:"+path);
                 }
             }
         }

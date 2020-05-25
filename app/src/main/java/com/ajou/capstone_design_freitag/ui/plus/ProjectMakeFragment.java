@@ -246,6 +246,10 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
     public void onClick(View view){
         switch (view.getId()){
             case R.id.make_button:
+                if(project_name.getText().toString().equals("") || project_subject.getText().toString().equals("")|| way_content.getText().toString().equals("")||condition_content.getText().toString().equals("")||description.getText().toString().equals("") ||total_data.getText().toString().equals("")){
+                    Toast.makeText(context, "빈칸없이 입력하세요.",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 plusFragment = (PlusFragment)getParentFragment();
                 plusFragment.replaceFragment(1);
                 break;
@@ -287,11 +291,6 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         final String conditionContent = condition_content.getText().toString();
         final String projectDescription = description.getText().toString();
         final String projectTotalData = total_data.getText().toString();
-
-        if(projectName.equals("") || projectSubject.equals("")|| wayContent.equals("")||conditionContent.equals("")||projectDescription.equals("") ||projectTotalData.equals("")){
-            Toast.makeText(context, "빈칸없이 입력하세요.",Toast.LENGTH_LONG).show();
-            return;
-        }
 
         AsyncTask<String, Void,Boolean> projectTask = new AsyncTask<String, Void, Boolean>() {
             protected Boolean doInBackground(String... userInfos) {

@@ -192,9 +192,7 @@ public class ProjectListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                RESTAPI instance = RESTAPI.getInstance();
                 Project project = (Project)projectAdapter.getItem(position);
-
                 Intent intent = new Intent(getActivity(), ProjectDetailActivity.class);
                 intent.putExtra("project", project);
                 startActivity(intent);

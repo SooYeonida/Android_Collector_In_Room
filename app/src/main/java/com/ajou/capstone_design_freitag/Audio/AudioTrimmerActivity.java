@@ -36,7 +36,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.ajou.capstone_design_freitag.Audio.customAudioViews.MarkerView;
 import com.ajou.capstone_design_freitag.Audio.customAudioViews.SamplePlayer;
 import com.ajou.capstone_design_freitag.Audio.customAudioViews.SoundFile;
@@ -118,7 +117,6 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
     private boolean mLoadingKeepGoing;
     private File mFile;
 
-
     public AudioTrimmerActivity() {
     }
 
@@ -129,23 +127,23 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
 
         mHandler = new Handler();
 
-        txtAudioCancel = (TextView) findViewById(R.id.txtAudioCancel);
-        txtAudioUpload = (TextView) findViewById(R.id.txtAudioUpload);
-        txtStartPosition = (TextView) findViewById(R.id.txtStartPosition);
-        txtEndPosition = (TextView) findViewById(R.id.txtEndPosition);
+        txtAudioCancel = (TextView) findViewById(R.id.txtAudioCancel_u);
+        txtAudioUpload = (TextView) findViewById(R.id.txtAudioUpload_u);
+        txtStartPosition = (TextView) findViewById(R.id.txtStartPosition_u);
+        txtEndPosition = (TextView) findViewById(R.id.txtEndPosition_u);
         llAudioCapture = (LinearLayout) findViewById(R.id.llAudioCapture);
         txtAudioRecord = (TextView) findViewById(R.id.txtAudioRecord);
         txtAudioRecordTime = (TextView) findViewById(R.id.txtAudioRecordTime);
-        rlAudioEdit = (RelativeLayout) findViewById(R.id.rlAudioEdit);
-        markerStart = (MarkerView) findViewById(R.id.markerStart);
-        markerEnd = (MarkerView) findViewById(R.id.markerEnd);
-        audioWaveform = (WaveformView) findViewById(R.id.audioWaveform);
-        txtAudioRecordTimeUpdate = (TextView) findViewById(R.id.txtAudioRecordTimeUpdate);
-        txtAudioReset = (TextView) findViewById(R.id.txtAudioReset);
-        txtAudioDone = (TextView) findViewById(R.id.txtAudioDone);
-        txtAudioPlay = (TextView) findViewById(R.id.txtAudioPlay);
-        txtAudioRecordUpdate = (TextView) findViewById(R.id.txtAudioRecordUpdate);
-        txtAudioCrop = (TextView) findViewById(R.id.txtAudioCrop);
+        rlAudioEdit = (RelativeLayout) findViewById(R.id.rlAudioEdit_u);
+        markerStart = (MarkerView) findViewById(R.id.markerStart_u);
+        markerEnd = (MarkerView) findViewById(R.id.markerEnd_u);
+        audioWaveform = (WaveformView) findViewById(R.id.audioWaveform_u);
+        txtAudioRecordTimeUpdate = (TextView) findViewById(R.id.txtAudioRecordTimeUpdate_u);
+        txtAudioReset = (TextView) findViewById(R.id.txtAudioReset_u);
+        txtAudioDone = (TextView) findViewById(R.id.txtAudioDone_u);
+        txtAudioPlay = (TextView) findViewById(R.id.txtAudioPlay_u);
+        txtAudioRecordUpdate = (TextView) findViewById(R.id.txtAudioRecordUpdate_u);
+        txtAudioCrop = (TextView) findViewById(R.id.txtAudioCrop_u);
 
         mRecordedSoundFile = null;
         mKeyDown = false;
@@ -258,7 +256,7 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
                 txtAudioPlay.setBackgroundResource(R.drawable.ic_play_btn);
             }
             onPlay(mStartPos);
-        } else if (view == txtAudioDone) {
+        } else if (view == txtAudioDone) { //가위모양
 
             double startTime = audioWaveform.pixelsToSeconds(mStartPos);
             double endTime = audioWaveform.pixelsToSeconds(mEndPos);
@@ -285,11 +283,11 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
                 txtEndPosition.setVisibility(View.INVISIBLE);
             }
 
-        } else if (view == txtAudioReset) {
+        } else if (view == txtAudioReset) { //재녹음
             audioWaveform.setIsDrawBorder(true);
             mPlayer = new SamplePlayer(mRecordedSoundFile);
             finishOpeningSoundFile(mRecordedSoundFile, 1);
-        } else if (view == txtAudioCrop) {
+        } else if (view == txtAudioCrop) { //연필모
 
 //            txtAudioCrop.setBackgroundResource(R.drawable.ic_crop_btn);
             txtAudioCrop.setVisibility(View.GONE);
@@ -303,7 +301,7 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
             txtStartPosition.setVisibility(View.VISIBLE);
             txtEndPosition.setVisibility(View.VISIBLE);
 
-        } else if (view == txtAudioUpload) {
+        } else if (view == txtAudioUpload) { //업로드
 
             if (txtAudioDone.getVisibility() == View.VISIBLE) {
                 if (mIsPlaying) {
@@ -326,6 +324,7 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
     /**
      * Start recording
      */
+    //음파 보이는 곳이 여기
     private void startRecording() {
         final SoundFile.ProgressListener listener =
                 new SoundFile.ProgressListener() {
@@ -351,6 +350,7 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
         Thread mRecordAudioThread = new Thread() {
             public void run() {
                 try {
+                    //사용자가 녹음한 파일을 저 형식으로 엶.
                     mRecordedSoundFile = SoundFile.record(listener);
                     if (mRecordedSoundFile == null) {
                         finish();
@@ -362,6 +362,77 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
                         mHandler.post(runnable);
                         return;
                     }
+
+                    mPlayer = new SamplePlayer(mRecordedSoundFile);
+                } catch (final Exception e) {
+                    finish();
+                    e.printStackTrace();
+                    return;
+                }
+
+                Runnable runnable = new Runnable() {
+                    public void run() {
+
+                        audioWaveform.setIsDrawBorder(true);
+                        finishOpeningSoundFile(mRecordedSoundFile, 0);
+                        txtAudioRecord.setBackgroundResource(R.drawable.ic_stop_btn1);
+                        txtAudioRecordTime.setVisibility(View.INVISIBLE);
+                        txtStartPosition.setVisibility(View.VISIBLE);
+                        txtEndPosition.setVisibility(View.VISIBLE);
+                        markerEnd.setVisibility(View.VISIBLE);
+                        markerStart.setVisibility(View.VISIBLE);
+                        llAudioCapture.setVisibility(View.GONE);
+                        rlAudioEdit.setVisibility(View.VISIBLE);
+                        txtAudioUpload.setVisibility(View.VISIBLE);
+
+                        txtAudioReset.setVisibility(View.VISIBLE);
+                        txtAudioCrop.setVisibility(View.GONE);
+                        txtAudioDone.setVisibility(View.VISIBLE);
+
+                    }
+                };
+                mHandler.post(runnable);
+            }
+        };
+        mRecordAudioThread.start();
+    }
+
+    private void startUserRecording() {
+        final SoundFile.ProgressListener listener =
+                new SoundFile.ProgressListener() {
+                    public boolean reportProgress(double elapsedTime) {
+                        long now = Utility.getCurrentTime();
+                        if (now - mRecordingLastUpdateTime > 5) {
+                            mRecordingTime = elapsedTime;
+                            // Only UI thread can update Views such as TextViews.
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    int min = (int) (mRecordingTime / 60);
+                                    float sec = (float) (mRecordingTime - 60 * min);
+                                    txtAudioRecordTime.setText(String.format(Locale.US, "%02d:%05.2f", min, sec));
+                                }
+                            });
+                            mRecordingLastUpdateTime = now;
+                        }
+                        return mRecordingKeepGoing;
+                    }
+                };
+
+        Thread mRecordAudioThread = new Thread() {
+            public void run() {
+                try {
+                    mRecordedSoundFile = SoundFile.record(listener);
+                    if (mRecordedSoundFile == null) {
+                        finish();
+                        Runnable runnable = new Runnable() {
+                            public void run() {
+                                Log.e("error >> ", "sound file null");
+                            }
+                        };
+                        mHandler.post(runnable);
+                        return;
+                    }
+
                     mPlayer = new SamplePlayer(mRecordedSoundFile);
                 } catch (final Exception e) {
                     finish();

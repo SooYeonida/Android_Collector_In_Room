@@ -1,12 +1,14 @@
 package com.ajou.capstone_design_freitag;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
     private static final int LOGIN_REQUEST_CODE = 102;
     Project project;
 
+    ImageView projectIcon;
     TextView projectName;
     TextView dataType;
     TextView subject;
@@ -46,6 +49,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
 
+        projectIcon = (ImageView)findViewById(R.id.project_icon_detail);
         projectName = (TextView)findViewById(R.id.work_name);
         dataType = (TextView)findViewById(R.id.work_data_type);
         subject = (TextView)findViewById(R.id.work_subject);
@@ -62,6 +66,22 @@ public class ProjectDetailActivity extends AppCompatActivity {
             className.setVisibility(View.GONE);
         }
 
+        if(project.getWorkType().equals("collection")) {
+            switch (project.getDataType()) {
+                case ("이미지"):
+                    projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_image_black_24dp));
+                    break;
+                case ("텍스트"):
+                    projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_text_black_24dp));
+                    break;
+                case ("음성"):
+                    projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_voice_black_24dp));
+                    break;
+            }
+        }
+        else{
+            projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_label_black_24dp));
+        }
         projectName.setText(project.getProjectName());
         dataType.setText(project.getDataType());
         subject.setText(project.getSubject());
