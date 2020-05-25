@@ -54,4 +54,5 @@ dependencies {
     implementation files('libs/httpmime-4.5.12.jar')
     implementation files('libs/jna-4.5.2.jar')
     implementation files('libs/jna-platform-4.5.2.jar')
+    implementation files('libs/HttpLibrary-1.0-20190628.011600-1.jar')
 }
