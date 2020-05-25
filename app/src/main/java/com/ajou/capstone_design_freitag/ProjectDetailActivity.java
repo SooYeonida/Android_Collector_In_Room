@@ -22,6 +22,7 @@ import java.util.Locale;
 public class ProjectDetailActivity extends AppCompatActivity {
 
     private static final int LOGIN_REQUEST_CODE = 102;
+    Project project;
 
     TextView projectName;
     TextView dataType;
@@ -31,8 +32,8 @@ public class ProjectDetailActivity extends AppCompatActivity {
     TextView wayContent;
     TextView conditionContent;
     TextView exampleContent;
+    TextView classlist;
     CheckBox agree_check;
-   // TextView agree;
     TextView date;
     Button start;
 
@@ -43,7 +44,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_project_detail);
 
         Intent intent = getIntent();
-        final Project project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
+        project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
 
         projectName = (TextView)findViewById(R.id.work_name);
         dataType = (TextView)findViewById(R.id.work_data_type);
@@ -53,6 +54,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
         wayContent = (TextView)findViewById(R.id.work_waycontent);
         conditionContent = (TextView)findViewById(R.id.work_conditioncontent);
         exampleContent = (TextView)findViewById(R.id.work_examplecontent);
+        classlist = (TextView)findViewById(R.id.classlist_project_detail);
         agree_check = findViewById(R.id.work_agree_check); //동의 안하면 작업 안넘어가게
         start = findViewById(R.id.work_start);
 
@@ -64,10 +66,10 @@ public class ProjectDetailActivity extends AppCompatActivity {
         dataType.setText(project.getDataType());
         subject.setText(project.getSubject());
         requester.setText(project.getUserId());
-        //클래스네임 저장하는 부분 아직 없윰
         wayContent.setText(project.getWayContent());
         conditionContent.setText(project.getConditionContent());
         exampleContent.setText(project.getExampleContent());
+        classlist.setText(project.getClass_list().toString());
 
         date = (TextView)findViewById(R.id.current_date);
         Date currenTime = Calendar.getInstance().getTime();
@@ -100,6 +102,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
         private void goToImageCollectionWork(View v) {
         //이미지, 음성, 텍스트 , 바운딩박스, 분류냐에 따라 작업 화면 다름
         Intent intent = new Intent(getApplicationContext(),ImageCollectionActivity.class);
+        intent.putExtra("project",project);
         startActivity(intent);
     }
 

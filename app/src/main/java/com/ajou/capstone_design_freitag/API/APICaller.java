@@ -1,22 +1,17 @@
 package com.ajou.capstone_design_freitag.API;
 
-import android.content.ContentResolver;
-import android.net.Uri;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,12 +21,14 @@ public class APICaller {
     private String method;
     private String url;
     private Map<String, String> queryParameters = new HashMap<>();
+    private String params;
     private Map<String, String> headers = new HashMap<>();
     private Map<String, String> jsonBody = new HashMap<>();
     private HttpURLConnection con = null;
 
     public APICaller(String method, String baseURL) {
         url = baseURL;
+        params = baseURL+'?';
         this.method = method;
     }
 
@@ -39,6 +36,14 @@ public class APICaller {
         queryParameters.put(key, value);
     }
 
+    public void setQueryParameter_class(String key,List<String> list){
+        StringBuffer parameters = new StringBuffer();
+        for(int i=0;i<list.size();i++){
+            parameters.append(String.format("%s=%s",key,list.get(i)));
+            parameters.append("&");
+        }
+        params += parameters.toString();
+    }
     public void setHeader(String key, String value) {
         headers.put(key, value);
     }
@@ -109,6 +114,24 @@ public class APICaller {
         con.getResponseCode();
     }
 
+    public void request_class() throws IOException {
+        con = (HttpURLConnection) new URL(params).openConnection();
+        con.setRequestMethod(method);
+
+        if(!headers.isEmpty()) {
+            for(String key : headers.keySet()) {
+                con.setRequestProperty(key, headers.get(key));
+            }
+        }
+
+        if(!jsonBody.isEmpty()) {
+            con.setDoOutput(true);
+            con.getOutputStream().write(new JSONObject(jsonBody).toString().getBytes());
+        }
+
+        con.getResponseCode();
+    }
+
     public String getUrl() {
         try {
             makeURL();
@@ -132,7 +155,7 @@ public class APICaller {
         }
     }
 
-    public boolean multipart(InputStream inputStream, String fileName, String type) throws Exception {
+    public Map<String, List<String>> multipart(InputStream inputStream, String fileName, String type) throws Exception {
         String CRLF = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****b*o*u*n*d*a*r*y*****";
@@ -140,6 +163,13 @@ public class APICaller {
         con = (HttpURLConnection) new URL(url).openConnection();
         con.setDoOutput(true);
         con.setRequestMethod(method);
+
+        if(!headers.isEmpty()) {
+            for(String key : headers.keySet()) {
+                con.setRequestProperty(key, headers.get(key));
+            }
+        }
+
         con.setRequestProperty("Content-Type","multipart/form-data;boundary=" + boundary);
 
         DataOutputStream dataStream = new DataOutputStream(con.getOutputStream());
@@ -165,9 +195,11 @@ public class APICaller {
         dataStream.flush();
         dataStream.close();
         if(con.getResponseCode() == 200) {
-            return true;
+            con.disconnect();
+            return con.getHeaderFields();
         } else {
-            return false;
+            con.disconnect();
+            throw new Exception(con.getResponseCode() + " Error");
         }
     }
 }

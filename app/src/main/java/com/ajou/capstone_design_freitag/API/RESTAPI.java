@@ -7,27 +7,20 @@ import android.net.Uri;
 import com.ajou.capstone_design_freitag.ui.home.User;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://wodnd999999.iptime.org:8080";
+    private String baseURL = "http://10.0.2.2:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
@@ -50,7 +43,6 @@ public class RESTAPI {
         APICaller login = new APICaller("POST", baseURL + "/api/login");
         login.setQueryParameter("userId", userID);
         login.setQueryParameter("userPassword", userPassword);
-
         Map<String, List<String>> result;
         try {
             login.request();
@@ -183,7 +175,7 @@ public class RESTAPI {
 
     public boolean makeProject(String projectName,String workType,String dataType,String subject,String wayContent,String conditionContent,String description,String totalData)
     {
-        APICaller makeProject = new APICaller("GET",baseURL+"/api/project/create");
+        APICaller makeProject = new APICaller("POST",baseURL+"/api/project/create");
         makeProject.setQueryParameter("projectName",projectName);
         makeProject.setQueryParameter("workType",workType);
         makeProject.setQueryParameter("dataType",dataType);
@@ -193,29 +185,69 @@ public class RESTAPI {
         makeProject.setQueryParameter("description",description);
         makeProject.setQueryParameter("totalData",totalData);
         makeProject.setHeader("Authorization",token);
-        String result = null; //헤더에서 버킷네임 null이면 실패 아니면 성공
+        String result = null;
+
         Project.getProjectinstance().setProjectName(projectName);
         try {
             makeProject.request();
-            result = makeProject.getHeader().get("bucketName").get(0);
-        } catch (IOException e) {
-            e.printStackTrace();
+            result = makeProject.getHeader().get("create").get(0);
+            Project.getProjectinstance().setProjectId(makeProject.getHeader().get("projectId").get(0));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(result.getBytes().length!=0){
+        if(result.equals("success")){
             return true;
         }
         else{
             return false;
         }
     }
-    //example 콘텐트에서 cost 받는거 해야됨.
+
+    public Boolean createClass(List<String> classList) throws Exception {
+        APICaller classname = new APICaller("POST",baseURL+"/api/project/class");
+        classname.setHeader("Authorization",token);
+
+        List<String> id = new ArrayList<>();
+        id.add(Project.getProjectinstance().getProjectId());
+        classname.setQueryParameter_class("className",classList);//안들
+        classname.setQueryParameter_class("projectId",id);
+
+        classname.request_class();
+
+        String result;
+        result = classname.getHeader().get("class").get(0);
+        Project.getProjectinstance().setBucketName(classname.getHeader().get("bucketName").get(0));
+        if(result.equals("success")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean uploadExampleFile(InputStream inputStream,String fileName,String fileType) throws Exception {
+        APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
+        Map<String, List<String>> header;
+        uploadFile.setHeader("Authorization",token);
+        uploadFile.setHeader("bucketName",Project.getProjectinstance().getBucketName());
+        header = uploadFile.multipart(inputStream, fileName, fileType);
+        String result;
+        result = header.get("example").get(0);
+        Project.getProjectinstance().setProjectId(header.get("projectId").get(0));//아이디 받아
+        Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
+        if(!result.equals("success")){
+            return false;
+        }
+        return true;
+    }
+
 
     public Boolean pointPayment() throws Exception {
         APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/point/payment");
         pointPayment.setHeader("Authorization",token);
+        pointPayment.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
         pointPayment.request();
         String result = null;
         result = pointPayment.getHeader().get("payment").get(0);
@@ -229,30 +261,46 @@ public class RESTAPI {
 
     public List<Project> projectList(String workType,String dataType,String subject, String difficulty) throws Exception {
      APICaller projectList = new APICaller("GET",baseURL+"/api/project/list");
-     projectList.setHeader("Authorization",token);
+     //projectList.setHeader("Authorization",token);
      projectList.setQueryParameter("workType",workType);
      projectList.setQueryParameter("dataType",dataType);
      projectList.setQueryParameter("subject",subject);
      projectList.setQueryParameter("difficulty",difficulty);
      projectList.request();
      String result;
-     List<Project> project_list = new ArrayList<Project>();
+     List<Project> project_list = new ArrayList<>();
      result = projectList.getBody();
      JSONArray jsonArray = new JSONArray(result);
      for(int i=0;i<jsonArray.length();i++){
+
          Project project = new Project();
          JSONObject jsonObject;
-         jsonObject = jsonArray.getJSONObject(i);
-         project.setUserId(jsonObject.getString("userId"));
-         project.setProjectName(jsonObject.getString("projectName"));
-         project.setWorkType(jsonObject.getString("workType"));
-         project.setDataType(jsonObject.getString("dataType"));
-         project.setSubject(jsonObject.getString("subject"));
-         project.setDifficulty(jsonObject.getInt("difficulty"));
-         project.setWayContent(jsonObject.getString("wayContent"));
-         project.setConditionContent(jsonObject.getString("conditionContent"));
-         project.setExampleContent(jsonObject.getString("description"));
+         JSONObject project_object;
+         JSONArray class_array;
+
+         jsonObject = jsonArray.getJSONObject(i);//dto랑 classlist담고 있는 object
+         project_object = jsonObject.getJSONObject("projectDto");
+
+         project.setProjectId(project_object.getString("projectId"));
+         project.setUserId(project_object.getString("userId"));
+         project.setProjectName(project_object.getString("projectName"));
+         project.setWorkType(project_object.getString("workType"));
+         project.setDataType(project_object.getString("dataType"));
+         project.setSubject(project_object.getString("subject"));
+         project.setDifficulty(project_object.getInt("difficulty"));
+         project.setWayContent(project_object.getString("wayContent"));
+         project.setConditionContent(project_object.getString("conditionContent"));
+         project.setExampleContent(project_object.getString("exampleContent"));
+         project.setDescription(project_object.getString("description"));
          project_list.add(project);
+
+         class_array = jsonObject.getJSONArray("classNameList");
+         List<String> class_list = new ArrayList<>();
+         for(int j=0;j<class_array.length();j++){
+             JSONObject classobject = class_array.getJSONObject(j);
+             class_list.add(classobject.getString("className"));
+         }
+         project.setClass_list(class_list);
      }
      return project_list;
     }
