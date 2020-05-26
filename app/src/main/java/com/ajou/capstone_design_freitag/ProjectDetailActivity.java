@@ -44,11 +44,17 @@ public class ProjectDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        RESTAPI instance = RESTAPI.getInstance();
+        //토큰 받아오는데 null이면 로그인
+        if(instance.getToken()==null){
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivityForResult(intent, LOGIN_REQUEST_CODE);
+        }
+
         setContentView(R.layout.activity_project_detail);
 
         Intent intent = getIntent();
         project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
-
         projectIcon = (ImageView)findViewById(R.id.project_icon_detail);
         projectName = (TextView)findViewById(R.id.work_name);
         dataType = (TextView)findViewById(R.id.work_data_type);

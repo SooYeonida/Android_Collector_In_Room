@@ -33,8 +33,6 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 
 public class ProjectListFragment extends Fragment {
-   // private static final int LOGIN_REQUEST_CODE = 102;
-  // private Context context;
     ArrayList<Project> projectArrayList = new ArrayList<Project>();
     ProjectAdapter projectAdapter;
     ListView listView;
@@ -108,8 +106,6 @@ public class ProjectListFragment extends Fragment {
         difficulty_3 = view.findViewById(R.id.difficulty_3);
         difficulty_4 = view.findViewById(R.id.difficulty_4);
         difficulty_5 = view.findViewById(R.id.difficulty_5);
-
-       // context = container.getContext();
 
         if(button_result.equals("수집")){//수집 버튼 누르면
             worktype.setVisibility(View.GONE);
@@ -261,15 +257,5 @@ public class ProjectListFragment extends Fragment {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if(requestCode == LOGIN_REQUEST_CODE) {
-//            if (resultCode != RESULT_OK) {
-//                Toast.makeText(context, "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
-//                ((MainActivity)getActivity()).goToHome();
-//            }
-//        }
-//    }
 
 }
