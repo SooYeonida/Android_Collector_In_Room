@@ -160,7 +160,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
             worktype = button_result;
             labelling_work_type.setVisibility(View.VISIBLE);
             collection_data_type.setVisibility(View.GONE);
-
+            example_data_upload.setVisibility(View.VISIBLE);
         }
         else if(button_result.equals("both")){
             worktype_text.setText("수집+라벨링");

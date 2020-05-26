@@ -73,28 +73,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/example_data_upload"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:text="*예시 데이터 업로드*"
-                android:fontFamily="@font/tmonmonsori"/>
-
-            <Button
-                android:id="@+id/example_data_selection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#8028ADFC"
-                android:text="파일 업로드"
-                android:fontFamily="@font/tmonmonsori"/>
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/type_collection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -170,6 +148,64 @@
     </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/text_upload_way"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="예시 데이 업로드 방법"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <RadioGroup
+                android:id="@+id/radioGroup_text_example"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/user_input_text"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="직접 입력" />
+
+                <RadioButton
+                    android:id="@+id/text_file_upload"
+                    android:layout_width="114dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="파일 업로드" />
+
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/example_data_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="*예시 데이터 업로드*"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <Button
+                android:id="@+id/example_data_selection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#8028ADFC"
+                android:text="파일 업로드"
+                android:fontFamily="@font/tmonmonsori"/>
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/linearlayout_in_plus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -192,7 +228,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:backgroundTint="#8028ADFC"
-                    android:text="입력칸 생성" />
+                    android:text="입력칸 생성"
+                    android:fontFamily="@font/tmonmonsori"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -301,40 +338,6 @@
                 android:maxLines="5" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/text_upload_way"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="예시 데이 업로드 방법"
-                android:fontFamily="@font/tmonmonsori"/>
-
-            <RadioGroup
-                android:id="@+id/radioGroup_text_example"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/user_input_text"
-                    android:layout_width="123dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="직접 입력" />
-
-                <RadioButton
-                    android:id="@+id/text_file_upload"
-                    android:layout_width="114dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="파일 업로드" />
-
-            </RadioGroup>
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/example_content_layout"
