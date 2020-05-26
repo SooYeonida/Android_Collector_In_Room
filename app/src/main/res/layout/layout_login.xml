@@ -15,8 +15,9 @@
         android:padding="@dimen/loginViewsMargin">
         <TextView
             style="@style/headerTextPrimary"
-            android:text="Login"
-            android:layout_marginTop="@dimen/loginViewsMargin"/>
+            android:text="로그인"
+            android:layout_marginTop="@dimen/loginViewsMargin"
+            android:fontFamily="@font/tmonmonsori"/>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputEmail"
             style="@style/parent"
@@ -47,7 +48,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/loginViewsMargin"
             android:onClick="login"
-            android:text="Login" />
+            android:text="Login"
+            android:fontFamily="@font/tmonmonsori"/>
         <TextView
             style="@style/parent"
             android:textAlignment="center"

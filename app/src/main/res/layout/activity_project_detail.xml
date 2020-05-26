@@ -24,7 +24,7 @@
         android:layout_marginTop="15dp"
         android:text="프로젝트 상세 페이지"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
 
     <TextView
         android:id="@+id/work_name"
@@ -34,7 +34,7 @@
         android:layout_marginTop="10dp"
         android:text="project name"
         android:textSize="25sp"
-        android:textStyle="bold"/>
+        android:fontFamily="@font/tmonmonsori"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         android:layout_height="match_parent"
         android:text="프로젝트 데이터 종류:"
         android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:fontFamily="@font/tmonmonsori"/>
         <ImageView
             android:id="@+id/project_icon_detail"
             android:layout_width="24dp"
@@ -73,7 +73,7 @@
             android:layout_height="match_parent"
             android:text="프로젝트 주제:"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/tmonmonsori"/>
         <TextView
             android:id="@+id/work_subject"
             android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:text="프로젝트 의뢰자:"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:fontFamily="@font/tmonmonsori"/>
             <TextView
                 android:id="@+id/work_requester"
                 android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
             android:layout_height="match_parent"
             android:text="&lt;프로젝트 수집 데이터 목록&gt;"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/tmonmonsori"/>
         <TextView
             android:id="@+id/classlist_project_detail"
             android:layout_width="wrap_content"
@@ -129,7 +129,7 @@
         android:gravity="center"
         android:text="프로젝트 진행 방법"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
     <TextView
         android:id="@+id/work_waycontent"
         android:layout_width="wrap_content"
@@ -146,7 +146,7 @@
         android:gravity="center"
         android:text="프로젝트 조건"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
     <TextView
         android:id="@+id/work_conditioncontent"
         android:layout_width="wrap_content"
@@ -163,7 +163,7 @@
         android:gravity="center"
         android:text="프로젝트 예시 데이터"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
     <TextView
         android:id="@+id/work_examplecontent"
         android:layout_width="wrap_content"
@@ -179,7 +179,7 @@
         android:gravity="center"
         android:text="작업 정보 수집 동의"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -308,7 +308,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="동의"/>
+            android:text="동의"
+            android:fontFamily="@font/tmonmonsori"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -334,9 +335,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:text="data"
+                android:text="date"
                 android:textSize="12sp"
-                android:textStyle="bold"/>
+                android:fontFamily="@font/tmonmonsori"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -347,7 +348,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:backgroundTint="#8028ADFC"
-        android:text="작업 시작" />
+        android:text="작업 시작"
+        android:fontFamily="@font/tmonmonsori"/>
 
     </LinearLayout>
 </ScrollView>

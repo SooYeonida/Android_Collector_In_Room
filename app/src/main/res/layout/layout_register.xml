@@ -16,7 +16,8 @@
         <TextView
             style="@style/headerTextPrimary"
             android:text="@string/register"
-            android:layout_marginTop="@dimen/loginViewsMargin"/>
+            android:layout_marginTop="@dimen/loginViewsMargin"
+            android:fontFamily="@font/tmonmonsori"/>
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
             android:layout_marginTop="@dimen/signup_text_margin_top">
@@ -90,7 +91,8 @@
             android:layout_gravity="center"
             android:onClick="register"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            android:text="Register" />
+            android:text="Register"
+            android:fontFamily="@font/tmonmonsori"/>
 
         <TextView
             style="@style/parent"

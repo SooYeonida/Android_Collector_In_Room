@@ -24,7 +24,7 @@
         android:layout_marginTop="20dp"
         android:text="프로젝트 이름"
         android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:fontFamily="@font/tmonmonsori"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         android:layout_marginTop="15dp"
         android:text="프로젝트 진행 방법 "
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori"/>
     <TextView
         android:id="@+id/audio_collection_way_content"
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@
         android:layout_marginTop="15dp"
         android:text="프로젝트 조건"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
 
     <TextView
         android:id="@+id/audio_collection_condition_content"
@@ -68,7 +68,7 @@
         android:layout_marginTop="15dp"
         android:text="프로젝트 예시"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -97,7 +97,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="음성 파일 업로드"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:fontFamily="@font/tmonmonsori"/>
         <Button
             android:id="@+id/collection_audio_upload"
             android:layout_width="30dp"
@@ -123,7 +124,8 @@
             android:text="음성 녹음"
             android:gravity="center"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/tmonmonsori"/>
         <Button
             android:id="@+id/collection_audio_record"
             android:layout_width="30dp"
@@ -146,7 +148,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:backgroundTint="#8028ADFC"
-        android:text="작업 완료" />
+        android:text="작업 완료"
+        android:fontFamily="@font/tmonmonsori"/>
 
 </LinearLayout>
 </ScrollView>

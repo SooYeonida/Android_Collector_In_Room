@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".ui.home.HomeMenuFragment"
+android:orientation="vertical"
+android:id="@+id/fragment_home">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="114dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/home_logo" />
+
+        <Button
+            android:id="@+id/banner1"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/banner"
+            android:text="작업 시작하기"
+            android:textSize="25sp"
+            android:textColor="#BF161717"
+            android:fontFamily="@font/tmonmonsori"/>
+        <Button
+            android:id="@+id/banner2"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/banner2"
+            android:text="프로젝트 의뢰하기"
+            android:textSize="25sp"
+            android:textColor="#BF161717"
+            android:fontFamily="@font/tmonmonsori"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#8028ADFC"
+            android:gravity="center"
+            android:text="누적 포인트별 랭킹"
+            android:textSize="20sp"
+            android:fontFamily="@font/tmonmonsori"/>
+
+        <ListView
+            android:id="@+id/ranking_list_total_point"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#8028ADFC"
+            android:gravity="center"
+            android:text="정확도별 랭킹"
+            android:textSize="20sp"
+            android:fontFamily="@font/tmonmonsori"/>
+
+        <ListView
+            android:id="@+id/ranking_list_accuracy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+</ScrollView>
+</RelativeLayout>

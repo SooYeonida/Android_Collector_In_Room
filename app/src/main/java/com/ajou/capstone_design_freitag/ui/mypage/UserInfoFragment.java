@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +18,11 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONException;
 
-public class TotalInfoFragment extends Fragment {
+public class UserInfoFragment extends Fragment {
 
     Button update;
     Button exchange;
     MyPageFragment myPageFragment;
-
-    View view;
 
     TextView userName;
     TextView userEmail;
@@ -34,32 +31,9 @@ public class TotalInfoFragment extends Fragment {
     TextView userLevel;
     TextView userPoint;
 
-    String user_id;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        User userinstance = User.getUserinstance();
-        user_id = userinstance.getUserID();
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_total_info, container, false);
-
-        TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText("의뢰한 프로젝트 목록"));
-        tabs.addTab(tabs.newTab().setText("완료한 작업 목록"));
-        tabs.setTabGravity(tabs.GRAVITY_FILL);
-
-        //어뎁터 부분
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        final PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(),2);
-        viewPager.setAdapter(pagerAdapter);
-
-        //탭 선택 이벤트처리
-        tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        View view = inflater.inflate(R.layout.fragment_user_info, container, false);
 
         userName = (TextView) view.findViewById(R.id.user_name_mypage);
         userEmail = (TextView) view.findViewById(R.id.user_email_mypage);
@@ -111,7 +85,7 @@ public class TotalInfoFragment extends Fragment {
             }
 
         };
-        mypageTask.execute(user_id);
+        mypageTask.execute(User.getUserinstance().getUserID());
     }
 
 

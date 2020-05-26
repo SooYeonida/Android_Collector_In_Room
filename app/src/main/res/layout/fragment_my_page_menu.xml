@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:gravity="center"
+tools:context=".ui.mypage.MyPageMenuFragment"
+android:id="@+id/project_type_fragment"
+android:layout_weight="1">
+
+<Button
+    android:id="@+id/user_info_btn"
+    android:layout_width="270dp"
+    android:layout_height="130dp"
+    android:background="@drawable/button_background"
+    android:gravity="right"
+    android:paddingTop="50dp"
+    android:paddingRight="30dp"
+    android:text="사용자 정보 조회"
+    android:textColor="#272424"
+    android:textSize="20sp"
+    android:fontFamily="@font/tmonmonsori" />
+
+<Button
+    android:id="@+id/request_project_list"
+    android:layout_width="270dp"
+    android:layout_height="130dp"
+    android:layout_marginTop="30dp"
+    android:background="@drawable/button_background"
+    android:gravity="right"
+    android:paddingTop="50dp"
+    android:paddingRight="20dp"
+    android:text="의뢰한 프로젝트 목록"
+    android:textColor="#272424"
+    android:textSize="18sp"
+    android:fontFamily="@font/tmonmonsori" />
+
+    <Button
+        android:id="@+id/complete_work_list"
+        android:layout_width="270dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_background"
+        android:gravity="right"
+        android:paddingTop="55dp"
+        android:paddingRight="20dp"
+        android:text="완료한 작업 목록"
+        android:textColor="#272424"
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori" />
+
+</LinearLayout>

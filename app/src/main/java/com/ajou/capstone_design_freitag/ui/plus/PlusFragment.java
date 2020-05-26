@@ -15,6 +15,7 @@ public class PlusFragment extends Fragment  {
 
     ProjectMakeFragment projectMakeFragment = new ProjectMakeFragment();
     PayFragment payFragment = new PayFragment();
+    CreationTypeFragment creationTypeFragment = new CreationTypeFragment();
 
     FragmentTransaction fragmentTransaction;
 
@@ -22,7 +23,7 @@ public class PlusFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plus, container, false);
-        replaceFragment(0);
+        replaceFragment(4);
         return view;
     }
 
@@ -32,16 +33,42 @@ public class PlusFragment extends Fragment  {
 
         if (index == 0) {
             if (!projectMakeFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_plus, projectMakeFragment);
+                fragmentTransaction.replace(R.id.fragment_plus, ProjectMakeFragment.newInstance("collection"));
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
-        } else if (index == 1) {
+        }
+        else if(index == 1){
+            if (!projectMakeFragment.isAdded()) {
+                fragmentTransaction.replace(R.id.fragment_plus, ProjectMakeFragment.newInstance("labelling"));
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        }
+        else if(index == 2){
+            if (!projectMakeFragment.isAdded()) {
+                fragmentTransaction.replace(R.id.fragment_plus, ProjectMakeFragment.newInstance("both"));
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        }
+        else if (index == 3) {
             if (!payFragment.isAdded()) {
                 fragmentTransaction.replace(R.id.fragment_plus, payFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         }
+        else if(index == 4){
+            if(!creationTypeFragment.isAdded()){
+                fragmentTransaction.replace(R.id.fragment_plus, creationTypeFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        }
+
     }
+
+
 
 }

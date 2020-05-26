@@ -32,7 +32,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="난이도"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/tmonmonsori" />
 
             <RadioGroup
                 android:id="@+id/radioGroup_difficulty"
@@ -97,7 +97,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="데이터타입"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/tmonmonsori" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup_datatype"
@@ -142,7 +142,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="작업타입"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/tmonmonsori"/>
 
                 <RadioGroup
                     android:id="@+id/radioGroup_labelling_work_type"

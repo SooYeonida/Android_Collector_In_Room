@@ -24,7 +24,7 @@ tools:context=".ImageCollectionActivity">
             android:layout_marginTop="20dp"
             android:text="프로젝트 이름"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/tmonmonsori"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@ tools:context=".ImageCollectionActivity">
         android:layout_marginTop="15dp"
         android:text="프로젝트 진행 방법 "
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
     <TextView
         android:id="@+id/image_collection_way_content"
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@ tools:context=".ImageCollectionActivity">
         android:layout_marginTop="15dp"
         android:text="프로젝트 조건"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori"/>
 
     <TextView
         android:id="@+id/image_collection_condition_content"
@@ -68,7 +68,7 @@ tools:context=".ImageCollectionActivity">
         android:layout_marginTop="15dp"
         android:text="프로젝트 예시"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -99,7 +99,8 @@ tools:context=".ImageCollectionActivity">
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="이미지 데이터 추가" />
+            android:text="이미지 데이터 추가"
+            android:fontFamily="@font/tmonmonsori"/>
 
         <Button
             android:id="@+id/collection_image_upload"
@@ -122,7 +123,8 @@ tools:context=".ImageCollectionActivity">
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:backgroundTint="#8028ADFC"
-        android:text="작업 완료" />
+        android:text="작업 완료"
+        android:fontFamily="@font/tmonmonsori"/>
 
 </LinearLayout>
 </ScrollView>
