@@ -62,7 +62,6 @@ public class PlusFragment extends Fragment  {
         else if(index == 4){
             if(!creationTypeFragment.isAdded()){
                 fragmentTransaction.replace(R.id.fragment_plus, creationTypeFragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         }
