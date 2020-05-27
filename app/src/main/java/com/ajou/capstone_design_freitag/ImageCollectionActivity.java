@@ -71,11 +71,15 @@ public class ImageCollectionActivity extends AppCompatActivity {
         work_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               user_work_done();
-               Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
-               Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-               startActivity(intent);
-
+                if (inputStreamList.size()==0){
+                    Toast.makeText(getApplicationContext(),"데이터를 업로드 하셔야 합니다.",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    user_work_done();
+                    Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -118,6 +122,7 @@ public class ImageCollectionActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public String getFileNameToUri(Uri data) {

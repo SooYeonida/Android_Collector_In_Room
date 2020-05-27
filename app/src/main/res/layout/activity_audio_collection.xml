@@ -142,6 +142,16 @@
         android:layout_gravity="center"/>
 
     <Button
+        android:id="@+id/delete_audio_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#B69AE3"
+        android:text="파일 삭제"
+        android:fontFamily="@font/tmonmonsori"/>
+
+    <Button
         android:id="@+id/work_done_audio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

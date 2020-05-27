@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +26,11 @@ import com.ajou.capstone_design_freitag.ui.plus.Project;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class AudioCollectionActivity extends AppCompatActivity {
     private static final int COLLECTION_AUDIO_REQUEST_CODE =100;
@@ -37,12 +40,16 @@ public class AudioCollectionActivity extends AppCompatActivity {
     TextView projectName;
     TextView wayContent;
     TextView conditionContent;
-    ImageView exampleContent;//오디오 파일은 예시 어케 보여주지? 재생하는거 만들어야하남
 
     Button upload;
     Button record;
+    Button work_done;
+    Button delete;
     TextView dataURI;
     Context context;
+
+    List<InputStream> inputStreamList = new ArrayList<>();
+    List<String> fileNameList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +58,16 @@ public class AudioCollectionActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Project project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
-
+        Project.getProjectinstance().setBucketName(project.getBucketName());
+        Project.getProjectinstance().setProjectId(project.getProjectId());
         projectName = findViewById(R.id.audio_collection_project_name);
         wayContent = findViewById(R.id.audio_collection_way_content);
         conditionContent = findViewById(R.id.audio_collection_condition_content);
         upload = findViewById(R.id.collection_audio_upload);
         record = findViewById(R.id.collection_audio_record);
+        work_done = findViewById(R.id.work_done_audio);
+        delete = findViewById(R.id.delete_audio_file);
+        delete.setVisibility(View.GONE);
         dataURI = findViewById(R.id.collection_audio_uri);
 
         projectName.setText(project.getProjectName());
@@ -69,7 +80,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onClick(View v) {
-             upload_audio_collection_data(v);
+                upload_audio_collection_data(v);
             }
         });
 
@@ -81,6 +92,34 @@ public class AudioCollectionActivity extends AppCompatActivity {
                     overridePendingTransition(0, 0);
                 } else {
                     requestStoragePermission();
+                }
+            }
+        });
+
+        work_done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (inputStreamList.size()==0){
+                    Toast.makeText(getApplicationContext(),"데이터를 업로드 하셔야 합니다.",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    upload_user_record_audio_data();
+                    Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inputStreamList.remove(inputStreamList.size()-1);//젤 최근꺼 삭제
+                fileNameList.remove(fileNameList.size()-1);
+                StringTokenizer stringTokenizer = new StringTokenizer(dataURI.getText().toString(),"\n");
+                dataURI.setText("");
+                while(stringTokenizer.countTokens()!=1){
+                    dataURI.setText(dataURI.getText() + "\n" + stringTokenizer.nextToken());
                 }
             }
         });
@@ -112,24 +151,12 @@ public class AudioCollectionActivity extends AppCompatActivity {
         }
     }
 
-    public void upload_user_record_audio_data(String path){
-        if (checkStoragePermission()) {
-            startActivityForResult(new Intent(AudioCollectionActivity.this, AudioTrimmerActivity.class), ADD_AUDIO);
-            overridePendingTransition(0, 0);
-        } else {
-            requestStoragePermission();
-        }
-        File file = new File(path);
-        final String fileName = file.getName();
-        dataURI.setText(dataURI.getText() + "\n" + fileName);
-        AsyncTask<File, Void, Boolean> uploadUserAudioTask = new AsyncTask<File, Void, Boolean>() {
+    public void upload_user_record_audio_data(){
+        AsyncTask<Object, Void, Boolean> uploadUserAudioTask = new AsyncTask<Object, Void, Boolean>() {
             @Override
-            protected Boolean doInBackground(File... files) {
+            protected Boolean doInBackground(Object... info) {
                 try {
-                    InputStream inputStream = new FileInputStream(files[0]);
-                    //boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream,"example.txt", "text/plain");
-                    boolean result = true; //다른걸로 나중에 바꿔야함
-                    inputStream.close();
+                    boolean result = RESTAPI.getInstance().collection_work((List<InputStream>)info[0],(List<String>)info[1],"audio/mp3");
                     return result;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -139,11 +166,31 @@ public class AudioCollectionActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Boolean result) {
                 if(!result){
-                    Toast.makeText(context, "음성 수집 데이터 업로드 실",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "수집 작업 오디오 업로드 실패",Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(context, "수집 작업 오디오 업로드 완료",Toast.LENGTH_LONG).show();
                 }
             }
         };
-        uploadUserAudioTask.execute(file);
+        uploadUserAudioTask.execute(inputStreamList,fileNameList);
+    }
+
+    public void save_user_record_audio_data(String path) throws IOException {
+        if (checkStoragePermission()) {
+            startActivityForResult(new Intent(AudioCollectionActivity.this, AudioTrimmerActivity.class), ADD_AUDIO);
+            overridePendingTransition(0, 0);
+        } else {
+            requestStoragePermission();
+        }
+        File file = new File(path);
+        InputStream inputStream = new FileInputStream(file);
+        inputStreamList.add(inputStream);
+        final String fileName = file.getName();
+        dataURI.setText(dataURI.getText() + "\n" + fileName);
+        fileNameList.add(fileName);
+
+        delete.setVisibility(View.VISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -165,6 +212,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
         String imgName = imgPath.substring(imgPath.lastIndexOf("/") + 1);
         return imgName;
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == COLLECTION_AUDIO_REQUEST_CODE) {
@@ -184,7 +232,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
                             requestStoragePermission();
                         }
                         InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
-                       // boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream, fileName, "audio/mp3");
+                        // boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream, fileName, "audio/mp3");
                         boolean result = true;
                         return new Boolean(result);
                     } catch (Exception e) {
@@ -199,7 +247,11 @@ public class AudioCollectionActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     String path = data.getExtras().getString("INTENT_AUDIO_FILE");
-                    upload_user_record_audio_data(path);
+                    try {
+                        save_user_record_audio_data(path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Toast.makeText(AudioCollectionActivity.this, "Audio stored at " + path, Toast.LENGTH_LONG).show();
                 }
             }
