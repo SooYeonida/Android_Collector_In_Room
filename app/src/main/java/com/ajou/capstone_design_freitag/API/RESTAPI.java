@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import awsauth.AWS4SignerBase;
 import awsauth.AWS4SignerForAuthorizationHeader;
@@ -233,13 +232,14 @@ public class RESTAPI {
 
         List<String> id = new ArrayList<>();
         id.add(Project.getProjectinstance().getProjectId());
-        classname.setQueryParameter_class("className",classList);//안들
+        classname.setQueryParameter_class("className",classList);
         classname.setQueryParameter_class("projectId",id);
 
         classname.request_class();
 
         String result;
         result = classname.getHeader().get("class").get(0);
+        System.out.println(classname.getHeader().get("bucketName").get(0));
         Project.getProjectinstance().setBucketName(classname.getHeader().get("bucketName").get(0));
         if(result.equals("success")){
             return true;
@@ -253,6 +253,7 @@ public class RESTAPI {
         APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
         Map<String, List<String>> header;
         uploadFile.setHeader("Authorization",token);
+        System.out.println(Project.getProjectinstance().getBucketName());
         uploadFile.setHeader("bucketName",Project.getProjectinstance().getBucketName());
         header = uploadFile.multipart(inputStream, fileName, fileType);
         String result;
@@ -283,7 +284,6 @@ public class RESTAPI {
 
     public List<Project> projectList(String workType,String dataType,String subject, String difficulty) throws Exception {
      APICaller projectList = new APICaller("GET",baseURL+"/api/project/list");
-     //projectList.setHeader("Authorization",token);
      projectList.setQueryParameter("workType",workType);
      projectList.setQueryParameter("dataType",dataType);
      projectList.setQueryParameter("subject",subject);
@@ -304,6 +304,8 @@ public class RESTAPI {
          project_object = jsonObject.getJSONObject("projectDto");
 
          project.setProjectId(project_object.getString("projectId"));
+         project.setBucketName(project_object.getString("bucketName"));
+         project.setStatus(project_object.getString("status"));
          project.setUserId(project_object.getString("userId"));
          project.setProjectName(project_object.getString("projectName"));
          project.setWorkType(project_object.getString("workType"));
@@ -314,6 +316,9 @@ public class RESTAPI {
          project.setConditionContent(project_object.getString("conditionContent"));
          project.setExampleContent(project_object.getString("exampleContent"));
          project.setDescription(project_object.getString("description"));
+         project.setTotalData(project_object.getInt("totalData"));
+         project.setProgressData(project_object.getInt("progressData"));
+         project.setCost(project_object.getInt("cost"));
          project_list.add(project);
 
          class_array = jsonObject.getJSONArray("classNameList");
@@ -326,6 +331,7 @@ public class RESTAPI {
      }
      return project_list;
     }
+
 
     public boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
         String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + obejctName;
@@ -362,4 +368,21 @@ public class RESTAPI {
             return false;
         }
     }
+    public Boolean collection_work(List<InputStream> inputStream,List<String> fileName,String fileType) throws Exception {
+        APICaller collectionWork = new APICaller("POST",baseURL+"/api/work/collection");
+        collectionWork.setHeader("Authorization",token);
+        collectionWork.setHeader("bucketName",Project.getProjectinstance().getBucketName());
+        collectionWork.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        Map<String, List<String>> header;
+        String result;
+        header = collectionWork.multipartList(inputStream, fileName, fileType);
+        result = header.get("upload").get(0);
+        System.out.println("result:"+result);
+        if(result.equals("success")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

@@ -53,6 +53,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
     LinearLayout example_content_layout;
     LinearLayout example_data_upload;
     LinearLayout text_upload_way;
+    LinearLayout labelling_upload;
 
     Button make_button;
     Button text_example_data_button;
@@ -66,12 +67,9 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
     PlusFragment plusFragment;
 
     int id_class = 0;
-    private RadioGroup work;
     private RadioGroup labelling_work;
     private RadioGroup collection_data;
     private RadioGroup text_example;
-    private RadioButton collection;
-    private RadioButton labelling;
     private RadioButton image;
     private RadioButton audio;
     private RadioButton text;
@@ -87,18 +85,25 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
     private EditText example_content;
     private EditText condition_content;
     private EditText total_data;
+    private TextView worktype_text;
 
     LinearLayout collection_data_type;
     LinearLayout labelling_work_type;
 
     String worktype = null;
     String datatype = null;
+    String button_result = null;
 
 
     List<EditText> addclass = new ArrayList<EditText>();
     List<String> classList = new ArrayList<String>();
 
-    public ProjectMakeFragment() {
+    public static ProjectMakeFragment newInstance(String worktype) {
+        ProjectMakeFragment fragment = new ProjectMakeFragment();
+        Bundle args = new Bundle();
+        args.putString("worktype",worktype);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -109,6 +114,9 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         if(instance.getToken()==null){
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivityForResult(intent, LOGIN_REQUEST_CODE);
+        }
+        if (getArguments() != null) {
+            button_result = getArguments().getString("worktype");
         }
     }
 
@@ -126,6 +134,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         example_data_upload.setVisibility(View.GONE);
         text_upload_way = (LinearLayout)view.findViewById(R.id.text_upload_way);
         text_upload_way.setVisibility(View.GONE);
+        labelling_upload = (LinearLayout)view.findViewById(R.id.labelling_upload);
 
         make_button = (Button) view.findViewById(R.id.make_button);
         text_example_data_button = (Button)view.findViewById(R.id.text_example_data_input);
@@ -135,27 +144,30 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
 
         collection_data_type = view.findViewById(R.id.type_collection);
         labelling_work_type = view.findViewById(R.id.type_labelling);
+      
+        worktype_text = view.findViewById(R.id.work_type_creation);
 
-        work = view.findViewById(R.id.radioGroup_work);
-        collection = view.findViewById(R.id.data_collection);
-        labelling = view.findViewById(R.id.labelling);
-        work.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case(R.id.data_collection):
-                        worktype = collection.getText().toString();
-                        collection_data_type.setVisibility(View.VISIBLE);
-                        labelling_work_type.setVisibility(View.GONE);
-                        break;
-                    case(R.id.labelling):
-                        worktype = labelling.getText().toString();
-                        labelling_work_type.setVisibility(View.VISIBLE);
-                        collection_data_type.setVisibility(View.GONE);
-                        break;
-                }
-            }
-        });
+        if(button_result.equals("collection")){
+            worktype_text.setText("수집");
+            worktype = button_result;
+            collection_data_type.setVisibility(View.VISIBLE);
+            labelling_work_type.setVisibility(View.GONE);
+            labelling_upload.setVisibility(View.GONE);
+
+        }
+        else if(button_result.equals("labelling")){
+            worktype_text.setText("라벨링");
+            worktype = button_result;
+            labelling_work_type.setVisibility(View.VISIBLE);
+            collection_data_type.setVisibility(View.GONE);
+            example_data_upload.setVisibility(View.VISIBLE);
+        }
+        else if(button_result.equals("both")){
+            worktype_text.setText("수집+라벨링");
+            //worktype = button_result;
+            labelling_work_type.setVisibility(View.GONE);
+            collection_data_type.setVisibility(View.VISIBLE);
+        }
 
         labelling_work = view.findViewById(R.id.radioGroup_labelling);
         boundingbox = view.findViewById(R.id.boundingbox);
@@ -246,8 +258,12 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
     public void onClick(View view){
         switch (view.getId()){
             case R.id.make_button:
+                if(project_name.getText().toString().equals("") || project_subject.getText().toString().equals("")|| way_content.getText().toString().equals("")||condition_content.getText().toString().equals("")||description.getText().toString().equals("") ||total_data.getText().toString().equals("")){
+                    Toast.makeText(context, "빈칸없이 입력하세요.",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 plusFragment = (PlusFragment)getParentFragment();
-                plusFragment.replaceFragment(1);
+                plusFragment.replaceFragment(3);
                 break;
             case R.id.text_example_data_input:
                 make_project(view);
@@ -288,11 +304,6 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         final String projectDescription = description.getText().toString();
         final String projectTotalData = total_data.getText().toString();
 
-        if(projectName.equals("") || projectSubject.equals("")|| wayContent.equals("")||conditionContent.equals("")||projectDescription.equals("") ||projectTotalData.equals("")){
-            Toast.makeText(context, "빈칸없이 입력하세요.",Toast.LENGTH_LONG).show();
-            return;
-        }
-
         AsyncTask<String, Void,Boolean> projectTask = new AsyncTask<String, Void, Boolean>() {
             protected Boolean doInBackground(String... userInfos) {
                 Boolean result = RESTAPI.getInstance().makeProject(userInfos[0],
@@ -307,7 +318,8 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                 }
             }
         };
-
+        System.out.println("worktype:"+worktype);
+        System.out.println("datatype:"+datatype);
         projectTask.execute(projectName, worktype, datatype, projectSubject, wayContent, conditionContent, projectDescription, projectTotalData);
     }
 
@@ -356,7 +368,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         fileOutputStream.close();
         File file = new File("/data/data/com.ajou.capstone_design_freitag/files/example.txt");
 
-        AsyncTask<File, Void, Boolean> loginTask = new AsyncTask<File, Void, Boolean>() {
+        AsyncTask<File, Void, Boolean> uploadUserTextTask = new AsyncTask<File, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(File... files) {
                 try {
@@ -376,7 +388,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                 }
             }
         };
-        loginTask.execute(file);
+        uploadUserTextTask.execute(file);
     }
 
     public void upload_image_example_data(View view){
@@ -429,7 +441,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
             Uri uri = data.getData();
             final String fileName = getFileNameToUri(data.getData());//이름
             exampleURI.setText(exampleURI.getText() + "\n" + uri);
-            AsyncTask<Uri, Void, Boolean> loginTask = new AsyncTask<Uri, Void, Boolean>() {
+            AsyncTask<Uri, Void, Boolean> uploadAudioTask = new AsyncTask<Uri, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Uri... uris) {
                     try {
@@ -442,13 +454,13 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                     }
                 }
             };
-            loginTask.execute(uri);
+            uploadAudioTask.execute(uri);
         }
         else if(requestCode == EXAMPLE_TEXT_REQUEST_CODE){
             Uri uri = data.getData();
             final String fileName = getFileNameToUri(data.getData());//이름
             exampleURI.setText(exampleURI.getText() + "\n" + uri);
-            AsyncTask<Uri, Void, Boolean> loginTask = new AsyncTask<Uri, Void, Boolean>() {
+            AsyncTask<Uri, Void, Boolean> uploadTextTask = new AsyncTask<Uri, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Uri... uris) {
                     try {
@@ -461,7 +473,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                     }
                 }
             };
-            loginTask.execute(uri);
+            uploadTextTask.execute(uri);
 
         }
         else if(requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE || requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
@@ -471,9 +483,10 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                     if (requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE) {
                         examplePictures.add(clipData.getItemAt(i).getUri());
                         final String fileName = getFileNameToUri(data.getData());//이름
-                        exampleURI.setText(exampleURI.getText() + "\n" + clipData.getItemAt(i).getUri());
+                        exampleURI.setText(exampleURI.getText() + "\n" + fileName);
+                        //clipData.getItemAt(i).getUri()
                         try {
-                            AsyncTask<Uri, Void, Boolean> loginTask = new AsyncTask<Uri, Void, Boolean>() {
+                            AsyncTask<Uri, Void, Boolean> uploadImageTask = new AsyncTask<Uri, Void, Boolean>() {
                                 @Override
                                 protected Boolean doInBackground(Uri... uris) {
                                     try {
@@ -488,7 +501,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                                     }
                                 }
                             };
-                            loginTask.execute(clipData.getItemAt(i).getUri());
+                            uploadImageTask.execute(clipData.getItemAt(i).getUri());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

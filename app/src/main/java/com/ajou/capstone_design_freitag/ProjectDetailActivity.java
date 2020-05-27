@@ -1,12 +1,14 @@
 package com.ajou.capstone_design_freitag;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
     private static final int LOGIN_REQUEST_CODE = 102;
     Project project;
 
+    ImageView projectIcon;
     TextView projectName;
     TextView dataType;
     TextView subject;
@@ -31,7 +34,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
     LinearLayout className; //텍스트뷰 추가할 레이아웃
     TextView wayContent;
     TextView conditionContent;
-    TextView exampleContent;
+    TextView exampleContent; //데이터 종류에 따라 바꿔야함
     TextView classlist;
     CheckBox agree_check;
     TextView date;
@@ -41,11 +44,18 @@ public class ProjectDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        RESTAPI instance = RESTAPI.getInstance();
+        //토큰 받아오는데 null이면 로그인
+        if(instance.getToken()==null){
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivityForResult(intent, LOGIN_REQUEST_CODE);
+        }
+
         setContentView(R.layout.activity_project_detail);
 
         Intent intent = getIntent();
         project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
-
+        projectIcon = (ImageView)findViewById(R.id.project_icon_detail);
         projectName = (TextView)findViewById(R.id.work_name);
         dataType = (TextView)findViewById(R.id.work_data_type);
         subject = (TextView)findViewById(R.id.work_subject);
@@ -62,6 +72,22 @@ public class ProjectDetailActivity extends AppCompatActivity {
             className.setVisibility(View.GONE);
         }
 
+        if(project.getWorkType().equals("collection")) {
+            switch (project.getDataType()) {
+                case ("이미지"):
+                    projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_image_black_24dp));
+                    break;
+                case ("텍스트"):
+                    projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_text_black_24dp));
+                    break;
+                case ("음성"):
+                    projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_voice_black_24dp));
+                    break;
+            }
+        }
+        else{
+            projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_label_black_24dp));
+        }
         projectName.setText(project.getProjectName());
         dataType.setText(project.getDataType());
         subject.setText(project.getSubject());
@@ -99,17 +125,23 @@ public class ProjectDetailActivity extends AppCompatActivity {
         });
     }
 
+    //이미지, 음성, 텍스트 , 바운딩박스, 분류냐에 따라 작업 화면 다름
+
         private void goToImageCollectionWork(View v) {
-        //이미지, 음성, 텍스트 , 바운딩박스, 분류냐에 따라 작업 화면 다름
         Intent intent = new Intent(getApplicationContext(),ImageCollectionActivity.class);
         intent.putExtra("project",project);
         startActivity(intent);
     }
 
     private void goToTextCollectionWork(View v) {
-
+        Intent intent = new Intent(getApplicationContext(), TextCollectionActivity.class);
+        intent.putExtra("project", project);
+        startActivity(intent);
     }
     private void goToAudioCollectionWork(View v) {
+        Intent intent = new Intent(getApplicationContext(), AudioCollectionActivity.class);
+        intent.putExtra("project", project);
+        startActivity(intent);
 
     }
 

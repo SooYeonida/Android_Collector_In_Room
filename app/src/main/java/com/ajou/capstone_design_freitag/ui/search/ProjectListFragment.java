@@ -1,5 +1,6 @@
 package com.ajou.capstone_design_freitag.ui.search;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.LoginActivity;
+import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.ProjectDetailActivity;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
@@ -27,8 +30,9 @@ import com.ajou.capstone_design_freitag.ui.plus.Project;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ProjectListFragment extends Fragment {
-    private static final int LOGIN_REQUEST_CODE = 102;
     ArrayList<Project> projectArrayList = new ArrayList<Project>();
     ProjectAdapter projectAdapter;
     ListView listView;
@@ -38,7 +42,6 @@ public class ProjectListFragment extends Fragment {
     String dataType = "";
     String subject = "";
     String difficulty = "-1";
-    //일케해야 서버에서 먹음
 
     LinearLayout datatype;
     LinearLayout worktype;
@@ -186,7 +189,6 @@ public class ProjectListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Project project = (Project)projectAdapter.getItem(position);
-
                 Intent intent = new Intent(getActivity(), ProjectDetailActivity.class);
                 intent.putExtra("project", project);
                 startActivity(intent);
