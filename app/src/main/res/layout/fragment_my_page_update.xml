@@ -19,7 +19,7 @@
         android:text="개인정보 수정"
         android:textColor="#8028ADFC"
         android:textSize="30sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/tmonmonsori" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:gravity="center"
             android:text="이름:"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/tmonmonsori"/>
 
         <EditText
             android:id="@+id/update_user_name"
@@ -59,7 +59,7 @@
             android:gravity="center"
             android:text="전화번호:"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/tmonmonsori"/>
 
         <EditText
             android:id="@+id/update_user_phone"
@@ -84,7 +84,7 @@
             android:gravity="center"
             android:text="이메일:"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/tmonmonsori"/>
 
         <EditText
             android:id="@+id/update_user_email"
@@ -109,7 +109,7 @@
             android:gravity="center"
             android:text="소속기관:"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/tmonmonsori"/>
 
         <EditText
             android:id="@+id/update_user_affiliation"
@@ -129,7 +129,8 @@
         android:layout_marginTop="20dp"
         android:backgroundTint="#8028ADFC"
         android:text="수정"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori"/>
 </LinearLayout>
 </ScrollView>
 

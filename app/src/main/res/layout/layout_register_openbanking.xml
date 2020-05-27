@@ -17,14 +17,16 @@
         <TextView
             style="@style/headerTextPrimary"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            android:text="환영하지만 오픈뱅킹도 등록해야 됨~" />
+            android:text="오픈뱅킹 등록이 필요합니다"
+            android:fontFamily="@font/tmonmonsori"/>
 
         <Button
             style="@style/loginButton"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/loginViewsMargin"
             android:onClick="registerOpenBanking"
-            android:text="Register" />
+            android:text="Register"
+            android:fontFamily="@font/tmonmonsori"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

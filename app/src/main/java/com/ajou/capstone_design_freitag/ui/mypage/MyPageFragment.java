@@ -21,9 +21,12 @@ import static android.app.Activity.RESULT_OK;
 public class MyPageFragment extends Fragment {
     private static final int LOGIN_REQUEST_CODE = 102;
 
-    TotalInfoFragment totalInfoFragment = new TotalInfoFragment();
+    UserInfoFragment userInfoFragment = new UserInfoFragment();
     MyPageUpdateFragment myPageUpdateFragment = new MyPageUpdateFragment();
     CheckPasswordFragment passwordFragment = new CheckPasswordFragment();
+    CompleteWorkListFragment completeWorkListFragment = new CompleteWorkListFragment();
+    RequestProjectListFragment requestProjectListFragment = new RequestProjectListFragment();
+    MyPageMenuFragment myPageMenuFragment = new MyPageMenuFragment();
 
     FragmentTransaction fragmentTransaction;
 
@@ -49,20 +52,43 @@ public class MyPageFragment extends Fragment {
         fragmentTransaction = getChildFragmentManager().beginTransaction();
 
         if(index==0){
-            if(!totalInfoFragment.isAdded()){
-                fragmentTransaction.replace(R.id.fragment_my_page,totalInfoFragment);
+            if(!userInfoFragment.isAdded()){
+                fragmentTransaction.replace(R.id.fragment_my_page, myPageMenuFragment);
                 fragmentTransaction.commit();
             }
         }
         else if(index == 1){
             if(!passwordFragment.isAdded()){
                 fragmentTransaction.replace(R.id.fragment_my_page,passwordFragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         }
         else if (index == 2) {
             if(!myPageUpdateFragment.isAdded()){
                 fragmentTransaction.replace(R.id.fragment_my_page,myPageUpdateFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        }
+        else if (index ==3){
+            if(!userInfoFragment.isAdded()){
+                fragmentTransaction.replace(R.id.fragment_my_page,userInfoFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        }
+        else if (index ==4){
+            if(!completeWorkListFragment.isAdded()){
+                fragmentTransaction.replace(R.id.fragment_my_page,completeWorkListFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        }
+        else if (index==5){
+            if(!requestProjectListFragment.isAdded()){
+                fragmentTransaction.replace(R.id.fragment_my_page,requestProjectListFragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         }
