@@ -318,7 +318,8 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                 }
             }
         };
-
+        System.out.println("worktype:"+worktype);
+        System.out.println("datatype:"+datatype);
         projectTask.execute(projectName, worktype, datatype, projectSubject, wayContent, conditionContent, projectDescription, projectTotalData);
     }
 

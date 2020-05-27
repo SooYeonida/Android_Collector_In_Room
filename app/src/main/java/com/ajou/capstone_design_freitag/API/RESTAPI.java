@@ -197,6 +197,7 @@ public class RESTAPI {
 
         String result;
         result = classname.getHeader().get("class").get(0);
+        System.out.println(classname.getHeader().get("bucketName").get(0));
         Project.getProjectinstance().setBucketName(classname.getHeader().get("bucketName").get(0));
         if(result.equals("success")){
             return true;
@@ -210,6 +211,7 @@ public class RESTAPI {
         APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
         Map<String, List<String>> header;
         uploadFile.setHeader("Authorization",token);
+        System.out.println(Project.getProjectinstance().getBucketName());
         uploadFile.setHeader("bucketName",Project.getProjectinstance().getBucketName());
         header = uploadFile.multipart(inputStream, fileName, fileType);
         String result;

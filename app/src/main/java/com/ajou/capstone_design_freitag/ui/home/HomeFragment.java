@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.ui.plus.CreationTypeFragment;
 import com.ajou.capstone_design_freitag.ui.search.ProjectTypeFragment;
@@ -39,16 +42,16 @@ public class HomeFragment extends Fragment {
         }
         else if(index == 1){
             if(!projectTypeFragment.isAdded()){
-                fragmentTransaction.replace(R.id.fragment_home,projectTypeFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                NavController navController;
+                navController = Navigation.findNavController((MainActivity)getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.navigation_search);
             }
         }
         else if (index == 2) {
             if(!creationTypeFragment.isAdded()){
-                fragmentTransaction.replace(R.id.fragment_home,creationTypeFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                NavController navController;
+                navController = Navigation.findNavController((MainActivity)getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.navigation_plus);
             }
         }
 
