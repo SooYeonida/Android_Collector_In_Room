@@ -341,7 +341,7 @@ public class RESTAPI {
             Map<String,String> q = new HashMap<>();
             header.put("x-amz-content-sha256", UNSIGNED_PAYLOAD);
             String auth = a.computeSignature(header, q, UNSIGNED_PAYLOAD, accessKey, secretKey);
-            HttpClient httpclient = HttpClients.createDefault();
+            HttpClient httpclient = new DefaultHttpClient();
 
             // Request Headers and other properties.
             for(String key : header.keySet()) {
@@ -350,7 +350,9 @@ public class RESTAPI {
             httpget.setHeader("Authorization", auth);
             HttpResponse response = httpclient.execute(httpget);
             if(response.getStatusLine().getStatusCode() == 200) {
-                response.getEntity().writeTo(outputStream);
+                if(outputStream != null) {
+                    response.getEntity().writeTo(outputStream);
+                }
                 return true;
             } else {
                 return false;
