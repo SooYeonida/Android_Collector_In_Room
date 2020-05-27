@@ -144,7 +144,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
 
         collection_data_type = view.findViewById(R.id.type_collection);
         labelling_work_type = view.findViewById(R.id.type_labelling);
-
+      
         worktype_text = view.findViewById(R.id.work_type_creation);
 
         if(button_result.equals("collection")){
@@ -492,6 +492,8 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                                     try {
                                         InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
                                         boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream,fileName,"image/jpeg");
+                                        //String contentType = context.getContentResolver().getType(uris[0]);
+                                        //boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream, contentType);
                                         return new Boolean(result);
                                     } catch (Exception e) {
                                         e.printStackTrace();

@@ -7,14 +7,36 @@ import android.net.Uri;
 import com.ajou.capstone_design_freitag.ui.home.User;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import awsauth.AWS4SignerBase;
+import awsauth.AWS4SignerForAuthorizationHeader;
+import http.HTTPRequest;
 
 public class RESTAPI {
     public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
@@ -99,6 +121,22 @@ public class RESTAPI {
         Uri uri = Uri.parse(registerOpenBanking.getUrl());
         intent.setData(uri);
         activity.startActivity(intent);
+    }
+
+    public boolean uploadExampleFile(InputStream inputStream, String contentType) throws Exception {
+        HttpClient httpClient = new DefaultHttpClient();
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.addBinaryBody("file", inputStream, ContentType.create(contentType), "test");
+        HttpPost httpPost = new HttpPost(baseURL + "/api/project/upload/example");
+        httpPost.setHeader("Authorization", token);
+        httpPost.setEntity(builder.build());
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public User mypage(String userId) throws JSONException {
@@ -294,6 +332,42 @@ public class RESTAPI {
      return project_list;
     }
 
+
+    public boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
+        String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + obejctName;
+        String accessKey = "sQG5BeaHcnvvqK4FI01A";
+        String secretKey = "mvNVjSac240XvnrK4qF39HpoMvvtMQMzUnnNHaRV";
+        String serviceName = "s3";
+        String regionName = "kr-standard";
+        String UNSIGNED_PAYLOAD = "UNSIGNED_PAYLOAD";
+        try {
+            AWS4SignerForAuthorizationHeader a = new AWS4SignerForAuthorizationHeader(new URL(url),"GET", serviceName, regionName);
+            HttpGet httpget = new HttpGet(url);
+            Map<String,String> header = new HashMap<>();
+            Map<String,String> q = new HashMap<>();
+            header.put("x-amz-content-sha256", UNSIGNED_PAYLOAD);
+            String auth = a.computeSignature(header, q, UNSIGNED_PAYLOAD, accessKey, secretKey);
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // Request Headers and other properties.
+            for(String key : header.keySet()) {
+                httpget.setHeader(key, header.get(key));
+            }
+            httpget.setHeader("Authorization", auth);
+            HttpResponse response = httpclient.execute(httpget);
+            if(response.getStatusLine().getStatusCode() == 200) {
+                if(outputStream != null) {
+                    response.getEntity().writeTo(outputStream);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } catch(Exception ex) {
+            System.out.print(ex);
+            return false;
+        }
+    }
     public Boolean collection_work(List<InputStream> inputStream,List<String> fileName,String fileType) throws Exception {
         APICaller collectionWork = new APICaller("POST",baseURL+"/api/work/collection");
         collectionWork.setHeader("Authorization",token);
@@ -310,8 +384,5 @@ public class RESTAPI {
             return false;
         }
     }
-
-
-
 
 }
