@@ -11,25 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.ajou.capstone_design_freitag.R;
 
-public class PlusFragment extends Fragment  {
+public class PlusFragment extends Fragment {
+    private CreationTypeFragment creationTypeFragment = new CreationTypeFragment();
+    private ProjectMakeFragment projectMakeFragment = new ProjectMakeFragment();
+    private PayFragment payFragment = new PayFragment();
 
-    ProjectMakeFragment projectMakeFragment = new ProjectMakeFragment();
-    PayFragment payFragment = new PayFragment();
-    CreationTypeFragment creationTypeFragment = new CreationTypeFragment();
-
-    FragmentTransaction fragmentTransaction;
-
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plus, container, false);
         replaceFragment(4);
         return view;
     }
 
-
     public void replaceFragment(int index) {
-        fragmentTransaction = getChildFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
         if (index == 0) {
             if (!projectMakeFragment.isAdded()) {
@@ -37,38 +31,29 @@ public class PlusFragment extends Fragment  {
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
-        }
-        else if(index == 1){
+        } else if(index == 1) {
             if (!projectMakeFragment.isAdded()) {
                 fragmentTransaction.replace(R.id.fragment_plus, ProjectMakeFragment.newInstance("labelling"));
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
-        }
-        else if(index == 2){
+        } else if(index == 2) {
             if (!projectMakeFragment.isAdded()) {
                 fragmentTransaction.replace(R.id.fragment_plus, ProjectMakeFragment.newInstance("both"));
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
-        }
-        else if (index == 3) {
+        } else if (index == 3) {
             if (!payFragment.isAdded()) {
                 fragmentTransaction.replace(R.id.fragment_plus, payFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
-        }
-        else if(index == 4){
+        } else if(index == 4) {
             if(!creationTypeFragment.isAdded()){
                 fragmentTransaction.replace(R.id.fragment_plus, creationTypeFragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         }
-
     }
-
-
-
 }
