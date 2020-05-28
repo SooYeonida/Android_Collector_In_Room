@@ -16,16 +16,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
+
             <TextView
-                android:id="@+id/work_type_creation"
+                android:id="@+id/workTypeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/tmonmonsori"
                 android:gravity="center"
-                android:text="worktype"
                 android:textColor="#8028ADFC"
-                android:textSize="25sp"
-                android:fontFamily="@font/tmonmonsori" />
+                android:textSize="25sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/type_collection"
+            android:id="@+id/collectionTypeLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -85,27 +85,27 @@
             android:fontFamily="@font/tmonmonsori"/>
 
         <RadioGroup
-            android:id="@+id/radioGroup_data"
+            android:id="@+id/collectionTypeRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/image_btn"
+                android:id="@+id/collectionImageRadioButton"
                 android:layout_width="123dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="이미지" />
 
             <RadioButton
-                android:id="@+id/text_btn"
+                android:id="@+id/collectionTextRadioButton"
                 android:layout_width="114dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="텍스트" />
 
             <RadioButton
-                android:id="@+id/audio_btn"
+                android:id="@+id/collectionAudioRadioButton"
                 android:layout_width="164dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -114,7 +114,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/type_labelling"
+        android:id="@+id/labelingTypeLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -126,29 +126,29 @@
             android:fontFamily="@font/tmonmonsori"/>
 
         <RadioGroup
-            android:id="@+id/radioGroup_labelling"
+            android:id="@+id/labelingTypeRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/boundingbox"
-                android:layout_width="123dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="바운딩박스" />
-
-            <RadioButton
-                android:id="@+id/classification"
+                android:id="@+id/labelingClassificationRadioButton"
                 android:layout_width="114dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="분류" />
+
+            <RadioButton
+                android:id="@+id/labelingBoundingboxRadioButton"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="바운딩박스" />
         </RadioGroup>
     </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/text_upload_way"
+            android:id="@+id/textUploadWayLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -160,20 +160,20 @@
                 android:fontFamily="@font/tmonmonsori"/>
 
             <RadioGroup
-                android:id="@+id/radioGroup_text_example"
+                android:id="@+id/textUploadWayRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/user_input_text"
+                    android:id="@+id/userInputExampleTextRadioButton"
                     android:layout_width="123dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="직접 입력" />
 
                 <RadioButton
-                    android:id="@+id/text_file_upload"
+                    android:id="@+id/uploadTextRadioButton"
                     android:layout_width="114dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -183,7 +183,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/example_data_upload"
+            android:id="@+id/uploadExampleDataLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -196,22 +196,38 @@
                 android:fontFamily="@font/tmonmonsori"/>
 
             <Button
-                android:id="@+id/example_data_selection"
+                android:id="@+id/uploadExampleDataButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#8028ADFC"
-                android:text="파일 업로드"
-                android:fontFamily="@font/tmonmonsori"/>
+                android:fontFamily="@font/tmonmonsori"
+                android:text="파일 업로드" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/examplePicturesURI"
+        <LinearLayout
+            android:id="@+id/userInputExampleTextLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/tmonmonsori"
+                android:text="예시 데이터 입력:" />
+
+            <EditText
+                android:id="@+id/userInputExampleTextEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="example"
+                android:inputType="textMultiLine"
+                android:maxLines="10" />
+        </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearlayout_in_plus"
+            android:id="@+id/classLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -228,13 +244,13 @@
                     android:fontFamily="@font/tmonmonsori"/>
 
                 <Button
-                    android:id="@+id/class_input"
+                    android:id="@+id/createNewClassButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:backgroundTint="#8028ADFC"
-                    android:text="입력칸 생성"
-                    android:fontFamily="@font/tmonmonsori"/>
+                    android:fontFamily="@font/tmonmonsori"
+                    android:text="입력칸 생성" />
             </LinearLayout>
         </LinearLayout>
 
@@ -251,7 +267,7 @@
                 android:fontFamily="@font/tmonmonsori"/>
 
             <EditText
-                android:id="@+id/total_data"
+                android:id="@+id/totalDataEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="total data"
@@ -272,7 +288,7 @@
                 android:fontFamily="@font/tmonmonsori"/>
 
             <EditText
-                android:id="@+id/subject"
+                android:id="@+id/subjectEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="subject"
@@ -293,7 +309,7 @@
                 android:fontFamily="@font/tmonmonsori"/>
 
             <EditText
-                android:id="@+id/description"
+                android:id="@+id/descriptionEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="description"
@@ -314,7 +330,7 @@
                 android:fontFamily="@font/tmonmonsori"/>
 
             <EditText
-                android:id="@+id/waycontent"
+                android:id="@+id/wayEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="way"
@@ -335,7 +351,7 @@
                 android:fontFamily="@font/tmonmonsori"/>
 
             <EditText
-                android:id="@+id/condition_content"
+                android:id="@+id/conditionEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="condition"
@@ -345,38 +361,10 @@
 
 
         <LinearLayout
-            android:id="@+id/example_content_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:text="예시 데이터 입력:"
-                android:fontFamily="@font/tmonmonsori"/>
-
-            <EditText
-                android:id="@+id/examplecontent"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:hint="example"
-                android:inputType="textMultiLine"
-                android:maxLines="10" />
-            <Button
-                android:id="@+id/text_example_data_input"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#8028ADFC"
-                android:text="업로드"
-                android:fontFamily="@font/tmonmonsori"/>
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/labelling_upload">
+            android:id="@+id/uploadLabelingDataLinearLayout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -386,22 +374,22 @@
                 android:fontFamily="@font/tmonmonsori"/>
 
             <Button
-                android:id="@+id/labelling_data_selection"
+                android:id="@+id/uploadLabelingDataButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#8028ADFC"
-                android:text="이미지 선택"
-                android:fontFamily="@font/tmonmonsori"/>
+                android:fontFamily="@font/tmonmonsori"
+                android:text="이미지 선택" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/make_button"
+            android:id="@+id/makeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:backgroundTint="#8028ADFC"
-            android:text="Make"
-            android:fontFamily="@font/tmonmonsori"/>
+            android:fontFamily="@font/tmonmonsori"
+            android:text="Make" />
     </LinearLayout>
 </ScrollView>

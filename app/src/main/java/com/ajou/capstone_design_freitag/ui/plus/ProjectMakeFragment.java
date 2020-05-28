@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -38,70 +36,71 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ProjectMakeFragment extends Fragment implements View.OnClickListener {
+public class ProjectMakeFragment extends Fragment {
 
-    private static final int EXAMPLE_PICTURE_IMAGE_REQUEST_CODE = 100;
-    private static final int LABELING_PICTURE_IMAGE_REQUEST_CODE = 101;
+    // Intent용 REQUEST CODE 정의
+    private static final int EXAMPLE_IMAGE_REQUEST_CODE = 100;
+    private static final int LABELING_IMAGE_REQUEST_CODE = 101;
     private static final int LOGIN_REQUEST_CODE = 102;
     private static final int EXAMPLE_AUDIO_REQUEST_CODE =103;
     private static final int EXAMPLE_TEXT_REQUEST_CODE = 104;
 
-    private ArrayList<Uri> examplePictures;
-    private ArrayList<Uri> labelingPictures;
+    // 업로드용 데이터 URI 임시 저장
+    private Uri exampleDataUri;
+    private ArrayList<Uri> labelingDataUris = new ArrayList<>();;
 
-    LinearLayout layout_plus;
-    LinearLayout example_content_layout;
-    LinearLayout example_data_upload;
-    LinearLayout text_upload_way;
-    LinearLayout labelling_upload;
+    // View들
+    private TextView workTypeTextView;
 
-    Button make_button;
-    Button text_example_data_button;
-    Button example_data_button;
-    Button labelling_data_button;
-    Button class_input;
+    private LinearLayout collectionTypeLinearLayout;
+    private RadioGroup collectionTypeRadioGroup;
+    private RadioButton collectionImageRadioButton;
+    private RadioButton collectionAudioRadioButton;
+    private RadioButton collectionTextRadioButton;
 
-    TextView exampleURI;
+    private LinearLayout labelingTypeLinearLayout;
+    private RadioGroup labelingTypeRadioGroup;
+    private RadioButton labelingBoundingboxRadioButton;
+    private RadioButton labelingClassificationRadioButton;
+
+    private LinearLayout textUploadWayLinearLayout;
+    private RadioGroup textUploadWayRadioGroup;
+    private RadioButton userInputExampleTextRadioButton;
+    private RadioButton uploadTextRadioButton;
+
+    private LinearLayout uploadExampleDataLinearLayout;
+    private Button uploadExampleDataButton;
+
+    private LinearLayout userInputExampleTextLinearLayout;
+    private EditText userInputExampleTextEditText;
+
+    private LinearLayout classLinearLayout;
+    private Button createNewClassButton;
+    private int classNum = 0;
+    private List<EditText> classListEditText = new ArrayList<EditText>();
+
+    private LinearLayout uploadLabelingDataLinearLayout;
+    private Button uploadLabelingDataButton;
+
+    private EditText projectName;
+    private EditText totalDataEditText;
+    private EditText subjectEditText;
+    private EditText descriptionEditText;
+    private EditText wayEditText;
+    private EditText conditionEditText;
+
+    private Button makeButton;
+
+    private String worktype;
+
+    List<String> classList = new ArrayList<>();
+
     private Context context;
-
-    PlusFragment plusFragment;
-
-    int id_class = 0;
-    private RadioGroup labelling_work;
-    private RadioGroup collection_data;
-    private RadioGroup text_example;
-    private RadioButton image;
-    private RadioButton audio;
-    private RadioButton text;
-    private RadioButton boundingbox;
-    private RadioButton classification;
-    private RadioButton user_input_text;
-    private RadioButton text_file_upload;
-
-    private EditText project_name;
-    private EditText project_subject;
-    private EditText description;
-    private EditText way_content;
-    private EditText example_content;
-    private EditText condition_content;
-    private EditText total_data;
-    private TextView worktype_text;
-
-    LinearLayout collection_data_type;
-    LinearLayout labelling_work_type;
-
-    String worktype = null;
-    String datatype = null;
-    String button_result = null;
-
-
-    List<EditText> addclass = new ArrayList<EditText>();
-    List<String> classList = new ArrayList<String>();
 
     public static ProjectMakeFragment newInstance(String worktype) {
         ProjectMakeFragment fragment = new ProjectMakeFragment();
         Bundle args = new Bundle();
-        args.putString("worktype",worktype);
+        args.putString("worktype", worktype);
         fragment.setArguments(args);
         return fragment;
     }
@@ -109,200 +108,167 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RESTAPI instance = RESTAPI.getInstance();
         //토큰 받아오는데 null이면 로그인
-        if(instance.getToken()==null){
+        if(RESTAPI.getInstance().getToken()==null){
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivityForResult(intent, LOGIN_REQUEST_CODE);
         }
         if (getArguments() != null) {
-            button_result = getArguments().getString("worktype");
+            worktype = getArguments().getString("worktype");
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        examplePictures = new ArrayList<>();
-        labelingPictures = new ArrayList<>();
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_project_make, container, false);
-        layout_plus = (LinearLayout)view.findViewById(R.id.linearlayout_in_plus);
-        example_content_layout = (LinearLayout)view.findViewById(R.id.example_content_layout);
-        example_content_layout.setVisibility(View.GONE);
-        example_data_upload = (LinearLayout)view.findViewById(R.id.example_data_upload);
-        example_data_upload.setVisibility(View.GONE);
-        text_upload_way = (LinearLayout)view.findViewById(R.id.text_upload_way);
-        text_upload_way.setVisibility(View.GONE);
-        labelling_upload = (LinearLayout)view.findViewById(R.id.labelling_upload);
 
-        make_button = (Button) view.findViewById(R.id.make_button);
-        text_example_data_button = (Button)view.findViewById(R.id.text_example_data_input);
-        example_data_button = (Button) view.findViewById(R.id.example_data_selection);
-        labelling_data_button = (Button) view.findViewById(R.id.labelling_data_selection);
-        class_input = (Button) view.findViewById(R.id.class_input);
-
-        collection_data_type = view.findViewById(R.id.type_collection);
-        labelling_work_type = view.findViewById(R.id.type_labelling);
-      
-        worktype_text = view.findViewById(R.id.work_type_creation);
-
-        if(button_result.equals("collection")){
-            worktype_text.setText("수집");
-            worktype = button_result;
-            collection_data_type.setVisibility(View.VISIBLE);
-            labelling_work_type.setVisibility(View.GONE);
-            labelling_upload.setVisibility(View.GONE);
-
-        }
-        else if(button_result.equals("labelling")){
-            worktype_text.setText("라벨링");
-            worktype = button_result;
-            labelling_work_type.setVisibility(View.VISIBLE);
-            collection_data_type.setVisibility(View.GONE);
-            example_data_upload.setVisibility(View.VISIBLE);
-        }
-        else if(button_result.equals("both")){
-            worktype_text.setText("수집+라벨링");
-            //worktype = button_result;
-            labelling_work_type.setVisibility(View.GONE);
-            collection_data_type.setVisibility(View.VISIBLE);
-        }
-
-        labelling_work = view.findViewById(R.id.radioGroup_labelling);
-        boundingbox = view.findViewById(R.id.boundingbox);
-        classification = view.findViewById(R.id.classification);
-        labelling_work.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
-                    case(R.id.boundingbox):
-                        datatype = boundingbox.getText().toString();
-                        break;
-                    case(R.id.classification):
-                        datatype = classification.getText().toString();
-                }
-            }
-        });
-
-        collection_data = view.findViewById(R.id.radioGroup_data);
-        image = view.findViewById(R.id.image_btn);
-        audio = view.findViewById(R.id.audio_btn);
-        text = view.findViewById(R.id.text_btn);
-        collection_data.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case(R.id.image_btn):
-                        datatype = image.getText().toString();
-                        example_content_layout.setVisibility(View.GONE);
-                        example_data_upload.setVisibility(View.VISIBLE);
-                        text_upload_way.setVisibility(View.GONE);
-                        break;
-                    case(R.id.audio_btn):
-                        datatype = audio.getText().toString();
-                        example_content_layout.setVisibility(View.GONE);
-                        example_data_upload.setVisibility(View.VISIBLE);
-                        text_upload_way.setVisibility(View.GONE);
-                        break;
-                    case( R.id.text_btn):
-                        datatype = text.getText().toString();
-                        text_upload_way.setVisibility(View.VISIBLE);
-                        break;
-                }
-            }
-        });
-
-        text_example = view.findViewById(R.id.radioGroup_text_example);
-        user_input_text = view.findViewById(R.id.user_input_text);
-        text_file_upload = view.findViewById(R.id.text_file_upload);
-        text_example.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case(R.id.user_input_text):
-                        example_content_layout.setVisibility(View.VISIBLE);
-                        example_data_upload.setVisibility(View.GONE);
-                        break;
-                    case(R.id.text_file_upload):
-                        example_data_upload.setVisibility(View.VISIBLE);
-                        example_content_layout.setVisibility(View.GONE);
-                        break;
-                }
-            }
-        });
-
-        project_name = view.findViewById(R.id.projectName);
-        project_subject = view.findViewById(R.id.subject);
-        description = view.findViewById(R.id.description);
-        way_content = view.findViewById(R.id.waycontent);
-        example_content = view.findViewById(R.id.examplecontent);
-        condition_content = view.findViewById(R.id.condition_content);
-        total_data = view.findViewById(R.id.total_data);
-
-        make_button.setOnClickListener(this);
-        text_example_data_button.setOnClickListener(this);
-        example_data_button.setOnClickListener(this);
-        labelling_data_button.setOnClickListener(this);
-        class_input.setOnClickListener(this);
-
-        exampleURI = (TextView) view.findViewById(R.id.examplePicturesURI);
+        findViews(view);
+        setAttributeByWorkType();
 
         context = container.getContext();
 
         return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @Override
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.make_button:
-                if(project_name.getText().toString().equals("") || project_subject.getText().toString().equals("")|| way_content.getText().toString().equals("")||condition_content.getText().toString().equals("")||description.getText().toString().equals("") ||total_data.getText().toString().equals("")){
-                    Toast.makeText(context, "빈칸없이 입력하세요.",Toast.LENGTH_LONG).show();
-                    return;
+    private void findViews(View view) {
+        workTypeTextView = view.findViewById(R.id.workTypeTextView);
+
+        collectionTypeLinearLayout = view.findViewById(R.id.collectionTypeLinearLayout);
+        collectionTypeRadioGroup = view.findViewById(R.id.collectionTypeRadioGroup);
+        collectionImageRadioButton = view.findViewById(R.id.collectionImageRadioButton);
+        collectionAudioRadioButton = view.findViewById(R.id.collectionAudioRadioButton);
+        collectionTextRadioButton = view.findViewById(R.id.collectionTextRadioButton);
+        collectionTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                exampleDataUri = null;
+                switch (checkedId){
+                    case(R.id.collectionImageRadioButton):
+                    case(R.id.collectionAudioRadioButton):
+                        textUploadWayLinearLayout.setVisibility(View.GONE);
+                        uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
+                        userInputExampleTextLinearLayout.setVisibility(View.GONE);
+                        break;
+                    case( R.id.collectionTextRadioButton):
+                        textUploadWayRadioGroup.clearCheck();
+                        textUploadWayLinearLayout.setVisibility(View.VISIBLE);
+                        uploadExampleDataLinearLayout.setVisibility(View.GONE);
+                        userInputExampleTextLinearLayout.setVisibility(View.GONE);
+                        break;
                 }
-                plusFragment = (PlusFragment)getParentFragment();
-                plusFragment.replaceFragment(3);
-                break;
-            case R.id.text_example_data_input:
-                make_project(view);
-                createClass(view);
-                try {
-                    upload_user_text_example(view);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            }
+        });
+
+        labelingTypeLinearLayout = view.findViewById(R.id.labelingTypeLinearLayout);
+        labelingTypeRadioGroup = view.findViewById(R.id.labelingTypeRadioGroup);
+        labelingBoundingboxRadioButton = view.findViewById(R.id.labelingBoundingboxRadioButton);
+        labelingClassificationRadioButton = view.findViewById(R.id.labelingClassificationRadioButton);
+
+        textUploadWayLinearLayout = view.findViewById(R.id.textUploadWayLinearLayout);
+        textUploadWayRadioGroup = view.findViewById(R.id.textUploadWayRadioGroup);
+        userInputExampleTextRadioButton = view.findViewById(R.id.userInputExampleTextRadioButton);
+        uploadTextRadioButton = view.findViewById(R.id.uploadTextRadioButton);
+        textUploadWayRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case(R.id.userInputExampleTextRadioButton):
+                        userInputExampleTextLinearLayout.setVisibility(View.VISIBLE);
+                        uploadExampleDataLinearLayout.setVisibility(View.GONE);
+                        break;
+                    case(R.id.uploadTextRadioButton):
+                        uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
+                        userInputExampleTextLinearLayout.setVisibility(View.GONE);
+                        break;
                 }
-                break;
-            case R.id.example_data_selection:
-                make_project(view);
-                createClass(view);
-                if(datatype.equals("이미지")){
-                    upload_image_example_data(view);
-                }
-                else if(datatype.equals("텍스트")){
-                  upload_text_example_data(view);
-                }
-                else if(datatype.equals("음성")){
-                    upload_audio_example_data(view);
-                }
-                break;
-            case R.id.labelling_data_selection:
-                upload_labelling_data(view);
-                break;
-            case R.id.class_input:
-                input_class(view);
-                break;
-        }
+            }
+        });
+
+        uploadExampleDataLinearLayout = view.findViewById(R.id.uploadExampleDataLinearLayout);
+        uploadExampleDataButton = view.findViewById(R.id.uploadExampleDataButton);
+        uploadExampleDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectExampleData(view);
+            }
+        });
+
+        userInputExampleTextLinearLayout = view.findViewById(R.id.userInputExampleTextLinearLayout);
+        userInputExampleTextEditText = view.findViewById(R.id.userInputExampleTextEditText);
+
+        classLinearLayout = view.findViewById(R.id.classLinearLayout);
+        createNewClassButton = view.findViewById(R.id.createNewClassButton);
+        createNewClassButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createNewClass(view);
+            }
+        });
+
+        uploadLabelingDataLinearLayout = view.findViewById(R.id.uploadLabelingDataLinearLayout);
+        uploadLabelingDataButton = view.findViewById(R.id.uploadLabelingDataButton);
+        uploadLabelingDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectLabellingImages(view);
+            }
+        });
+
+        projectName = view.findViewById(R.id.projectName);
+        totalDataEditText = view.findViewById(R.id.totalDataEditText);
+        subjectEditText = view.findViewById(R.id.subjectEditText);
+        descriptionEditText = view.findViewById(R.id.descriptionEditText);
+        wayEditText = view.findViewById(R.id.wayEditText);
+        conditionEditText = view.findViewById(R.id.conditionEditText);
+
+        makeButton = view.findViewById(R.id.makeButton);
+        makeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeProject(view);
+            }
+        });
     }
 
-    public void make_project(final View view){
-        final String projectName = project_name.getText().toString();
-        final String projectSubject = project_subject.getText().toString();
-        final String wayContent = way_content.getText().toString();
-        final String conditionContent = condition_content.getText().toString();
-        final String projectDescription = description.getText().toString();
-        final String projectTotalData = total_data.getText().toString();
+    private void setAttributeByWorkType() {
+        switch (worktype) {
+            case "collection":
+                workTypeTextView.setText("수집");
+                collectionTypeLinearLayout.setVisibility(View.VISIBLE);
+                labelingTypeLinearLayout.setVisibility(View.GONE);
+                uploadExampleDataLinearLayout.setVisibility(View.GONE);
+                uploadLabelingDataLinearLayout.setVisibility(View.GONE);
+                break;
+            case "labelling":
+                workTypeTextView.setText("라벨링");
+                collectionTypeLinearLayout.setVisibility(View.GONE);
+                labelingTypeLinearLayout.setVisibility(View.VISIBLE);
+                uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
+                uploadLabelingDataLinearLayout.setVisibility(View.VISIBLE);
+                break;
+            case "both":
+                workTypeTextView.setText("수집+라벨링");
+                collectionTypeLinearLayout.setVisibility(View.VISIBLE);
+                collectionImageRadioButton.setChecked(true);
+                collectionImageRadioButton.setEnabled(false);
+                collectionTextRadioButton.setEnabled(false);
+                collectionAudioRadioButton.setEnabled(false);
+                labelingTypeLinearLayout.setVisibility(View.VISIBLE);
+                uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
+                uploadLabelingDataLinearLayout.setVisibility(View.GONE);
+                break;
+        }
+        textUploadWayLinearLayout.setVisibility(View.GONE);
+        userInputExampleTextLinearLayout.setVisibility(View.GONE);
+    }
+
+    public void makeProject(View view){
+        final String projectName = this.projectName.getText().toString();
+        final String projectSubject = subjectEditText.getText().toString();
+        final String wayContent = wayEditText.getText().toString();
+        final String conditionContent = conditionEditText.getText().toString();
+        final String projectDescription = descriptionEditText.getText().toString();
+        final String projectTotalData = totalDataEditText.getText().toString();
 
         AsyncTask<String, Void,Boolean> projectTask = new AsyncTask<String, Void, Boolean>() {
             protected Boolean doInBackground(String... userInfos) {
@@ -318,9 +284,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                 }
             }
         };
-        System.out.println("worktype:"+worktype);
-        System.out.println("datatype:"+datatype);
-        projectTask.execute(projectName, worktype, datatype, projectSubject, wayContent, conditionContent, projectDescription, projectTotalData);
+        projectTask.execute(projectName, worktype, projectSubject, wayContent, conditionContent, projectDescription, projectTotalData);
     }
 
     public void createClass(final View view) {
@@ -336,27 +300,26 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
             }
 
         };
-        for(int i=0;i<addclass.size();i++){
-            classList.add(addclass.get(i).getText().toString());
+        for(int i = 0; i< classListEditText.size(); i++){
+            classList.add(classListEditText.get(i).getText().toString());
         }
         classTask.execute(classList);
-
     }
 
-    private void input_class(View view) { //프로젝트 생성할때 클래스 입력
+    public void createNewClass(View view) { //프로젝트 생성할때 클래스 입력
         EditText input = new EditText(getActivity().getApplicationContext());
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(param);
         input.setHint("class");
-        input.setId(id_class);
-        addclass.add(input);
+        input.setId(classNum);
+        classListEditText.add(input);
 
-        layout_plus.addView(input);
-        id_class++;
+        classLinearLayout.addView(input);
+        classNum++;
     }
 
     public void upload_user_text_example(View view) throws Exception {
-        final String exampleContent = example_content.getText().toString();
+        final String exampleContent = userInputExampleTextEditText.getText().toString();
         String dirPath = getContext().getExternalFilesDir(null).getAbsolutePath() + "/text_ex_file";
         File dir = new File(dirPath);
         if(!dir.exists()){
@@ -391,127 +354,82 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         uploadUserTextTask.execute(file);
     }
 
-    public void upload_image_example_data(View view){
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, EXAMPLE_PICTURE_IMAGE_REQUEST_CODE);
+    public void selectExampleData(View view) {
+        if(worktype.equals("collection")) {
+            switch (collectionTypeRadioGroup.getCheckedRadioButtonId()) {
+                case R.id.collectionImageRadioButton:
+                    selectExampleImage();
+                    break;
+                case R.id.collectionTextRadioButton:
+                    selectExampleText();
+                    break;
+                case R.id.collectionAudioRadioButton:
+                    selectExampleAudio();
+                    break;
+            }
+        } else {
+            selectExampleImage();
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void upload_audio_example_data(View view){
+    private void selectExampleImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("file/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setData(MediaStore.Downloads.EXTERNAL_CONTENT_URI);
-        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, EXAMPLE_IMAGE_REQUEST_CODE);
+    }
+
+    private void selectExampleAudio() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Audio.Media.CONTENT_TYPE);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        intent.setData(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, EXAMPLE_AUDIO_REQUEST_CODE);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void upload_text_example_data(View view){
-        Intent intent = new Intent(Intent.ACTION_PICK);
+    private void selectExampleText() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("file/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
         intent.setData(MediaStore.Downloads.EXTERNAL_CONTENT_URI);
-        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(intent, EXAMPLE_TEXT_REQUEST_CODE);
     }
 
-    public void upload_labelling_data(View view){
+    public void selectLabellingImages(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, EXAMPLE_PICTURE_IMAGE_REQUEST_CODE);
+        startActivityForResult(intent, EXAMPLE_IMAGE_REQUEST_CODE);
     }
 
-    public String getFileNameToUri(Uri data) { String[] proj = { MediaStore.Files.FileColumns.DISPLAY_NAME};
-    Cursor cursor = context.getContentResolver().query(data, proj, null, null, null);
-    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME);
-    cursor.moveToFirst();
-    String imgPath = cursor.getString(column_index);
-    String imgName = imgPath.substring(imgPath.lastIndexOf("/")+1);
-    return imgName; }
+    public String getFileNameFromUri(Uri uri) {
+        String[] proj = { MediaStore.Files.FileColumns.DISPLAY_NAME };
+        Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME);
+        cursor.moveToFirst();
+        String path = cursor.getString(columnIndex);
+        String name = path.substring(path.lastIndexOf("/")+1);
+        cursor.close();
+        return name;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == EXAMPLE_AUDIO_REQUEST_CODE){
-            Uri uri = data.getData();
-            final String fileName = getFileNameToUri(data.getData());//이름
-            exampleURI.setText(exampleURI.getText() + "\n" + uri);
-            AsyncTask<Uri, Void, Boolean> uploadAudioTask = new AsyncTask<Uri, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Uri... uris) {
-                    try {
-                        InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
-                        boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream,fileName,"audio/mp3");
-                        return new Boolean(result);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return new Boolean(false);
-                    }
-                }
-            };
-            uploadAudioTask.execute(uri);
-        }
-        else if(requestCode == EXAMPLE_TEXT_REQUEST_CODE){
-            Uri uri = data.getData();
-            final String fileName = getFileNameToUri(data.getData());//이름
-            exampleURI.setText(exampleURI.getText() + "\n" + uri);
-            AsyncTask<Uri, Void, Boolean> uploadTextTask = new AsyncTask<Uri, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Uri... uris) {
-                    try {
-                        InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
-                        boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream,fileName,"text/plain");
-                        return new Boolean(result);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return new Boolean(false);
-                    }
-                }
-            };
-            uploadTextTask.execute(uri);
-
-        }
-        else if(requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE || requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                ClipData clipData = data.getClipData();
-                for (int i = 0; i < clipData.getItemCount(); i++) {
-                    if (requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE) {
-                        examplePictures.add(clipData.getItemAt(i).getUri());
-                        final String fileName = getFileNameToUri(data.getData());//이름
-                        exampleURI.setText(exampleURI.getText() + "\n" + fileName);
-                        //clipData.getItemAt(i).getUri()
-                        try {
-                            AsyncTask<Uri, Void, Boolean> uploadImageTask = new AsyncTask<Uri, Void, Boolean>() {
-                                @Override
-                                protected Boolean doInBackground(Uri... uris) {
-                                    try {
-                                        InputStream inputStream = context.getContentResolver().openInputStream(uris[0]);
-                                        boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream,fileName,"image/jpeg");
-                                        //String contentType = context.getContentResolver().getType(uris[0]);
-                                        //boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream, contentType);
-                                        return new Boolean(result);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        return new Boolean(false);
-                                    }
-                                }
-                            };
-                            uploadImageTask.execute(clipData.getItemAt(i).getUri());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else if (requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
-                        labelingPictures.add(clipData.getItemAt(i).getUri());
-                    }
+        if (resultCode == RESULT_OK) {
+            if(requestCode == EXAMPLE_AUDIO_REQUEST_CODE || requestCode == EXAMPLE_TEXT_REQUEST_CODE || requestCode == EXAMPLE_IMAGE_REQUEST_CODE){
+                exampleDataUri = data.getData();
+                System.out.println(exampleDataUri);
+            }
+            if(requestCode == LABELING_IMAGE_REQUEST_CODE) {
+                ClipData clipDatas = data.getClipData();
+                for (int i = 0; i < clipDatas.getItemCount(); i++) {
+                    labelingDataUris.add(clipDatas.getItemAt(i).getUri());
                 }
             }
-        } else if(requestCode == LOGIN_REQUEST_CODE) {
-            if (resultCode != RESULT_OK) {
+        } else {
+            if(requestCode == LOGIN_REQUEST_CODE) {
                 Toast.makeText(context, "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
                 ((MainActivity)getActivity()).goToHome();
             }
