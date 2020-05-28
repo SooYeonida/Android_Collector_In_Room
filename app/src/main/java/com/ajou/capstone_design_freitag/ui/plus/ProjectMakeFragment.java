@@ -29,8 +29,10 @@ import com.ajou.capstone_design_freitag.R;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,14 +42,14 @@ public class ProjectMakeFragment extends Fragment {
 
     // Intent용 REQUEST CODE 정의
     private static final int EXAMPLE_IMAGE_REQUEST_CODE = 100;
-    private static final int LABELING_IMAGE_REQUEST_CODE = 101;
+    private static final int LABELLING_IMAGE_REQUEST_CODE = 101;
     private static final int LOGIN_REQUEST_CODE = 102;
     private static final int EXAMPLE_AUDIO_REQUEST_CODE =103;
     private static final int EXAMPLE_TEXT_REQUEST_CODE = 104;
 
     // 업로드용 데이터 URI 임시 저장
     private Uri exampleDataUri;
-    private ArrayList<Uri> labelingDataUris = new ArrayList<>();;
+    private ArrayList<Uri> labellingDataUris = new ArrayList<>();;
 
     // View들
     private TextView workTypeTextView;
@@ -58,10 +60,10 @@ public class ProjectMakeFragment extends Fragment {
     private RadioButton collectionAudioRadioButton;
     private RadioButton collectionTextRadioButton;
 
-    private LinearLayout labelingTypeLinearLayout;
-    private RadioGroup labelingTypeRadioGroup;
-    private RadioButton labelingBoundingboxRadioButton;
-    private RadioButton labelingClassificationRadioButton;
+    private LinearLayout labellingTypeLinearLayout;
+    private RadioGroup labellingTypeRadioGroup;
+    private RadioButton labellingBoundingboxRadioButton;
+    private RadioButton labellingClassificationRadioButton;
 
     private LinearLayout textUploadWayLinearLayout;
     private RadioGroup textUploadWayRadioGroup;
@@ -79,8 +81,8 @@ public class ProjectMakeFragment extends Fragment {
     private int classNum = 0;
     private List<EditText> classListEditText = new ArrayList<EditText>();
 
-    private LinearLayout uploadLabelingDataLinearLayout;
-    private Button uploadLabelingDataButton;
+    private LinearLayout uploadLabellingDataLinearLayout;
+    private Button uploadLabellingDataButton;
 
     private EditText projectName;
     private EditText totalDataEditText;
@@ -92,6 +94,7 @@ public class ProjectMakeFragment extends Fragment {
     private Button makeButton;
 
     private String worktype;
+    private String datatype;
 
     List<String> classList = new ArrayList<>();
 
@@ -143,26 +146,46 @@ public class ProjectMakeFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 exampleDataUri = null;
                 switch (checkedId){
-                    case(R.id.collectionImageRadioButton):
-                    case(R.id.collectionAudioRadioButton):
+                    case R.id.collectionImageRadioButton:
+                        datatype = "image";
                         textUploadWayLinearLayout.setVisibility(View.GONE);
                         uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
                         userInputExampleTextLinearLayout.setVisibility(View.GONE);
                         break;
-                    case( R.id.collectionTextRadioButton):
+                    case R.id.collectionTextRadioButton:
+                        datatype = "text";
                         textUploadWayRadioGroup.clearCheck();
                         textUploadWayLinearLayout.setVisibility(View.VISIBLE);
                         uploadExampleDataLinearLayout.setVisibility(View.GONE);
+                        userInputExampleTextLinearLayout.setVisibility(View.GONE);
+                        break;
+                    case R.id.collectionAudioRadioButton:
+                        datatype = "audio";
+                        textUploadWayLinearLayout.setVisibility(View.GONE);
+                        uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
                         userInputExampleTextLinearLayout.setVisibility(View.GONE);
                         break;
                 }
             }
         });
 
-        labelingTypeLinearLayout = view.findViewById(R.id.labelingTypeLinearLayout);
-        labelingTypeRadioGroup = view.findViewById(R.id.labelingTypeRadioGroup);
-        labelingBoundingboxRadioButton = view.findViewById(R.id.labelingBoundingboxRadioButton);
-        labelingClassificationRadioButton = view.findViewById(R.id.labelingClassificationRadioButton);
+        labellingTypeLinearLayout = view.findViewById(R.id.labelingTypeLinearLayout);
+        labellingTypeRadioGroup = view.findViewById(R.id.labelingTypeRadioGroup);
+        labellingClassificationRadioButton = view.findViewById(R.id.labelingClassificationRadioButton);
+        labellingBoundingboxRadioButton = view.findViewById(R.id.labelingBoundingboxRadioButton);
+        labellingTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.labelingClassificationRadioButton:
+                        datatype = "classfication";
+                        break;
+                    case R.id.labelingBoundingboxRadioButton:
+                        datatype = "boundingBox";
+                        break;
+                }
+            }
+        });
 
         textUploadWayLinearLayout = view.findViewById(R.id.textUploadWayLinearLayout);
         textUploadWayRadioGroup = view.findViewById(R.id.textUploadWayRadioGroup);
@@ -205,9 +228,9 @@ public class ProjectMakeFragment extends Fragment {
             }
         });
 
-        uploadLabelingDataLinearLayout = view.findViewById(R.id.uploadLabelingDataLinearLayout);
-        uploadLabelingDataButton = view.findViewById(R.id.uploadLabelingDataButton);
-        uploadLabelingDataButton.setOnClickListener(new View.OnClickListener() {
+        uploadLabellingDataLinearLayout = view.findViewById(R.id.uploadLabelingDataLinearLayout);
+        uploadLabellingDataButton = view.findViewById(R.id.uploadLabelingDataButton);
+        uploadLabellingDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectLabellingImages(view);
@@ -235,16 +258,16 @@ public class ProjectMakeFragment extends Fragment {
             case "collection":
                 workTypeTextView.setText("수집");
                 collectionTypeLinearLayout.setVisibility(View.VISIBLE);
-                labelingTypeLinearLayout.setVisibility(View.GONE);
+                labellingTypeLinearLayout.setVisibility(View.GONE);
                 uploadExampleDataLinearLayout.setVisibility(View.GONE);
-                uploadLabelingDataLinearLayout.setVisibility(View.GONE);
+                uploadLabellingDataLinearLayout.setVisibility(View.GONE);
                 break;
             case "labelling":
                 workTypeTextView.setText("라벨링");
                 collectionTypeLinearLayout.setVisibility(View.GONE);
-                labelingTypeLinearLayout.setVisibility(View.VISIBLE);
+                labellingTypeLinearLayout.setVisibility(View.VISIBLE);
                 uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
-                uploadLabelingDataLinearLayout.setVisibility(View.VISIBLE);
+                uploadLabellingDataLinearLayout.setVisibility(View.VISIBLE);
                 break;
             case "both":
                 workTypeTextView.setText("수집+라벨링");
@@ -253,108 +276,31 @@ public class ProjectMakeFragment extends Fragment {
                 collectionImageRadioButton.setEnabled(false);
                 collectionTextRadioButton.setEnabled(false);
                 collectionAudioRadioButton.setEnabled(false);
-                labelingTypeLinearLayout.setVisibility(View.VISIBLE);
+                labellingTypeLinearLayout.setVisibility(View.VISIBLE);
                 uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
-                uploadLabelingDataLinearLayout.setVisibility(View.GONE);
+                uploadLabellingDataLinearLayout.setVisibility(View.GONE);
                 break;
         }
         textUploadWayLinearLayout.setVisibility(View.GONE);
         userInputExampleTextLinearLayout.setVisibility(View.GONE);
     }
 
-    public void makeProject(View view){
-        final String projectName = this.projectName.getText().toString();
-        final String projectSubject = subjectEditText.getText().toString();
-        final String wayContent = wayEditText.getText().toString();
-        final String conditionContent = conditionEditText.getText().toString();
-        final String projectDescription = descriptionEditText.getText().toString();
-        final String projectTotalData = totalDataEditText.getText().toString();
-
-        AsyncTask<String, Void,Boolean> projectTask = new AsyncTask<String, Void, Boolean>() {
-            protected Boolean doInBackground(String... userInfos) {
-                Boolean result = RESTAPI.getInstance().makeProject(userInfos[0],
-                        userInfos[1],userInfos[2],userInfos[3],userInfos[4],userInfos[5]
-                        ,userInfos[6],userInfos[7]);
-                return result;
-            }
-            @Override
-            protected void onPostExecute(Boolean result) {
-               if(!result){
-                    Toast.makeText(getActivity(), "프로젝트 생성 실패", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-        projectTask.execute(projectName, worktype, projectSubject, wayContent, conditionContent, projectDescription, projectTotalData);
+    private void makeProject(View view){
+        MakeProjectTask makeProjectTask = new MakeProjectTask(this);
+        makeProjectTask.execute();
     }
 
-    public void createClass(final View view) {
-        AsyncTask<Object, Void,Boolean> classTask = new AsyncTask<Object, Void, Boolean>() {
-            protected Boolean doInBackground(Object... classInfos) {
-                Boolean result = null;
-                try {
-                    result = RESTAPI.getInstance().createClass((List<String>) classInfos[0]);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return result;
-            }
-
-        };
-        for(int i = 0; i< classListEditText.size(); i++){
-            classList.add(classListEditText.get(i).getText().toString());
-        }
-        classTask.execute(classList);
-    }
-
-    public void createNewClass(View view) { //프로젝트 생성할때 클래스 입력
+    private void createNewClass(View view) { //프로젝트 생성할때 클래스 입력
         EditText input = new EditText(getActivity().getApplicationContext());
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(param);
         input.setHint("class");
-        input.setId(classNum);
         classListEditText.add(input);
-
         classLinearLayout.addView(input);
         classNum++;
     }
 
-    public void upload_user_text_example(View view) throws Exception {
-        final String exampleContent = userInputExampleTextEditText.getText().toString();
-        String dirPath = getContext().getExternalFilesDir(null).getAbsolutePath() + "/text_ex_file";
-        File dir = new File(dirPath);
-        if(!dir.exists()){
-            dir.mkdir();
-        }
-        String FileName = "example.txt";
-        FileOutputStream fileOutputStream = getContext().openFileOutput(FileName,Context.MODE_PRIVATE);
-        fileOutputStream.write(exampleContent.getBytes());
-        fileOutputStream.close();
-        File file = new File("/data/data/com.ajou.capstone_design_freitag/files/example.txt");
-
-        AsyncTask<File, Void, Boolean> uploadUserTextTask = new AsyncTask<File, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(File... files) {
-                try {
-                    InputStream inputStream = new FileInputStream(files[0]);
-                    boolean result = RESTAPI.getInstance().uploadExampleFile(inputStream,"example.txt", "text/plain");
-                    inputStream.close();
-                    return result;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return new Boolean(false);
-                }
-            }
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if(!result){
-                    Toast.makeText(context, "사용자 입력 예시 텍스트파일 업로드 실패",Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-        uploadUserTextTask.execute(file);
-    }
-
-    public void selectExampleData(View view) {
+    private void selectExampleData(View view) {
         if(worktype.equals("collection")) {
             switch (collectionTypeRadioGroup.getCheckedRadioButtonId()) {
                 case R.id.collectionImageRadioButton:
@@ -374,45 +320,30 @@ public class ProjectMakeFragment extends Fragment {
 
     private void selectExampleImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, EXAMPLE_IMAGE_REQUEST_CODE);
     }
 
     private void selectExampleAudio() {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Audio.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        intent.setData(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        intent.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.Audio.Media.CONTENT_TYPE);
         startActivityForResult(intent, EXAMPLE_AUDIO_REQUEST_CODE);
     }
 
     private void selectExampleText() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setType("file/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        intent.setData(MediaStore.Downloads.EXTERNAL_CONTENT_URI);
+        intent.setDataAndType(MediaStore.Downloads.EXTERNAL_CONTENT_URI, "file/*");
         startActivityForResult(intent, EXAMPLE_TEXT_REQUEST_CODE);
     }
 
-    public void selectLabellingImages(View view) {
+    private void selectLabellingImages(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, EXAMPLE_IMAGE_REQUEST_CODE);
-    }
-
-    public String getFileNameFromUri(Uri uri) {
-        String[] proj = { MediaStore.Files.FileColumns.DISPLAY_NAME };
-        Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
-        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME);
-        cursor.moveToFirst();
-        String path = cursor.getString(columnIndex);
-        String name = path.substring(path.lastIndexOf("/")+1);
-        cursor.close();
-        return name;
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.CONTENT_TYPE);
+        startActivityForResult(intent, LABELLING_IMAGE_REQUEST_CODE);
     }
 
     @Override
@@ -420,12 +351,10 @@ public class ProjectMakeFragment extends Fragment {
         if (resultCode == RESULT_OK) {
             if(requestCode == EXAMPLE_AUDIO_REQUEST_CODE || requestCode == EXAMPLE_TEXT_REQUEST_CODE || requestCode == EXAMPLE_IMAGE_REQUEST_CODE){
                 exampleDataUri = data.getData();
-                System.out.println(exampleDataUri);
-            }
-            if(requestCode == LABELING_IMAGE_REQUEST_CODE) {
+            } else if(requestCode == LABELLING_IMAGE_REQUEST_CODE) {
                 ClipData clipDatas = data.getClipData();
                 for (int i = 0; i < clipDatas.getItemCount(); i++) {
-                    labelingDataUris.add(clipDatas.getItemAt(i).getUri());
+                    labellingDataUris.add(clipDatas.getItemAt(i).getUri());
                 }
             }
         } else {
@@ -433,6 +362,210 @@ public class ProjectMakeFragment extends Fragment {
                 Toast.makeText(context, "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
                 ((MainActivity)getActivity()).goToHome();
             }
+        }
+    }
+
+    private Uri getExampleDataUri() throws Exception {
+        if(collectionTextRadioButton.isChecked()) {
+            String exampleText = userInputExampleTextEditText.getText().toString();
+            String dirPath = getContext().getCacheDir().getAbsolutePath() + "/freitag";
+            File dir = new File(dirPath);
+            if(!dir.exists()) {
+                dir.mkdir();
+            }
+            String fileName = dirPath + "example.txt";
+            FileOutputStream fileOutputStream = getContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+            fileOutputStream.write(exampleText.getBytes());
+            fileOutputStream.close();
+            return Uri.fromFile(new File(fileName));
+        }
+        return exampleDataUri;
+    }
+
+    private static class MakeProjectTask extends AsyncTask<Void, Void, Boolean> {
+
+        private WeakReference<ProjectMakeFragment> fragmentReference;
+
+        private String projectName;
+        private String worktype;
+        private String datatype;
+        private String totalData;
+        private String subject;
+        private String description;
+        private String way;
+        private String condition;
+        private ArrayList<String> classList;
+        private Uri exampleDataUri;
+        private ArrayList<Uri> labellingDataUris;
+
+        MakeProjectTask(ProjectMakeFragment context) {
+            fragmentReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            getParameters();
+            System.out.println("getParameters pass");
+            if(validation()) {
+                System.out.println("validation pass");
+                if(sendProjectInfo()) {
+                    System.out.println("create project pass");
+                    if(sendClassInfo()) {
+                        System.out.println("create class pass");
+                        if(sendExampleData()) {
+                            System.out.println("upload example data pass");
+                            if(worktype.equals("labelling")) {
+                                if(sendLabellingData()) {
+                                    System.out.println("upload labelling datas pass");
+                                    return true;
+                                }
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private boolean sendLabellingData() {
+            ProjectMakeFragment fragment = getFragment();
+            if(fragment == null) {
+                return false;
+            }
+            Context context = fragment.getContext();
+
+            try {
+                int labellingDataNum = labellingDataUris.size();
+                InputStream[] inputStreams = new InputStream[labellingDataNum];
+                String[] contentTypes = new String[labellingDataNum];
+                String[] fileNames = new String[labellingDataNum];
+                for(int i = 0; i < labellingDataNum; i++) {
+                    inputStreams[i] = context.getContentResolver().openInputStream(exampleDataUri);
+                    fileNames[i] = getFileNameFromUri(exampleDataUri);
+                    contentTypes[i] = context.getContentResolver().getType(exampleDataUri);
+                }
+                return RESTAPI.getInstance().uploadLabellingFiles(inputStreams, fileNames, contentTypes);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        private String getFileNameFromUri(Uri uri) {
+            ProjectMakeFragment fragment = getFragment();
+            if(fragment == null)
+                return null;
+
+            String[] proj = { MediaStore.Files.FileColumns.DISPLAY_NAME };
+            Cursor cursor = fragment.getContext().getContentResolver().query(uri, proj, null, null, null);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME);
+            cursor.moveToFirst();
+            String path = cursor.getString(columnIndex);
+            String name = path.substring(path.lastIndexOf("/")+1);
+            cursor.close();
+            return name;
+        }
+
+        private boolean sendExampleData() {
+            ProjectMakeFragment fragment = getFragment();
+            if(fragment == null) {
+                return false;
+            }
+            Context context = fragment.getContext();
+
+            try {
+                InputStream inputStream = context.getContentResolver().openInputStream(exampleDataUri);
+                String fileName = getFileNameFromUri(exampleDataUri);
+                String contentType = context.getContentResolver().getType(exampleDataUri);
+                return RESTAPI.getInstance().uploadExampleFile(inputStream, fileName, contentType);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        private boolean sendClassInfo() {
+            return RESTAPI.getInstance().createClass(classList);
+        }
+
+        private boolean sendProjectInfo() {
+            return RESTAPI.getInstance().makeProject(projectName, worktype, datatype, subject, way, condition, description, totalData);
+        }
+
+        private boolean validation() {
+            if(projectName.isEmpty() || datatype.isEmpty() || totalData.isEmpty() || subject.isEmpty() || description.isEmpty() || way.isEmpty() || condition.isEmpty()) {
+                System.out.println("not enough project infomation");
+                return false;
+            }
+            if(classList.size() == 0) {
+                System.out.println("not entered classes");
+                return false;
+            }
+            if(exampleDataUri == null) {
+                System.out.println("not selected example");
+                return false;
+            }
+            if(worktype.equals("labelling")) {
+                if(Integer.parseInt(totalData) != labellingDataUris.size()) {
+                    System.out.println("not match labelling number");
+                    System.out.println("totalData : " + Integer.parseInt(totalData));
+                    System.out.println("labellingDataUris.size() : " + labellingDataUris.size());
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void getParameters() {
+            ProjectMakeFragment fragment = getFragment();
+            if (fragment == null) {
+                return;
+            }
+
+            projectName = fragment.projectName.getText().toString();
+            worktype = fragment.worktype;
+            datatype = fragment.datatype;
+            totalData = fragment.totalDataEditText.getText().toString();
+            subject = fragment.subjectEditText.getText().toString();
+            description = fragment.descriptionEditText.getText().toString();
+            way = fragment.wayEditText.getText().toString();
+            condition = fragment.conditionEditText.getText().toString();
+            classList = new ArrayList<>();
+            for(int i = 0; i < fragment.classListEditText.size(); i++) {
+                classList.add(fragment.classListEditText.get(i).getText().toString());
+            }
+            try {
+                exampleDataUri = fragment.getExampleDataUri();
+            } catch (Exception e) {
+                exampleDataUri = null;
+            }
+            labellingDataUris = fragment.labellingDataUris;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            ProjectMakeFragment fragment = getFragment();
+            if (fragment == null) {
+                return;
+            }
+
+            if(result) {
+                ((PlusFragment)fragment.getParentFragment()).replaceFragment(3);
+            } else {
+                Toast.makeText(fragment.context, "프로젝트 생성이 실패했습니다.", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        private ProjectMakeFragment getFragment() {
+            ProjectMakeFragment fragment = fragmentReference.get();
+            if (fragment == null || fragment.isRemoving()) {
+                return null;
+            }
+            return fragment;
         }
     }
 }
