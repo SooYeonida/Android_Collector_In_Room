@@ -6,6 +6,8 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,8 +22,13 @@ import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,16 +44,23 @@ public class ImageCollectionActivity extends AppCompatActivity {
     Button upload;
     Button work_done;
     Context context;
+    Project project;
 
     List<InputStream> inputStreamList = new ArrayList<>();
     List<String> fileNameList = new ArrayList<>();
+
+    File file = new File("/data/data/com.ajou.capstone_design_freitag/files/project_example.jpg");
+    OutputStream outputStream = new FileOutputStream(file);
+
+    public ImageCollectionActivity() throws FileNotFoundException {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_collection);
         Intent intent = getIntent();
-        Project project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
+        project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
         Project.getProjectinstance().setBucketName(project.getBucketName());
         Project.getProjectinstance().setProjectId(project.getProjectId());
         projectName = findViewById(R.id.image_collection_project_name);
@@ -55,6 +69,13 @@ public class ImageCollectionActivity extends AppCompatActivity {
         dataURI = findViewById(R.id.collection_image_uri);
         upload = findViewById(R.id.collection_image_upload);
         work_done = findViewById(R.id.work_done_image);
+        exampleContent = findViewById(R.id.work_example_content_image);
+
+        try {
+            getExampleData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         projectName.setText(project.getProjectName());
         wayContent.setText(project.getWayContent());
@@ -82,6 +103,41 @@ public class ImageCollectionActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void getExampleData() throws IOException {
+        AsyncTask<Object, Void, Boolean> downloadExampleTask = new AsyncTask<Object, Void, Boolean>() {
+            protected Boolean doInBackground(Object... dataInfos) {
+                Boolean result = RESTAPI.getInstance().downloadObject((String)dataInfos[0],(String)dataInfos[1],(OutputStream)dataInfos[2]);
+                return result;
+            }
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if(!result){
+                    System.out.println("예시 다운로드 실패");
+                }
+                else
+                {
+                    System.out.println("예시 다운로드 성공");
+                    InputStream inputStream = null;
+                    try {
+                        inputStream = new FileInputStream(file);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    exampleContent.setImageBitmap(bitmap);
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        };
+        downloadExampleTask.execute(project.getBucketName(),project.getExampleContent(),outputStream);
+
     }
 
     public void upload_collection_image_data(View view) {

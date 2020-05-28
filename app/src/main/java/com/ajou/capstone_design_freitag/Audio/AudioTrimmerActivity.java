@@ -324,7 +324,6 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
     /**
      * Start recording
      */
-    //음파 보이는 곳이 여기
     private void startRecording() {
         final SoundFile.ProgressListener listener =
                 new SoundFile.ProgressListener() {
@@ -350,7 +349,6 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
         Thread mRecordAudioThread = new Thread() {
             public void run() {
                 try {
-                    //사용자가 녹음한 파일을 저 형식으로 엶.
                     mRecordedSoundFile = SoundFile.record(listener);
                     if (mRecordedSoundFile == null) {
                         finish();

@@ -318,8 +318,6 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                 }
             }
         };
-        System.out.println("worktype:"+worktype);
-        System.out.println("datatype:"+datatype);
         projectTask.execute(projectName, worktype, datatype, projectSubject, wayContent, conditionContent, projectDescription, projectTotalData);
     }
 
@@ -362,6 +360,7 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
         if(!dir.exists()){
             dir.mkdir();
         }
+
         String FileName = "example.txt";
         FileOutputStream fileOutputStream = getContext().openFileOutput(FileName,Context.MODE_PRIVATE);
         fileOutputStream.write(exampleContent.getBytes());
@@ -474,7 +473,6 @@ public class ProjectMakeFragment extends Fragment implements View.OnClickListene
                 }
             };
             uploadTextTask.execute(uri);
-
         }
         else if(requestCode == EXAMPLE_PICTURE_IMAGE_REQUEST_CODE || requestCode == LABELING_PICTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {

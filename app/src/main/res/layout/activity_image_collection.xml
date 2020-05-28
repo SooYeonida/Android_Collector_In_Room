@@ -71,9 +71,10 @@ tools:context=".ImageCollectionActivity">
         android:fontFamily="@font/tmonmonsori"/>
 
     <ImageView
+        android:id="@+id/work_example_content_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
 
     <View
         android:layout_width="match_parent"
