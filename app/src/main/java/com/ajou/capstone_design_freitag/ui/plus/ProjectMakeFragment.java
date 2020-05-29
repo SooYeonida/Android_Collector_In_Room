@@ -326,9 +326,9 @@ public class ProjectMakeFragment extends Fragment {
     }
 
     private void selectExampleAudio() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        intent.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.Audio.Media.CONTENT_TYPE);
+        intent.setDataAndType(MediaStore.Downloads.EXTERNAL_CONTENT_URI, "audio/*");
         startActivityForResult(intent, EXAMPLE_AUDIO_REQUEST_CODE);
     }
 
@@ -373,8 +373,8 @@ public class ProjectMakeFragment extends Fragment {
             if(!dir.exists()) {
                 dir.mkdir();
             }
-            String fileName = dirPath + "example.txt";
-            FileOutputStream fileOutputStream = getContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+            String fileName = dirPath + "/example.txt";
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(fileName));
             fileOutputStream.write(exampleText.getBytes());
             fileOutputStream.close();
             return Uri.fromFile(new File(fileName));
@@ -541,6 +541,7 @@ public class ProjectMakeFragment extends Fragment {
             try {
                 exampleDataUri = fragment.getExampleDataUri();
             } catch (Exception e) {
+                e.printStackTrace();
                 exampleDataUri = null;
             }
             labellingDataUris = fragment.labellingDataUris;
