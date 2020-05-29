@@ -235,12 +235,13 @@ public class RESTAPI {
         header = uploadFile.multipart(inputStream, fileName, fileType);
         String result;
         result = header.get("example").get(0);
-        Project.getProjectinstance().setProjectId(header.get("projectId").get(0));//아이디 받아
-        Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
-        if(!result.equals("success")){
+        if(result.equals("success")) {
+            Project.getProjectinstance().setProjectId(header.get("projectId").get(0));//아이디 받아
+            Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 
     public boolean uploadLabellingFiles(InputStream[] inputStreams, String[] fileNames, String[] contentTypes) throws Exception {
@@ -262,8 +263,8 @@ public class RESTAPI {
         }
     }
 
-    public boolean pointPayment() throws Exception {
-        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/point/payment");
+    public boolean payment(String method) throws Exception {
+        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/" + method + "/payment");
         pointPayment.setHeader("Authorization",token);
         pointPayment.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
         pointPayment.request();
