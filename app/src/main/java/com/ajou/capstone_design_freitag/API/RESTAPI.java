@@ -39,7 +39,7 @@ import awsauth.AWS4SignerForAuthorizationHeader;
 import http.HTTPRequest;
 
 public class RESTAPI {
-    public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
+    private static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
     private String baseURL = "http://10.0.0.2:8080";
     //private String baseURL = "http://localhost:8080";
@@ -226,7 +226,7 @@ public class RESTAPI {
         return result.equals("success");
     }
 
-    public boolean uploadExampleFile(InputStream inputStream, String fileName, String fileType) throws Exception {
+    public boolean uploadExampleFile(InputStream inputStream, String fileName, String fileType, String worktype) throws Exception {
         APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
         Map<String, List<String>> header;
         uploadFile.setHeader("Authorization",token);
@@ -237,7 +237,11 @@ public class RESTAPI {
         result = header.get("example").get(0);
         if(result.equals("success")) {
             Project.getProjectinstance().setProjectId(header.get("projectId").get(0));//아이디 받아
-            Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
+            if(worktype.equals("collection")) {
+                Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
+            } else {
+                Project.getProjectinstance().setBucketName(header.get("bucketName").get(0));
+            }
             return true;
         } else {
             return false;
@@ -253,14 +257,17 @@ public class RESTAPI {
         }
         HttpPost httpPost = new HttpPost(baseURL + "/api/project/upload/labelling");
         httpPost.setHeader("Authorization", token);
+        httpPost.setHeader("bucketName", Project.getProjectinstance().getBucketName());
         httpPost.setEntity(builder.build());
         HttpResponse httpResponse = httpClient.execute(httpPost);
 
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            return true;
-        } else {
-            return false;
+            if(httpResponse.getFirstHeader("upload").getValue().equals("success")) {
+                Project.getProjectinstance().setCost(Integer.parseInt(httpResponse.getFirstHeader("cost").getValue()));
+                return true;
+            }
         }
+        return false;
     }
 
     public boolean payment(String method) throws Exception {

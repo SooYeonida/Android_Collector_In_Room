@@ -443,9 +443,9 @@ public class ProjectMakeFragment extends Fragment {
                 String[] contentTypes = new String[labellingDataNum];
                 String[] fileNames = new String[labellingDataNum];
                 for(int i = 0; i < labellingDataNum; i++) {
-                    inputStreams[i] = context.getContentResolver().openInputStream(exampleDataUri);
-                    fileNames[i] = getFileNameFromUri(exampleDataUri);
-                    contentTypes[i] = context.getContentResolver().getType(exampleDataUri);
+                    inputStreams[i] = context.getContentResolver().openInputStream(labellingDataUris.get(i));
+                    fileNames[i] = getFileNameFromUri(labellingDataUris.get(i));
+                    contentTypes[i] = context.getContentResolver().getType(labellingDataUris.get(i));
                 }
                 return RESTAPI.getInstance().uploadLabellingFiles(inputStreams, fileNames, contentTypes);
             } catch (Exception e) {
@@ -480,7 +480,7 @@ public class ProjectMakeFragment extends Fragment {
                 InputStream inputStream = context.getContentResolver().openInputStream(exampleDataUri);
                 String fileName = getFileNameFromUri(exampleDataUri);
                 String contentType = context.getContentResolver().getType(exampleDataUri);
-                return RESTAPI.getInstance().uploadExampleFile(inputStream, fileName, contentType);
+                return RESTAPI.getInstance().uploadExampleFile(inputStream, fileName, contentType, worktype);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
