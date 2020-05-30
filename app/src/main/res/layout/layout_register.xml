@@ -13,11 +13,12 @@
         style="@style/linearParent"
         android:layout_gravity="center"
         android:padding="@dimen/loginViewsMargin">
+
         <TextView
             style="@style/headerTextPrimary"
-            android:text="@string/register"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            android:fontFamily="@font/tmonmonsori"/>
+            android:fontFamily="@font/tmonmonsori"
+            android:text="회원가입" />
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
             android:layout_marginTop="@dimen/signup_text_margin_top">
@@ -40,6 +41,18 @@
                 android:hint="@string/login_password_hint"
                 android:inputType="textPassword"
                 android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+
+            <EditText
+                android:id="@+id/registerPasswordSecond"
+                style="@style/modifiedEditText"
+                android:hint="Password 확인"
+                android:inputType="textPassword"
+                android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
@@ -48,7 +61,7 @@
             <EditText
                 android:id="@+id/registerName"
                 style="@style/modifiedEditText"
-                android:hint="Name"
+                android:hint="이름"
                 android:inputType="text"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -59,7 +72,7 @@
             <EditText
                 android:id="@+id/registerPhone"
                 style="@style/modifiedEditText"
-                android:hint="Mobile Number"
+                android:hint="핸드폰 번호"
                 android:inputType="phone"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -70,7 +83,7 @@
             <EditText
                 android:id="@+id/registerEmail"
                 style="@style/modifiedEditText"
-                android:hint="Email"
+                android:hint="이메일"
                 android:inputType="textEmailAddress"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -81,7 +94,7 @@
             <EditText
                 android:id="@+id/registerAffiliation"
                 style="@style/modifiedEditText"
-                android:hint="Affiliation"
+                android:hint="소속"
                 android:inputType="text"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
