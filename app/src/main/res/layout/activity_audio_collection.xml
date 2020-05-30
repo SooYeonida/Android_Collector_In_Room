@@ -80,13 +80,15 @@
             android:id="@+id/play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/play"/>
+            android:src="@drawable/play"
+            android:layout_marginTop="10dp"/>
 
         <ImageView
             android:id="@+id/pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/pause" />
+            android:src="@drawable/pause"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
@@ -104,6 +106,22 @@
         android:layout_centerInParent="true"
         android:background="#80242525"/>
 
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioGroup_class_list_audio"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+        </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="*오디오 등록버튼을 눌러야 작업이 완료됩니다. 버튼을 꼭 눌러주세요*"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -118,11 +136,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="음성 파일 업로드"
+            android:text="음성 파일 선택"
             android:gravity="center"
             android:fontFamily="@font/tmonmonsori"/>
         <Button
-            android:id="@+id/collection_audio_upload"
+            android:id="@+id/collection_audio_select"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
@@ -173,15 +191,29 @@
         android:text="파일 삭제"
         android:fontFamily="@font/tmonmonsori"/>
 
-    <Button
-        android:id="@+id/work_done_audio"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#8028ADFC"
-        android:text="작업 완료"
-        android:fontFamily="@font/tmonmonsori"/>
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/collection_upload_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="#8028ADFC"
+            android:text="오디오 등록"
+            android:fontFamily="@font/tmonmonsori"/>
+        <Button
+            android:id="@+id/work_done_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="#8028ADFC"
+            android:text="작업 완료"
+            android:fontFamily="@font/tmonmonsori"/>
+    </LinearLayout>
+
 
 </LinearLayout>
 </ScrollView>

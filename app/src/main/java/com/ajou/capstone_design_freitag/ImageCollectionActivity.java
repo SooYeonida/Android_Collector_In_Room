@@ -13,8 +13,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +34,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ImageCollectionActivity extends AppCompatActivity {
 
@@ -41,13 +47,19 @@ public class ImageCollectionActivity extends AppCompatActivity {
     TextView conditionContent;
     ImageView exampleContent;
     TextView dataURI;
-    Button upload;
+    RadioGroup class_list;
+    Button select;
     Button work_done;
+    Button upload;
     Context context;
     Project project;
+    String classname;
 
     List<InputStream> inputStreamList = new ArrayList<>();
     List<String> fileNameList = new ArrayList<>();
+    List<String> classList = new ArrayList<>();
+
+    Map<String,Integer> class_count = new HashMap<>();
 
     File file = new File("/data/data/com.ajou.capstone_design_freitag/files/project_example.jpg");
     OutputStream outputStream = new FileOutputStream(file);
@@ -63,13 +75,27 @@ public class ImageCollectionActivity extends AppCompatActivity {
         project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
         Project.getProjectinstance().setBucketName(project.getBucketName());
         Project.getProjectinstance().setProjectId(project.getProjectId());
+
+        context = getApplicationContext();
+
         projectName = findViewById(R.id.image_collection_project_name);
         wayContent = findViewById(R.id.image_collection_way_content);
         conditionContent = findViewById(R.id.image_collection_condition_content);
         dataURI = findViewById(R.id.collection_image_uri);
-        upload = findViewById(R.id.collection_image_upload);
+        select = findViewById(R.id.collection_image_select);
         work_done = findViewById(R.id.work_done_image);
+        upload = findViewById(R.id.collection_image_upload);
         exampleContent = findViewById(R.id.work_example_content_image);
+        class_list = findViewById(R.id.radioGroup_class_list_image);
+
+        for(int i=0;i<project.getClass_list().size();i++){
+            RadioButton radioButton = new RadioButton(context);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            radioButton.setLayoutParams(param);
+            radioButton.setText(project.getClass_list().get(i));
+            radioButton.setId(i);
+            class_list.addView(radioButton);
+        }
 
         try {
             getExampleData();
@@ -81,14 +107,41 @@ public class ImageCollectionActivity extends AppCompatActivity {
         wayContent.setText(project.getWayContent());
         conditionContent.setText(project.getConditionContent());
 
-        context = getApplicationContext();
+        //라디오버튼 리스너
+        class_list.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                for(int i=0;i<project.getClass_list().size();i++){
+                    if(i == checkedId){
+                        classname =  project.getClass_list().get(i);
+                    }
+                }
+            }
+        });
+
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                select_collection_image_data(v);
+            }
+        });
 
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upload_collection_image_data(v);
+                dataURI.setText("");
+                Toast.makeText(getApplicationContext(),"이미지 등록 완료",Toast.LENGTH_LONG).show();
+
+//                for(int i=0;i<inputStreamList.size();i++){
+//                   finalinputstreamList.add(inputStreamList.get(i));
+//                   finalfilenameList.add(fileNameList.get(i));
+//                }
+
+//                inputStreamList.removeAll(inputStreamList);
+//                fileNameList.removeAll(fileNameList);
             }
         });
+
         work_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +149,8 @@ public class ImageCollectionActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"데이터를 업로드 하셔야 합니다.",Toast.LENGTH_LONG).show();
                 }
                 else {
-                    user_work_done();
+                    upload_image_data(inputStreamList,fileNameList,classname);
+
                     Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
@@ -137,10 +191,9 @@ public class ImageCollectionActivity extends AppCompatActivity {
 
         };
         downloadExampleTask.execute(project.getBucketName(),project.getExampleContent(),outputStream);
-
     }
 
-    public void upload_collection_image_data(View view) {
+    public void select_collection_image_data(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -148,37 +201,35 @@ public class ImageCollectionActivity extends AppCompatActivity {
         startActivityForResult(intent, COLLECTION_IMAGE_REQUEST_CODE);
     }
 
-    public void user_work_done(){
-        try {
-            AsyncTask<Object, Void, Boolean> uploadImageTask = new AsyncTask<Object, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Object... info) {
-                    try {
+    public void upload_image_data(List<InputStream> inputStreams, List<String> filenames, String classname){
+            try {
+                AsyncTask<Object, Void, Boolean> uploadImageTask = new AsyncTask<Object, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground(Object... info) {
+                        try {
 
-                        boolean result = RESTAPI.getInstance().collection_work((List<InputStream>)info[0],(List<String>)info[1],"image/jpeg");
-                        return new Boolean(result);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return new Boolean(false);
+                            boolean result = RESTAPI.getInstance().collection_work((List<InputStream>) info[0], (List<String>) info[1], "image/jpeg",(String)info[2]);
+                            return new Boolean(result);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return new Boolean(false);
+                        }
                     }
-                }
 
-                @Override
-                protected void onPostExecute(Boolean result) {
-                    if(result){
-                        Toast.makeText(getApplicationContext(),"수집 작업 이미지 업로드 성공",Toast.LENGTH_LONG).show();
+                    @Override
+                    protected void onPostExecute(Boolean result) {
+                        if (result) {
+                            Toast.makeText(getApplicationContext(), "수집 작업 이미지 업로드 성공", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "수집 작업 이미지 업로드 실패", Toast.LENGTH_LONG).show();
+                        }
                     }
-                    else{
-                        Toast.makeText(getApplicationContext(),"수집 작업 이미지 업로드 실패",Toast.LENGTH_LONG).show();
-                    }
-                }
 
-            };
-            uploadImageTask.execute(inputStreamList,fileNameList);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+                };
+                uploadImageTask.execute(inputStreams,filenames,classname);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     public String getFileNameToUri(Uri data) {
@@ -195,6 +246,11 @@ public class ImageCollectionActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
             ClipData clipData = data.getClipData();
+
+            class_count.put(classname,clipData.getItemCount());//클래스에 해당하는 데이타 개수 몇개인지 저장.
+            classList.add(classname);
+            System.out.println(classname+":"+clipData.getItemCount());
+
             for (int i = 0; i < clipData.getItemCount(); i++) {
                 if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
                     try {

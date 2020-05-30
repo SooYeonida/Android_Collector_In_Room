@@ -335,8 +335,8 @@ public class RESTAPI {
 
     public boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
         String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + obejctName;
-        String accessKey = "sQG5BeaHcnvvqK4FI01A";
-        String secretKey = "mvNVjSac240XvnrK4qF39HpoMvvtMQMzUnnNHaRV";
+        String accessKey = "bADdb2HelATZt2ZfCZUV";
+        String secretKey = "WByLzY9TQnHqsqVmqFh00p5YYXSVMAOCjWoMw0pB";
         String serviceName = "s3";
         String regionName = "kr-standard";
         String UNSIGNED_PAYLOAD = "UNSIGNED_PAYLOAD";
@@ -368,19 +368,21 @@ public class RESTAPI {
             return false;
         }
     }
-    public Boolean collection_work(List<InputStream> inputStream,List<String> fileName,String fileType) throws Exception {
+    public Boolean collection_work(List<InputStream> inputStream,List<String> fileName,String fileType,String classname) throws Exception {
         APICaller collectionWork = new APICaller("POST",baseURL+"/api/work/collection");
         collectionWork.setHeader("Authorization",token);
         collectionWork.setHeader("bucketName",Project.getProjectinstance().getBucketName());
-        collectionWork.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        collectionWork.setHeader("projectId",Project.getProjectinstance().getProjectId());
+        collectionWork.setQueryParameter("className",classname);
         Map<String, List<String>> header;
         String result;
         header = collectionWork.multipartList(inputStream, fileName, fileType);
         result = header.get("upload").get(0);
-        System.out.println("result:"+result);
         if(result.equals("success")){
+            System.out.println(result);
             return true;
         }else{
+            System.out.println(result);
             return false;
         }
     }
