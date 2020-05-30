@@ -39,9 +39,9 @@ import awsauth.AWS4SignerForAuthorizationHeader;
 import http.HTTPRequest;
 
 public class RESTAPI {
-    public static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
+    private static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://10.0.2.2:8080";
+    private String baseURL = "http://10.0.0.2:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
@@ -123,22 +123,6 @@ public class RESTAPI {
         activity.startActivity(intent);
     }
 
-    public boolean uploadExampleFile(InputStream inputStream, String contentType) throws Exception {
-        HttpClient httpClient = new DefaultHttpClient();
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder.addBinaryBody("file", inputStream, ContentType.create(contentType), "test");
-        HttpPost httpPost = new HttpPost(baseURL + "/api/project/upload/example");
-        httpPost.setHeader("Authorization", token);
-        httpPost.setEntity(builder.build());
-        HttpResponse httpResponse = httpClient.execute(httpPost);
-        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public User mypage(String userId) throws JSONException {
         APICaller mypage = new APICaller("GET", baseURL + "/api/mypage");
         mypage.setQueryParameter("userId",userId);
@@ -169,7 +153,7 @@ public class RESTAPI {
         return user;
     }
 
-    public boolean update(String userName,String userPhone,String userEmail,String userAffiliation){
+    public boolean update(String userName, String userPhone, String userEmail, String userAffiliation) {
         APICaller update = new APICaller("PUT",baseURL+"/api/mypage/update");
         update.setQueryParameter("userName",userName);
         update.setQueryParameter("userPhone",userPhone);
@@ -191,11 +175,9 @@ public class RESTAPI {
         } else {
             return false;
         }
-
     }
 
-    public boolean makeProject(String projectName,String workType,String dataType,String subject,String wayContent,String conditionContent,String description,String totalData)
-    {
+    public boolean makeProject(String projectName, String workType, String dataType, String subject, String wayContent, String conditionContent, String description, String totalData) {
         APICaller makeProject = new APICaller("POST",baseURL+"/api/project/create");
         makeProject.setQueryParameter("projectName",projectName);
         makeProject.setQueryParameter("workType",workType);
@@ -216,17 +198,13 @@ public class RESTAPI {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if(result.equals("success")){
-            return true;
-        }
-        else{
             return false;
         }
+
+        return result.equals("success");
     }
 
-    public Boolean createClass(List<String> classList) throws Exception {
+    public boolean createClass(List<String> classList) {
         APICaller classname = new APICaller("POST",baseURL+"/api/project/class");
         classname.setHeader("Authorization",token);
 
@@ -234,22 +212,21 @@ public class RESTAPI {
         id.add(Project.getProjectinstance().getProjectId());
         classname.setQueryParameter_class("className",classList);
         classname.setQueryParameter_class("projectId",id);
+        String result = null;
 
-        classname.request_class();
-
-        String result;
-        result = classname.getHeader().get("class").get(0);
-        System.out.println(classname.getHeader().get("bucketName").get(0));
-        Project.getProjectinstance().setBucketName(classname.getHeader().get("bucketName").get(0));
-        if(result.equals("success")){
-            return true;
-        }
-        else{
+        try {
+            classname.request_class();
+            result = classname.getHeader().get("class").get(0);
+            Project.getProjectinstance().setBucketName(classname.getHeader().get("bucketName").get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
+
+        return result.equals("success");
     }
 
-    public boolean uploadExampleFile(InputStream inputStream,String fileName,String fileType) throws Exception {
+    public boolean uploadExampleFile(InputStream inputStream, String fileName, String fileType, String worktype) throws Exception {
         APICaller uploadFile = new APICaller("POST", baseURL + "/api/project/upload/example");
         Map<String, List<String>> header;
         uploadFile.setHeader("Authorization",token);
@@ -258,17 +235,43 @@ public class RESTAPI {
         header = uploadFile.multipart(inputStream, fileName, fileType);
         String result;
         result = header.get("example").get(0);
-        Project.getProjectinstance().setProjectId(header.get("projectId").get(0));//아이디 받아
-        Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
-        if(!result.equals("success")){
+        if(result.equals("success")) {
+            Project.getProjectinstance().setProjectId(header.get("projectId").get(0));//아이디 받아
+            if(worktype.equals("collection")) {
+                Project.getProjectinstance().setCost(Integer.parseInt(header.get("cost").get(0)));
+            } else {
+                Project.getProjectinstance().setBucketName(header.get("bucketName").get(0));
+            }
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 
+    public boolean uploadLabellingFiles(InputStream[] inputStreams, String[] fileNames, String[] contentTypes) throws Exception {
+        HttpClient httpClient = new DefaultHttpClient();
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        for(int i = 0; i < inputStreams.length; i++) {
+            builder.addBinaryBody("files", inputStreams[i], ContentType.create(contentTypes[i]), fileNames[i]);
+        }
+        HttpPost httpPost = new HttpPost(baseURL + "/api/project/upload/labelling");
+        httpPost.setHeader("Authorization", token);
+        httpPost.setHeader("bucketName", Project.getProjectinstance().getBucketName());
+        httpPost.setEntity(builder.build());
+        HttpResponse httpResponse = httpClient.execute(httpPost);
 
-    public Boolean pointPayment() throws Exception {
-        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/point/payment");
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            if(httpResponse.getFirstHeader("upload").getValue().equals("success")) {
+                Project.getProjectinstance().setCost(Integer.parseInt(httpResponse.getFirstHeader("cost").getValue()));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean payment(String method) throws Exception {
+        APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/" + method + "/payment");
         pointPayment.setHeader("Authorization",token);
         pointPayment.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
         pointPayment.request();
@@ -368,6 +371,7 @@ public class RESTAPI {
             return false;
         }
     }
+  
     public Boolean collection_work(List<InputStream> inputStream,List<String> fileName,String fileType,String classname) throws Exception {
         APICaller collectionWork = new APICaller("POST",baseURL+"/api/work/collection");
         collectionWork.setHeader("Authorization",token);
