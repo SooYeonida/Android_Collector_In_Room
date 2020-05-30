@@ -31,10 +31,9 @@ public class ProjectDetailActivity extends AppCompatActivity {
     TextView dataType;
     TextView subject;
     TextView requester;
-    LinearLayout className; //텍스트뷰 추가할 레이아웃
+    LinearLayout className;
     TextView wayContent;
     TextView conditionContent;
-    TextView exampleContent; //데이터 종류에 따라 바꿔야함
     TextView classlist;
     CheckBox agree_check;
     TextView date;
@@ -63,7 +62,6 @@ public class ProjectDetailActivity extends AppCompatActivity {
         className = (LinearLayout) findViewById(R.id.work_class_name);
         wayContent = (TextView)findViewById(R.id.work_waycontent);
         conditionContent = (TextView)findViewById(R.id.work_conditioncontent);
-        exampleContent = (TextView)findViewById(R.id.work_examplecontent);
         classlist = (TextView)findViewById(R.id.classlist_project_detail);
         agree_check = findViewById(R.id.work_agree_check); //동의 안하면 작업 안넘어가게
         start = findViewById(R.id.work_start);
@@ -88,13 +86,13 @@ public class ProjectDetailActivity extends AppCompatActivity {
         else{
             projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_label_black_24dp));
         }
+
         projectName.setText(project.getProjectName());
         dataType.setText(project.getDataType());
         subject.setText(project.getSubject());
         requester.setText(project.getUserId());
         wayContent.setText(project.getWayContent());
         conditionContent.setText(project.getConditionContent());
-        exampleContent.setText(project.getExampleContent());
         classlist.setText(project.getClass_list().toString());
 
         date = (TextView)findViewById(R.id.current_date);
@@ -124,8 +122,6 @@ public class ProjectDetailActivity extends AppCompatActivity {
             }
         });
     }
-
-    //이미지, 음성, 텍스트 , 바운딩박스, 분류냐에 따라 작업 화면 다름
 
         private void goToImageCollectionWork(View v) {
         Intent intent = new Intent(getApplicationContext(),ImageCollectionActivity.class);
