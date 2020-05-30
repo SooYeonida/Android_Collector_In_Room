@@ -17,15 +17,17 @@ import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 
+import java.lang.ref.WeakReference;
+
 public class PayFragment extends Fragment {
 
-     String cost;
-     String projectName = null;
+     private String cost;
+     private String projectName = null;
 
-     TextView project_name;
-     TextView project_cost;
-     Button pay_point;
-     Button pay_account;
+     private TextView project_name;
+     private TextView project_cost;
+     private Button pay_point;
+     private Button pay_account;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,16 +43,16 @@ public class PayFragment extends Fragment {
         View view;
         view = inflater.inflate(R.layout.fragment_pay, container, false);
 
-        project_name = (TextView) view.findViewById(R.id.pay_project_name);
-        project_cost = (TextView) view.findViewById(R.id.pay_project_cost);
-        pay_point = (Button) view.findViewById(R.id.pay_point_btn);
+        project_name = view.findViewById(R.id.pay_project_name);
+        project_cost = view.findViewById(R.id.pay_project_cost);
+        pay_point = view.findViewById(R.id.pay_point_btn);
         pay_point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 point(v);
             }
         });
-        pay_account = (Button) view.findViewById(R.id.pay_account_btn);
+        pay_account = view.findViewById(R.id.pay_account_btn);
         pay_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,42 +62,59 @@ public class PayFragment extends Fragment {
         project_name.setText(projectName);
         project_cost.setText(cost);
         return  view;
-
     }
 
-    public void point(View view){
+    private void point(View view) {
+        PayTask pointPayTask = new PayTask(this, "point");
+        pointPayTask.execute();
+    }
 
-                AsyncTask<Void, Void,Boolean > pointTask = new AsyncTask<Void, Void, Boolean>() {
 
-                    @Override
-                    protected Boolean doInBackground(Void... voids) {
-                        boolean result = false;
-                        try {
-                            result = RESTAPI.getInstance().pointPayment();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return result;
-                    }
+    private void account(View view) {
+        PayTask pointPayTask = new PayTask(this, "account");
+        pointPayTask.execute();
+    }
 
-                    @Override
-            protected void onPostExecute(Boolean result) {
-                if(result){
-                    ((MainActivity)getActivity()).goToHome();
-                    Toast.makeText(getActivity(), "결제 성공", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(getActivity(), "포인트 결제 실패. 다른 결제 수단을 선택하쇼", Toast.LENGTH_SHORT).show();
-                }
+    private static class PayTask extends AsyncTask<Void, Void,Boolean > {
+        private WeakReference<PayFragment> fragmentReference;
+        private final String method;
+
+        public PayTask(PayFragment context, String method) {
+            fragmentReference = new WeakReference<>(context);
+            this.method = method;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean result = false;
+            try {
+                result = RESTAPI.getInstance().payment(method);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            return result;
+        }
 
+        @Override
+        protected void onPostExecute(Boolean result) {
+            PayFragment fragment = getFragment();
+            if(fragment == null)
+                return;
 
-        };
-        pointTask.execute();
-    }
+            if(result) {
+                ((MainActivity)fragment.getActivity()).goToHome();
+                Toast.makeText(fragment.getActivity(), "결제 성공", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(fragment.getActivity(), "결제에 실패했습니다. 다른 결제 수단을 선택해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        }
 
-
-    public void account(View view){
-
-    }
+        private PayFragment getFragment() {
+            PayFragment fragment = fragmentReference.get();
+            if (fragment == null || fragment.isRemoving()) {
+                return null;
+            }
+            return fragment;
+        }
+    };
 }
