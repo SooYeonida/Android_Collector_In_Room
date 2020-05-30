@@ -72,13 +72,13 @@ public class ProjectDetailActivity extends AppCompatActivity {
 
         if(project.getWorkType().equals("collection")) {
             switch (project.getDataType()) {
-                case ("이미지"):
+                case ("image"):
                     projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_image_black_24dp));
                     break;
-                case ("텍스트"):
+                case ("text"):
                     projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_text_black_24dp));
                     break;
-                case ("음성"):
+                case ("audio"):
                     projectIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_voice_black_24dp));
                     break;
             }
@@ -107,13 +107,13 @@ public class ProjectDetailActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "정보 제공 동의를 해야 작업할 수 있습니다.",Toast.LENGTH_LONG).show();
                 }else{
                     switch(project.getDataType()){
-                        case("이미지"):
+                        case("image"):
                             goToImageCollectionWork(v);
                             break;
-                        case("텍스트"):
+                        case("text"):
                             goToTextCollectionWork(v);
                             break;
-                        case ("음성"):
+                        case ("audio"):
                             goToAudioCollectionWork(v);
                             break;
                     }
