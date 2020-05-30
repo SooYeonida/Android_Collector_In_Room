@@ -33,6 +33,8 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 
 public class ProjectListFragment extends Fragment {
+    private static final int LOGIN_REQUEST_CODE = 102;
+
     ArrayList<Project> projectArrayList = new ArrayList<Project>();
     ProjectAdapter projectAdapter;
     ListView listView;
@@ -188,10 +190,18 @@ public class ProjectListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Project project = (Project)projectAdapter.getItem(position);
-                Intent intent = new Intent(getActivity(), ProjectDetailActivity.class);
-                intent.putExtra("project", project);
-                startActivity(intent);
+                RESTAPI instance = RESTAPI.getInstance();
+
+                //토큰 받아오는데 null이면 로그인
+                if(instance.getToken()==null){
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                } else {
+                    Project project = (Project) projectAdapter.getItem(position);
+                    Intent intent = new Intent(getActivity(), ProjectDetailActivity.class);
+                    intent.putExtra("project", project);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -256,6 +266,18 @@ public class ProjectListFragment extends Fragment {
         params.height = totalHeight + (listView.getDividerHeight() * (projectAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == LOGIN_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                Toast.makeText(getContext(), "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
+                ((MainActivity)getActivity()).goToHome();
+            } else {
+                ((MainActivity)getActivity()).loginSuccess();
+            }
+        }
     }
 
 }

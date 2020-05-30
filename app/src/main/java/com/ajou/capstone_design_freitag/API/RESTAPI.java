@@ -393,4 +393,7 @@ public class RESTAPI {
         }
     }
 
+    public void logout() {
+        token = null;
+    }
 }
