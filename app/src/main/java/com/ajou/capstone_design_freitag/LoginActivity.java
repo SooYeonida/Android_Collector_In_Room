@@ -1,5 +1,6 @@
 package com.ajou.capstone_design_freitag;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,20 +12,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 
+import java.lang.ref.WeakReference;
+
 public class LoginActivity extends AppCompatActivity {
-    View layout_login;
-    View layout_register;
-    View layout_register_openbanking;
+    private View layout_login;
+    private View layout_register;
+    private View layout_register_openbanking;
 
-    EditText logindID;
-    EditText loginPassword;
+    private EditText logindID;
+    private EditText loginPassword;
 
-    EditText registerID;
-    EditText registerPassword;
-    EditText registerName;
-    EditText registerPhone;
-    EditText registerEmail;
-    EditText registerAffiliation;
+    private EditText registerID;
+    private EditText registerPassword;
+    private EditText registerPasswordSecond;
+    private EditText registerName;
+    private EditText registerPhone;
+    private EditText registerEmail;
+    private EditText registerAffiliation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
         registerID = findViewById(R.id.registerID);
         registerPassword = findViewById(R.id.registerPassword);
+        registerPasswordSecond = findViewById(R.id.registerPasswordSecond);
         registerName = findViewById(R.id.registerName);
         registerPhone = findViewById(R.id.registerPhone);
         registerEmail = findViewById(R.id.registerEmail);
@@ -46,87 +51,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(final View view) {
-        final String userID = logindID.getText().toString();
-        final String userPassword = loginPassword.getText().toString();
-
-        AsyncTask<String, Void, Boolean> loginTask = new AsyncTask<String, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(String... registerInfos) {
-                boolean result = RESTAPI.getInstance().login(registerInfos[0], registerInfos[1]);
-                return new Boolean(result);
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result",result);
-                    setResult(LoginActivity.RESULT_OK,returnIntent);
-                    finish();
-                } else {
-                    showToast("아이디 또는 비밀번호를 잘못 입력했습니다.");
-                }
-            }
-
-            private void showToast(final String text)
-            {
-                LoginActivity.this.runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
-                        Toast.makeText(LoginActivity.this, text, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        };
-        loginTask.execute(userID, userPassword);
+        new LoginTask(this).execute();
     }
 
     public void register(final View view) {
-        final String userID = registerID.getText().toString();
-        final String userPassword = registerPassword.getText().toString();
-        final String userName = registerName.getText().toString();
-        final String userPhone = registerPhone.getText().toString();
-        final String userEmail = registerEmail.getText().toString();
-        final String userAffiliation = registerAffiliation.getText().toString();
-
-        AsyncTask<String, Void, Boolean> singupTask = new AsyncTask<String, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(String... registerInfos) {
-                boolean result = RESTAPI.getInstance().signup(registerInfos[0],
-                        registerInfos[1],
-                        registerInfos[2],
-                        registerInfos[3],
-                        registerInfos[4],
-                        registerInfos[5]);
-                return new Boolean(result);
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
-                    goToRegisterOpenBanking();
-                } else {
-                    showToast("회원 가입 실패...");
-                }
-            }
-
-            private void showToast(final String text)
-            {
-                LoginActivity.this.runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
-                        Toast.makeText(LoginActivity.this, text, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        };
-        singupTask.execute(userID, userPassword, userName, userPhone, userEmail, userAffiliation);
+        new SignupTask(this).execute();
     }
 
     public void registerOpenBanking(final View view) {
         RESTAPI.getInstance().registerOpenBanking(this);
+        goToLogin(view);
     }
 
     public void goToLogin(View view) {
@@ -135,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         layout_login.setVisibility(View.VISIBLE);
         layout_register.setVisibility(View.GONE);
+        layout_register_openbanking.setVisibility(View.GONE);
     }
 
     public void goToRegister(View view) {
@@ -147,10 +82,155 @@ public class LoginActivity extends AppCompatActivity {
 
         layout_login.setVisibility(View.GONE);
         layout_register.setVisibility(View.VISIBLE);
+        layout_register_openbanking.setVisibility(View.GONE);
     }
 
     private void goToRegisterOpenBanking() {
+        layout_login.setVisibility(View.GONE);
         layout_register.setVisibility(View.GONE);
         layout_register_openbanking.setVisibility(View.VISIBLE);
+    }
+
+    private static class IDManageTask extends AsyncTask<Void, Void, Integer> {
+        private WeakReference<LoginActivity> activityReference;
+
+        @Override
+        public Integer doInBackground(Void... voids) {
+            return 0;
+        }
+
+        public IDManageTask(LoginActivity context) {
+            activityReference = new WeakReference<>(context);
+        }
+
+        LoginActivity getActivity() {
+            LoginActivity activity = activityReference.get();
+            if (activity == null || activity.isFinishing()) {
+                return null;
+            }
+            return activity;
+        }
+
+        void showToast(final String text)
+        {
+            final LoginActivity activity = getActivity();
+            if(activity == null)
+                return;
+
+            activity.runOnUiThread(new Runnable()
+            {
+                public void run()
+                {
+                    Toast.makeText(activity, text, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+    private static class LoginTask extends IDManageTask {
+        private String userID;
+        private String userPassword;
+
+        public LoginTask(LoginActivity context) {
+            super(context);
+        }
+
+        @Override
+        public Integer doInBackground(Void... voids) {
+            getParameters();
+            return RESTAPI.getInstance().login(userID, userPassword);
+        }
+
+        private void getParameters() {
+            final LoginActivity activity = getActivity();
+            if(activity == null)
+                return;
+
+            userID = activity.logindID.getText().toString();
+            userPassword = activity.loginPassword.getText().toString();
+        }
+
+        @Override
+        public void onPostExecute(Integer result) {
+            final LoginActivity activity = getActivity();
+            if(activity == null)
+                return;
+
+            switch (result) {
+                case RESTAPI.LOGIN_SUCCESS_WITH_REWARD:
+                    showToast("로그인 보상이 지급되었습니다!");
+                    System.out.println("로그인 보상이 지급되었습니다!");
+                case RESTAPI.LOGIN_SUCCESS:
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("result", result);
+                    activity.setResult(RESULT_OK, returnIntent);
+                    activity.finish();
+                    break;
+                case RESTAPI.LOGIN_FAIL:
+                    showToast("아이디 또는 비밀번호를 잘못 입력했습니다.");
+                    break;
+            }
+        }
+    }
+
+    private static class SignupTask extends IDManageTask {
+        private String userID;
+        private String userPassword;
+        private String userPasswordSecond;
+        private String userName;
+        private String userPhone;
+        private String userEmail;
+        private String userAffiliation;
+
+        public SignupTask(LoginActivity context) {
+            super(context);
+        }
+
+        @Override
+        public Integer doInBackground(Void... voids) {
+            getParameters();
+            if(validation()) {
+                return RESTAPI.getInstance().signup(userID, userPassword, userName, userPhone, userEmail, userAffiliation);
+            } else {
+                return RESTAPI.REGISTER_VALIDATION_FAIL;
+            }
+        }
+
+        private boolean validation() {
+            return userPassword.equals(userPasswordSecond);
+        }
+
+        private void getParameters() {
+            final LoginActivity activity = getActivity();
+            if(activity == null)
+                return;
+
+            userID = activity.registerID.getText().toString();
+            userPassword = activity.registerPassword.getText().toString();
+            userPasswordSecond = activity.registerPasswordSecond.getText().toString();
+            userName = activity.registerName.getText().toString();
+            userPhone = activity.registerPhone.getText().toString();
+            userEmail = activity.registerEmail.getText().toString();
+            userAffiliation = activity.registerAffiliation.getText().toString();
+        }
+
+        @Override
+        public void onPostExecute(Integer result) {
+            final LoginActivity activity = getActivity();
+            if(activity == null)
+                return;
+
+            switch (result) {
+                case RESTAPI.REGISTER_SUCCESS:
+                    activity.goToRegisterOpenBanking();
+                    break;
+                case RESTAPI.REGISTER_VALIDATION_FAIL:
+                    showToast("패스워드를 다르게 입력했습니다.");
+                    break;
+                case RESTAPI.REGISTER_FAIL:
+                    showToast("회원 가입에 실패했습니다.");
+                    break;
+            }
+        }
     }
 }

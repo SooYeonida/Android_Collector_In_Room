@@ -39,9 +39,17 @@ import awsauth.AWS4SignerForAuthorizationHeader;
 import http.HTTPRequest;
 
 public class RESTAPI {
+    public static final int LOGIN_SUCCESS = 0;
+    public static final int LOGIN_SUCCESS_WITH_REWARD = 1;
+    public static final int LOGIN_FAIL = 2;
+
+    public static final int REGISTER_SUCCESS = 0;
+    public static final int REGISTER_VALIDATION_FAIL = 1;
+    public static final int REGISTER_FAIL = 2;
+
     private static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://10.0.2.2:8080";
+    private String baseURL = "http://10.0.0.2:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
@@ -60,7 +68,7 @@ public class RESTAPI {
         return instance;
     }
 
-    public boolean login(String userID, String userPassword) {
+    public int login(String userID, String userPassword) {
         APICaller login = new APICaller("POST", baseURL + "/api/login");
         login.setQueryParameter("userId", userID);
         login.setQueryParameter("userPassword", userPassword);
@@ -72,17 +80,21 @@ public class RESTAPI {
                 User.getUserinstance().setUserID(userID);
                 User.getUserinstance().setUserPwd(userPassword);
                 token = result.get("Authorization").get(0);
+                if(result.get("reward") == null) {
+                    return LOGIN_SUCCESS;
+                } else {
+                    return LOGIN_SUCCESS_WITH_REWARD;
+                }
             } else {
-                return false;
+                return LOGIN_FAIL;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return LOGIN_FAIL;
         }
-        return true;
     }
 
-    public boolean signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
+    public Integer signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
         APICaller signup = new APICaller("GET", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
         signup.setQueryParameter("userPassword", userPassword);
@@ -97,14 +109,14 @@ public class RESTAPI {
             result = signup.getHeader();
             if(result.get("update").get(0).equals("success")) {
                 state = signup.getHeader().get("state").get(0);
+                return REGISTER_SUCCESS;
             } else {
-                return false;
+                return REGISTER_FAIL;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return REGISTER_FAIL;
         }
-        return true;
     }
 
     public void registerOpenBanking(Activity activity) {
@@ -397,8 +409,8 @@ public class RESTAPI {
 
     public boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
         String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + obejctName;
-        String accessKey = "bADdb2HelATZt2ZfCZUV";
-        String secretKey = "WByLzY9TQnHqsqVmqFh00p5YYXSVMAOCjWoMw0pB";
+        String accessKey = "sQG5BeaHcnvvqK4FI01A";
+        String secretKey = "mvNVjSac240XvnrK4qF39HpoMvvtMQMzUnnNHaRV";
         String serviceName = "s3";
         String regionName = "kr-standard";
         String UNSIGNED_PAYLOAD = "UNSIGNED_PAYLOAD";
@@ -430,7 +442,7 @@ public class RESTAPI {
             return false;
         }
     }
-  
+
     public Boolean collection_work(List<InputStream> inputStream,List<String> fileName,String fileType,String classname) throws Exception {
         APICaller collectionWork = new APICaller("POST",baseURL+"/api/work/collection");
         collectionWork.setHeader("Authorization",token);
@@ -441,14 +453,15 @@ public class RESTAPI {
         String result;
         header = collectionWork.multipartList(inputStream, fileName, fileType);
         result = header.get("upload").get(0);
+        System.out.println("result:"+result);
         if(result.equals("success")){
-            System.out.println(result);
             return true;
         }else{
-            System.out.println(result);
             return false;
         }
     }
 
-
+    public void logout() {
+        token = null;
+    }
 }

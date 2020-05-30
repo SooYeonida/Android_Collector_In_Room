@@ -101,6 +101,8 @@ public class MyPageFragment extends Fragment {
             if (resultCode != RESULT_OK) {
                 Toast.makeText(getContext(), "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
                 ((MainActivity)getActivity()).goToHome();
+            } else {
+                ((MainActivity)getActivity()).loginSuccess();
             }
         }
     }

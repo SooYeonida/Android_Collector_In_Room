@@ -356,6 +356,8 @@ public class ProjectMakeFragment extends Fragment {
                 for (int i = 0; i < clipDatas.getItemCount(); i++) {
                     labellingDataUris.add(clipDatas.getItemAt(i).getUri());
                 }
+            } else if(requestCode == LOGIN_REQUEST_CODE) {
+                ((MainActivity)getActivity()).loginSuccess();
             }
         } else {
             if(requestCode == LOGIN_REQUEST_CODE) {

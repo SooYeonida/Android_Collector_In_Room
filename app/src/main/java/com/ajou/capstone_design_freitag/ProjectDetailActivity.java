@@ -43,13 +43,6 @@ public class ProjectDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RESTAPI instance = RESTAPI.getInstance();
-        //토큰 받아오는데 null이면 로그인
-        if(instance.getToken()==null){
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivityForResult(intent, LOGIN_REQUEST_CODE);
-        }
-
         setContentView(R.layout.activity_project_detail);
 
         Intent intent = getIntent();
@@ -140,15 +133,4 @@ public class ProjectDetailActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == LOGIN_REQUEST_CODE) {
-            if (resultCode != RESULT_OK) {
-                Toast.makeText(getApplicationContext(), "로그인이 필요합니다.",Toast.LENGTH_LONG).show();
-                ((MainActivity)getApplicationContext()).goToHome();
-            }
-        }
-    }
-
 }
