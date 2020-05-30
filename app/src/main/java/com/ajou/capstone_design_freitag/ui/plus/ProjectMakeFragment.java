@@ -326,9 +326,9 @@ public class ProjectMakeFragment extends Fragment {
     }
 
     private void selectExampleAudio() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        intent.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.Audio.Media.CONTENT_TYPE);
+        intent.setDataAndType(MediaStore.Downloads.EXTERNAL_CONTENT_URI, "audio/*");
         startActivityForResult(intent, EXAMPLE_AUDIO_REQUEST_CODE);
     }
 
@@ -373,8 +373,8 @@ public class ProjectMakeFragment extends Fragment {
             if(!dir.exists()) {
                 dir.mkdir();
             }
-            String fileName = dirPath + "example.txt";
-            FileOutputStream fileOutputStream = getContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+            String fileName = dirPath + "/example.txt";
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(fileName));
             fileOutputStream.write(exampleText.getBytes());
             fileOutputStream.close();
             return Uri.fromFile(new File(fileName));
@@ -443,9 +443,9 @@ public class ProjectMakeFragment extends Fragment {
                 String[] contentTypes = new String[labellingDataNum];
                 String[] fileNames = new String[labellingDataNum];
                 for(int i = 0; i < labellingDataNum; i++) {
-                    inputStreams[i] = context.getContentResolver().openInputStream(exampleDataUri);
-                    fileNames[i] = getFileNameFromUri(exampleDataUri);
-                    contentTypes[i] = context.getContentResolver().getType(exampleDataUri);
+                    inputStreams[i] = context.getContentResolver().openInputStream(labellingDataUris.get(i));
+                    fileNames[i] = getFileNameFromUri(labellingDataUris.get(i));
+                    contentTypes[i] = context.getContentResolver().getType(labellingDataUris.get(i));
                 }
                 return RESTAPI.getInstance().uploadLabellingFiles(inputStreams, fileNames, contentTypes);
             } catch (Exception e) {
@@ -480,7 +480,7 @@ public class ProjectMakeFragment extends Fragment {
                 InputStream inputStream = context.getContentResolver().openInputStream(exampleDataUri);
                 String fileName = getFileNameFromUri(exampleDataUri);
                 String contentType = context.getContentResolver().getType(exampleDataUri);
-                return RESTAPI.getInstance().uploadExampleFile(inputStream, fileName, contentType);
+                return RESTAPI.getInstance().uploadExampleFile(inputStream, fileName, contentType, worktype);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -541,6 +541,7 @@ public class ProjectMakeFragment extends Fragment {
             try {
                 exampleDataUri = fragment.getExampleDataUri();
             } catch (Exception e) {
+                e.printStackTrace();
                 exampleDataUri = null;
             }
             labellingDataUris = fragment.labellingDataUris;
