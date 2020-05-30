@@ -332,6 +332,65 @@ public class RESTAPI {
      return project_list;
     }
 
+    public List<Project> requestProjectList() throws Exception {
+        APICaller requestproject = new APICaller("GET",baseURL+"/api/project/all");
+        requestproject.setHeader("Authorization",token);
+        System.out.println("token:"+token);
+        requestproject.request();
+
+        String list = null;
+        String result;
+
+        List<Project> project_list = new ArrayList<>();
+        try {
+            list = requestproject.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray(list);
+
+        for(int i=0;i<jsonArray.length();i++){
+
+            Project project = new Project();
+            JSONObject jsonObject;
+            JSONObject project_object;
+            JSONArray class_array;
+
+            jsonObject = jsonArray.getJSONObject(i);//dto랑 classlist담고 있는 object
+            project_object = jsonObject.getJSONObject("projectDto");
+
+            project.setProjectId(project_object.getString("projectId"));
+            project.setBucketName(project_object.getString("bucketName"));
+            project.setStatus(project_object.getString("status"));
+            project.setUserId(project_object.getString("userId"));
+            project.setProjectName(project_object.getString("projectName"));
+            project.setWorkType(project_object.getString("workType"));
+            project.setDataType(project_object.getString("dataType"));
+            project.setSubject(project_object.getString("subject"));
+            project.setDifficulty(project_object.getInt("difficulty"));
+            project.setWayContent(project_object.getString("wayContent"));
+            project.setConditionContent(project_object.getString("conditionContent"));
+            project.setExampleContent(project_object.getString("exampleContent"));
+            project.setDescription(project_object.getString("description"));
+            project.setTotalData(project_object.getInt("totalData"));
+            project.setProgressData(project_object.getInt("progressData"));
+            project.setCost(project_object.getInt("cost"));
+            project_list.add(project);
+
+            class_array = jsonObject.getJSONArray("classNameList");
+
+            List<String> class_list = new ArrayList<>();
+
+            for(int j=0;j<class_array.length();j++){
+                JSONObject classobject = class_array.getJSONObject(j);
+                class_list.add(classobject.getString("className"));
+            }
+            project.setClass_list(class_list);
+        }
+        return project_list;
+    }
+
 
     public boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
         String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + obejctName;
@@ -386,5 +445,6 @@ public class RESTAPI {
             return false;
         }
     }
+
 
 }

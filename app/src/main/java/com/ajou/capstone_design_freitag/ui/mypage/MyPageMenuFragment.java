@@ -40,7 +40,7 @@ public class MyPageMenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 myPageFragment = (MyPageFragment)getParentFragment();
-                myPageFragment.replaceFragment(4);
+                myPageFragment.replaceFragment(5);
             }
         });
 
@@ -48,7 +48,7 @@ public class MyPageMenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 myPageFragment = (MyPageFragment)getParentFragment();
-                myPageFragment.replaceFragment(5);
+                myPageFragment.replaceFragment(4);
             }
         });
         return view;
