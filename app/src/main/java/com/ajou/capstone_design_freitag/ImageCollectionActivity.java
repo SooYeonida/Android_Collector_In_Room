@@ -58,7 +58,6 @@ public class ImageCollectionActivity extends AppCompatActivity {
     List<InputStream> inputStreamList = new ArrayList<>();
     List<String> fileNameList = new ArrayList<>();
     List<String> classList = new ArrayList<>();
-
     Map<String,Integer> class_count = new HashMap<>();
 
     File file = new File("/data/data/com.ajou.capstone_design_freitag/files/project_example.jpg");

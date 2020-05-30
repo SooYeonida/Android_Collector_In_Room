@@ -111,21 +111,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="이미지" />
+                        android:text="image" />
 
                     <RadioButton
                         android:id="@+id/data_type_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:text="텍스트" />
+                        android:text="text" />
 
                     <RadioButton
                         android:id="@+id/data_type_audio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:text="음성" />
+                        android:text="audio" />
 
                 </RadioGroup>
 
@@ -156,14 +156,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="바운딩박스" />
+                        android:text="boundingbox" />
 
                     <RadioButton
                         android:id="@+id/labelling_classification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:text="분류" />
+                        android:text="classification" />
 
                 </RadioGroup>
 

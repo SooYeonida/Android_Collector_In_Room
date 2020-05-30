@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="프로젝트 의뢰"
+            android:text="작업 의뢰"
             android:textColor="#8028ADFC"
             android:textSize="25sp"
             android:fontFamily="@font/tmonmonsori" />
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
-                android:text="프로젝트명:"
+                android:text="작업명:"
                 android:fontFamily="@font/tmonmonsori"/>
 
             <EditText
@@ -240,7 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginTop="20dp"
-                    android:text="클래스 입력:"
+                    android:text="라벨링 타입:"
                     android:fontFamily="@font/tmonmonsori"/>
 
                 <Button

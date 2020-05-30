@@ -26,7 +26,7 @@ public class CreationTypeFragment extends Fragment {
 
         creation_collection = view.findViewById(R.id.creation_collection_project);
         creation_labelling = view.findViewById(R.id.creation_labelling_project);
-        creation_colla = view.findViewById(R.id.creation_colla_project);
+//        creation_colla = view.findViewById(R.id.creation_colla_project);
 
         creation_collection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,13 +43,13 @@ public class CreationTypeFragment extends Fragment {
                 plusFragment.replaceFragment(1);
             }
         });
-        creation_colla.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                plusFragment = (PlusFragment)getParentFragment();
-                plusFragment.replaceFragment(2);
-            }
-        });
+//        creation_colla.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                plusFragment = (PlusFragment)getParentFragment();
+//                plusFragment.replaceFragment(2);
+//            }
+//        });
 
         return view;
     }
