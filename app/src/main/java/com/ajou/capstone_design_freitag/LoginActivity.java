@@ -60,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void registerOpenBanking(final View view) {
         RESTAPI.getInstance().registerOpenBanking(this);
+        goToLogin(view);
     }
 
     public void goToLogin(View view) {
@@ -68,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         layout_login.setVisibility(View.VISIBLE);
         layout_register.setVisibility(View.GONE);
+        layout_register_openbanking.setVisibility(View.GONE);
     }
 
     public void goToRegister(View view) {
@@ -80,19 +82,21 @@ public class LoginActivity extends AppCompatActivity {
 
         layout_login.setVisibility(View.GONE);
         layout_register.setVisibility(View.VISIBLE);
+        layout_register_openbanking.setVisibility(View.GONE);
     }
 
     private void goToRegisterOpenBanking() {
+        layout_login.setVisibility(View.GONE);
         layout_register.setVisibility(View.GONE);
         layout_register_openbanking.setVisibility(View.VISIBLE);
     }
 
-    private static class IDManageTask extends AsyncTask<Void, Void, Boolean> {
+    private static class IDManageTask extends AsyncTask<Void, Void, Integer> {
         private WeakReference<LoginActivity> activityReference;
 
         @Override
-        public Boolean doInBackground(Void... voids) {
-            return true;
+        public Integer doInBackground(Void... voids) {
+            return 0;
         }
 
         public IDManageTask(LoginActivity context) {
@@ -132,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        public Boolean doInBackground(Void... voids) {
+        public Integer doInBackground(Void... voids) {
             getParameters();
             return RESTAPI.getInstance().login(userID, userPassword);
         }
@@ -147,18 +151,24 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onPostExecute(Boolean result) {
+        public void onPostExecute(Integer result) {
             final LoginActivity activity = getActivity();
             if(activity == null)
                 return;
 
-            if(result) {
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", result);
-                activity.setResult(RESULT_OK, returnIntent);
-                activity.finish();
-            } else {
-                showToast("아이디 또는 비밀번호를 잘못 입력했습니다.");
+            switch (result) {
+                case RESTAPI.LOGIN_SUCCESS_WITH_REWARD:
+                    showToast("로그인 보상이 지급되었습니다!");
+                    System.out.println("로그인 보상이 지급되었습니다!");
+                case RESTAPI.LOGIN_SUCCESS:
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("result", result);
+                    activity.setResult(RESULT_OK, returnIntent);
+                    activity.finish();
+                    break;
+                case RESTAPI.LOGIN_FAIL:
+                    showToast("아이디 또는 비밀번호를 잘못 입력했습니다.");
+                    break;
             }
         }
     }
@@ -177,12 +187,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        public Boolean doInBackground(Void... voids) {
+        public Integer doInBackground(Void... voids) {
             getParameters();
             if(validation()) {
                 return RESTAPI.getInstance().signup(userID, userPassword, userName, userPhone, userEmail, userAffiliation);
             } else {
-                return false;
+                return RESTAPI.REGISTER_VALIDATION_FAIL;
             }
         }
 
@@ -205,15 +215,21 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onPostExecute(Boolean result) {
+        public void onPostExecute(Integer result) {
             final LoginActivity activity = getActivity();
             if(activity == null)
                 return;
 
-            if (result) {
-                activity.goToRegisterOpenBanking();
-            } else {
-                showToast("회원 가입에 실패했습니다.");
+            switch (result) {
+                case RESTAPI.REGISTER_SUCCESS:
+                    activity.goToRegisterOpenBanking();
+                    break;
+                case RESTAPI.REGISTER_VALIDATION_FAIL:
+                    showToast("패스워드를 다르게 입력했습니다.");
+                    break;
+                case RESTAPI.REGISTER_FAIL:
+                    showToast("회원 가입에 실패했습니다.");
+                    break;
             }
         }
     }

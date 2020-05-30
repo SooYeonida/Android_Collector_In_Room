@@ -8,37 +8,37 @@ import com.ajou.capstone_design_freitag.ui.home.User;
 import com.ajou.capstone_design_freitag.ui.plus.Project;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import awsauth.AWS4SignerBase;
 import awsauth.AWS4SignerForAuthorizationHeader;
-import http.HTTPRequest;
 
 public class RESTAPI {
+    public static final int LOGIN_SUCCESS = 0;
+    public static final int LOGIN_SUCCESS_WITH_REWARD = 1;
+    public static final int LOGIN_FAIL = 2;
+
+    public static final int REGISTER_SUCCESS = 0;
+    public static final int REGISTER_VALIDATION_FAIL = 1;
+    public static final int REGISTER_FAIL = 2;
+
     private static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
     private String baseURL = "http://10.0.0.2:8080";
@@ -60,7 +60,7 @@ public class RESTAPI {
         return instance;
     }
 
-    public boolean login(String userID, String userPassword) {
+    public int login(String userID, String userPassword) {
         APICaller login = new APICaller("POST", baseURL + "/api/login");
         login.setQueryParameter("userId", userID);
         login.setQueryParameter("userPassword", userPassword);
@@ -72,17 +72,21 @@ public class RESTAPI {
                 User.getUserinstance().setUserID(userID);
                 User.getUserinstance().setUserPwd(userPassword);
                 token = result.get("Authorization").get(0);
+                if(result.get("reward") == null) {
+                    return LOGIN_SUCCESS;
+                } else {
+                    return LOGIN_SUCCESS_WITH_REWARD;
+                }
             } else {
-                return false;
+                return LOGIN_FAIL;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return LOGIN_FAIL;
         }
-        return true;
     }
 
-    public boolean signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
+    public Integer signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
         APICaller signup = new APICaller("GET", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
         signup.setQueryParameter("userPassword", userPassword);
@@ -97,14 +101,14 @@ public class RESTAPI {
             result = signup.getHeader();
             if(result.get("update").get(0).equals("success")) {
                 state = signup.getHeader().get("state").get(0);
+                return REGISTER_SUCCESS;
             } else {
-                return false;
+                return REGISTER_FAIL;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return REGISTER_FAIL;
         }
-        return true;
     }
 
     public void registerOpenBanking(Activity activity) {
