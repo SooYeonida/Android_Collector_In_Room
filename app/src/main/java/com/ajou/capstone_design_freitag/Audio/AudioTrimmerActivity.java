@@ -316,15 +316,12 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
                 setResult(RESULT_OK, intent);
                 finish();
             }
-
-
         }
     }
 
     /**
      * Start recording
      */
-    //음파 보이는 곳이 여기
     private void startRecording() {
         final SoundFile.ProgressListener listener =
                 new SoundFile.ProgressListener() {
@@ -350,7 +347,6 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
         Thread mRecordAudioThread = new Thread() {
             public void run() {
                 try {
-                    //사용자가 녹음한 파일을 저 형식으로 엶.
                     mRecordedSoundFile = SoundFile.record(listener);
                     if (mRecordedSoundFile == null) {
                         finish();
@@ -1071,7 +1067,8 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
         long fileSize = outFile.length();
 
         ContentValues values = new ContentValues();
-        values.put(MediaStore.MediaColumns.DATA, outPath);
+        //values.put(MediaStore.Audio.Media._ID, outPath); //바꾼부
+        values.put(MediaStore.MediaColumns.DATA,outPath);
         values.put(MediaStore.MediaColumns.TITLE, title.toString());
         values.put(MediaStore.MediaColumns.SIZE, fileSize);
         values.put(MediaStore.MediaColumns.MIME_TYPE, Utility.AUDIO_MIME_TYPE);
@@ -1082,6 +1079,11 @@ public class AudioTrimmerActivity extends AppCompatActivity implements View.OnCl
         values.put(MediaStore.Audio.Media.IS_MUSIC, true);
 
         Uri uri = MediaStore.Audio.Media.getContentUriForPath(outPath);
+        //System.out.println("outpath:"+outPath);
+        //System.out.println("path:"+getApplicationContext().getExternalFilesDir(null).getAbsolutePath());
+        //Uri uri = Uri.parse(outPath);
+        //System.out.println("uri:"+uri);
+
         final Uri newUri = getContentResolver().insert(uri, values);
         Log.e("final URI >> ", newUri + " >> " + outPath);
 
