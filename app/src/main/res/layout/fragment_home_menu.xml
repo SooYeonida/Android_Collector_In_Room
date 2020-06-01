@@ -47,7 +47,7 @@ android:id="@+id/fragment_home">
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#8028ADFC"
+            android:background="@color/grayBackGround"
             android:gravity="center"
             android:text="누적 포인트별 랭킹"
             android:textSize="20sp"
@@ -63,7 +63,7 @@ android:id="@+id/fragment_home">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#8028ADFC"
+            android:background="@color/grayBackGround"
             android:gravity="center"
             android:text="정확도별 랭킹"
             android:textSize="20sp"

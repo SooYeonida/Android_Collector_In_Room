@@ -22,7 +22,7 @@
         android:background="#80CCCECF"
         android:gravity="center"
         android:layout_marginTop="15dp"
-        android:text="프로젝트 상세 페이지"
+        android:text="작업 상세 페이지"
         android:textSize="20sp"
         android:fontFamily="@font/tmonmonsori" />
 
@@ -44,7 +44,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="프로젝트 데이터 종류:"
+        android:text="작업 데이터 종류:"
         android:textSize="15sp"
         android:fontFamily="@font/tmonmonsori"/>
         <ImageView
@@ -60,7 +60,7 @@
             android:layout_height="match_parent"
             android:text="data type"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/jejugothic"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -71,7 +71,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="프로젝트 주제:"
+            android:text="작업 주제:"
             android:textSize="15sp"
             android:fontFamily="@font/tmonmonsori"/>
         <TextView
@@ -79,6 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="subject"
+            android:fontFamily="@font/jejugothic"
             android:textSize="15sp" />
     </LinearLayout>
         <LinearLayout
@@ -90,7 +91,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="프로젝트 의뢰자:"
+                android:text="작업 의뢰자:"
                 android:textSize="15sp"
                 android:fontFamily="@font/tmonmonsori"/>
             <TextView
@@ -98,6 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="requester"
+                android:fontFamily="@font/jejugothic"
                 android:textSize="15sp" />
     </LinearLayout>
 
@@ -118,7 +120,9 @@
             android:id="@+id/classlist_project_detail"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:text="클래스"
+            android:fontFamily="@font/jejugothic"
             android:textSize="15sp" />
     </LinearLayout>
     <TextView
@@ -135,7 +139,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         android:text="waycontent"
+        android:fontFamily="@font/jejugothic"
         android:textSize="15sp" />
 
     <TextView
@@ -152,7 +158,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         android:text="conditioncontent"
+        android:fontFamily="@font/jejugothic"
         android:textSize="15sp" />
 
     <TextView
@@ -186,6 +194,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:text="정보 수집 이용 동의"
+                android:fontFamily="@font/jejugothic"
                 android:textSize="18sp" />
             <TextView
                 android:layout_width="wrap_content"
@@ -194,6 +203,7 @@
                 android:layout_marginTop="10dp"
                 android:text="프로젝트 진행 시 작업자가 제공하는 음성, 텍스트, 이미지 등 작업 정보를 처리합니다."
                 android:textSize="11sp"
+                android:fontFamily="@font/jejugothic"
                 android:textStyle="bold"/>
             <View
                 android:layout_width="match_parent"
@@ -211,7 +221,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:text="항목"
+                android:fontFamily="@font/jejugothic"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
 
@@ -220,7 +232,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="100dp"
+                android:layout_marginTop="5dp"
                 android:text="수집 목적"
+                android:fontFamily="@font/jejugothic"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
 
@@ -229,7 +243,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="100dp"
+                android:layout_marginTop="5dp"
                 android:text="보유 기간"
+                android:fontFamily="@font/jejugothic"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -247,6 +263,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="작업 정보"
+                    android:fontFamily="@font/jejugothic"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -257,6 +274,7 @@
                     android:layout_marginLeft="50dp"
                     android:text="프로젝트 진행 &amp; 포인트 지급"
                     android:textSize="15sp"
+                    android:fontFamily="@font/jejugothic"
                     android:textStyle="bold" />
 
                 <TextView
@@ -265,6 +283,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="30dp"
                     android:text="1년"
+                    android:fontFamily="@font/jejugothic"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -273,7 +292,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/jejugothic"
                 android:text="*위와 같이 개인정보를 처리하는데 동의를 거부할 권리가 있습니다. &#10;그러나 동의를 거부할 경우 일부 작업 서비스 제공이 제한될 수 있습니다."
                 android:textSize="12sp"
                 android:textStyle="bold"/>
@@ -282,7 +302,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/jejugothic"
                 android:text="위와 같이 작업 정보를 수집 및 처리하는데 동의하십니까?"
                 android:textSize="12sp"
                 android:textStyle="bold"/>
@@ -299,20 +320,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="동의 여부:"-->
-<!--                android:textSize="12sp" />-->
-<!--            <TextView-->
-<!--                android:id="@+id/work_agree"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="비동의"-->
-<!--                android:textStyle="bold"-->
-<!--                android:textSize="12sp" />-->
+
         </LinearLayout>
             <TextView
                 android:id="@+id/current_date"

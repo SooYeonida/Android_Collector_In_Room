@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
         
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,18 +25,32 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/tmonmonsori"
                 android:gravity="center"
-                android:textColor="#8028ADFC"
-                android:textSize="25sp" />
+                android:textColor="#020202"
+                android:textSize="35sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="작업 의뢰"
-            android:textColor="#8028ADFC"
-            android:textSize="25sp"
+            android:textColor="#020202"
+            android:textSize="35sp"
             android:fontFamily="@font/tmonmonsori" />
+
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/collector_in_room" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_centerInParent="true"
+            android:background="@color/grayBackGround"
+            android:layout_marginTop="20dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -43,14 +58,17 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:textSize="15sp"
+            android:fontFamily="@font/jejugothic"
+            android:textColor="#80565858"
             android:text="이 페이지는 의뢰자가 방구석수집가에게 &#10; 의뢰하고자 하는 프로젝트를 생성하는 공간입니다."/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_centerInParent="true"
-            android:background="#2196F3"
+            android:background="@color/grayBackGround"
             android:layout_marginTop="20dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +85,8 @@
                 android:id="@+id/projectName"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:hint="project name"
+                android:hint="작업 이름을 입력해주세요"
+                android:textSize="15sp"
                 android:inputType="textMultiLine"
                 android:maxLines="1" />
         </LinearLayout>
@@ -95,21 +114,24 @@
                 android:layout_width="123dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="이미지" />
+                android:text="이미지"
+                android:fontFamily="@font/jejugothic"/>
 
             <RadioButton
                 android:id="@+id/collectionTextRadioButton"
                 android:layout_width="114dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="텍스트" />
+                android:text="텍스트"
+                android:fontFamily="@font/jejugothic"/>
 
             <RadioButton
                 android:id="@+id/collectionAudioRadioButton"
                 android:layout_width="164dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="음성" />
+                android:text="음성"
+                android:fontFamily="@font/jejugothic"/>
         </RadioGroup>
     </LinearLayout>
 
@@ -136,14 +158,17 @@
                 android:layout_width="114dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="분류" />
+                android:text="분류"
+                android:fontFamily="@font/jejugothic"
+                android:gravity=""/>
 
             <RadioButton
                 android:id="@+id/labelingBoundingboxRadioButton"
                 android:layout_width="123dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="바운딩박스" />
+                android:text="바운딩박스"
+                android:fontFamily="@font/jejugothic"/>
         </RadioGroup>
     </LinearLayout>
 
@@ -170,14 +195,16 @@
                     android:layout_width="123dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="직접 입력" />
+                    android:text="직접 입력"
+                    android:fontFamily="@font/jejugothic"/>
 
                 <RadioButton
                     android:id="@+id/uploadTextRadioButton"
                     android:layout_width="114dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="파일 업로드" />
+                    android:text="파일 업로드"
+                    android:fontFamily="@font/jejugothic"/>
 
             </RadioGroup>
         </LinearLayout>
@@ -221,7 +248,8 @@
                 android:id="@+id/userInputExampleTextEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:hint="example"
+                android:hint="예시"
+                android:textSize="15sp"
                 android:inputType="textMultiLine"
                 android:maxLines="10" />
         </LinearLayout>
@@ -240,7 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginTop="20dp"
-                    android:text="라벨링 타입:"
+                    android:text="데이터 라벨:"
                     android:fontFamily="@font/tmonmonsori"/>
 
                 <Button
@@ -263,27 +291,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
-                android:text="데이터 개수:"
-                android:fontFamily="@font/tmonmonsori"/>
-
-            <EditText
-                android:id="@+id/totalDataEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:hint="total data"
-                android:inputType="numberDecimal"
-                android:maxLines="3" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
                 android:text="주제:"
                 android:fontFamily="@font/tmonmonsori"/>
 
@@ -291,10 +298,32 @@
                 android:id="@+id/subjectEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:hint="subject"
+                android:hint="주제"
+                android:textSize="15sp"
                 android:inputType="textMultiLine"
                 android:maxLines="3" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="데이터 개수:"
+                android:fontFamily="@font/tmonmonsori"/>
+            <EditText
+                android:id="@+id/totalDataEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="데이터 개수"
+                android:textSize="15sp"
+                android:inputType="numberDecimal"
+                android:maxLines="3" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -312,7 +341,8 @@
                 android:id="@+id/descriptionEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:hint="description"
+                android:hint="작업 설명을 입력하세요"
+                android:textSize="15sp"
                 android:inputType="textMultiLine"
                 android:maxLines="10" />
         </LinearLayout>
@@ -333,7 +363,8 @@
                 android:id="@+id/wayEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:hint="way"
+                android:hint="작업 방법을 입력하세요"
+                android:textSize="15sp"
                 android:inputType="textMultiLine"
                 android:maxLines="10" />
         </LinearLayout>
@@ -354,7 +385,8 @@
                 android:id="@+id/conditionEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:hint="condition"
+                android:hint="작업 조건을 입력하세요"
+                android:textSize="15sp"
                 android:inputType="textMultiLine"
                 android:maxLines="5" />
         </LinearLayout>
@@ -379,7 +411,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#8028ADFC"
                 android:fontFamily="@font/tmonmonsori"
-                android:text="이미지 선택" />
+                android:text="파일 업로드" />
         </LinearLayout>
 
         <Button
@@ -390,6 +422,7 @@
             android:layout_marginTop="20dp"
             android:backgroundTint="#8028ADFC"
             android:fontFamily="@font/tmonmonsori"
-            android:text="Make" />
+            android:text="작업 생성" />
+
     </LinearLayout>
 </ScrollView>

@@ -116,6 +116,7 @@ public class ProjectListFragment extends Fragment {
         }
         else{
             datatype.setVisibility(View.GONE);
+            search_subject.setVisibility(View.GONE);
             workType = "labelling";
             projectList(view);
         }

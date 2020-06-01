@@ -3,13 +3,15 @@
     <!--<color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>-->
-    <color name="colorPrimary">#1F5BF3</color>
-    <color name="colorPrimaryDark">#0947E8</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#030304</color>
     <color name="colorAccent">#00A5FF</color>
+
     <!--colors for modern ui-->
     <color name="whiteTextColor">#fff</color>
     <color name="primaryTextColor">#00a5ff</color>
     <color name="loginBkColor">#f0f0f0</color>
+
     <!--colros for card-->
     <color name="whiteCardColor">#fff</color>
 
@@ -27,4 +29,8 @@
     <color name="waveformSelected">#adb5cc</color>
     <color name="waveformUnselected">#adb5cc</color>
     <color name="waveformUnselectedBackground">#e8e6e7</color>
+
+    <color name="grayBackGround">#80CBCCCC</color>
+    <color name="blueBackGround">#B3DBED</color>
+
 </resources>

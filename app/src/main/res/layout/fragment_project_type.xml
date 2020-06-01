@@ -16,11 +16,11 @@
         android:layout_height="150dp"
         android:background="@drawable/button_background"
         android:gravity="right"
-        android:paddingTop="50dp"
+        android:paddingTop="55dp"
         android:paddingRight="30dp"
         android:text="데이터 수집"
         android:textColor="#272424"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:fontFamily="@font/tmonmonsori" />
 
     <Button
@@ -30,11 +30,11 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/button_background"
         android:gravity="right"
-        android:paddingTop="50dp"
+        android:paddingTop="55dp"
         android:paddingRight="20dp"
         android:text="데이터 라벨링"
         android:textColor="#272424"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:fontFamily="@font/tmonmonsori" />
 
 </LinearLayout>

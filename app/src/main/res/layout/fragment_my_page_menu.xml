@@ -34,7 +34,7 @@ android:layout_weight="1">
     android:paddingRight="20dp"
     android:text="의뢰한 작업 목록"
     android:textColor="#272424"
-    android:textSize="18sp"
+    android:textSize="20sp"
     android:fontFamily="@font/tmonmonsori" />
 
     <Button
