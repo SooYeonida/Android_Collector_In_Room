@@ -215,7 +215,7 @@ public class ImageCollectionActivity extends AppCompatActivity {
                     protected Boolean doInBackground(Object... info) {
                         try {
 
-                            boolean result = RESTAPI.getInstance().collection_work((List<InputStream>) info[0], (List<String>) info[1], "image/jpeg",(String)info[2]);
+                            boolean result = RESTAPI.getInstance().collectionWork((List<InputStream>) info[0], (List<String>) info[1], "image/jpeg",(String)info[2]);
                             return new Boolean(result);
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -2,6 +2,7 @@ package com.ajou.capstone_design_freitag.API;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.hardware.usb.UsbRequest;
 import android.net.Uri;
 
 import com.ajou.capstone_design_freitag.ui.home.User;
@@ -353,16 +354,9 @@ public class RESTAPI {
         System.out.println("token:"+token);
         requestproject.request();
 
-        String list = null;
-        String result;
-
+        String list;
         List<Project> project_list = new ArrayList<>();
-        try {
-            list = requestproject.getBody();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        list = requestproject.getBody();
         JSONArray jsonArray = new JSONArray(list);
 
         for(int i=0;i<jsonArray.length();i++){
@@ -443,7 +437,7 @@ public class RESTAPI {
         }
     }
 
-    public Boolean collection_work(List<InputStream> inputStream,List<String> fileName,String fileType,String classname) throws Exception {
+    public Boolean collectionWork(List<InputStream> inputStream, List<String> fileName, String fileType, String classname) throws Exception {
         APICaller collectionWork = new APICaller("POST",baseURL+"/api/work/collection");
         collectionWork.setHeader("Authorization",token);
         collectionWork.setHeader("bucketName",Project.getProjectinstance().getBucketName());
@@ -453,7 +447,6 @@ public class RESTAPI {
         String result;
         header = collectionWork.multipartList(inputStream, fileName, fileType);
         result = header.get("upload").get(0);
-        System.out.println("result:"+result);
         if(result.equals("success")){
             return true;
         }else{
@@ -463,5 +456,36 @@ public class RESTAPI {
 
     public void logout() {
         token = null;
+    }
+
+    public List<User> rankingPoint() throws Exception {
+        APICaller rankingPoint = new APICaller("GET",baseURL+"/api/ranking/point");
+        String result;
+        String list;
+        List<User> ranking = new ArrayList<>();
+
+        rankingPoint.request();
+        result = rankingPoint.getHeader().get("ranking").get(0);
+        System.out.println(result);
+
+        if(result.equals("fail")){
+            System.out.println("랭킹 업로드 실패");
+        }
+        else{
+            System.out.println("랭킹 업로드 성공");
+        }
+
+        list = rankingPoint.getBody();
+        JSONArray jsonArray = new JSONArray(list);
+
+        for(int i=0;i<jsonArray.length();i++){
+            User user = new User();
+            JSONObject jsonObject;
+            jsonObject = jsonArray.getJSONObject(i);
+            user.setUserID(jsonObject.getString("userId"));
+            user.setTotalPoint(jsonObject.getString("totalPoint"));
+            ranking.add(user);
+        }
+        return  ranking;
     }
 }

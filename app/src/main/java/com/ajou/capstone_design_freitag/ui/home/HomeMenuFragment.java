@@ -1,5 +1,6 @@
 package com.ajou.capstone_design_freitag.ui.home;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,11 +13,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
+import com.ajou.capstone_design_freitag.ui.plus.Project;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 
 public class HomeMenuFragment extends Fragment {
@@ -27,25 +31,13 @@ public class HomeMenuFragment extends Fragment {
     ArrayList<User> rankingArrayList1 = new ArrayList<User>();
     ArrayList<User> rankingArrayList2 = new ArrayList<User>();
 
+    ListView point;
+    ListView accuracy;
+
     Button work_start;
     Button create_project;
 
     HomeFragment homeFragment;
-
-
-    Comparator<User> comparator_point = new Comparator<User>() {
-        @Override
-        public int compare(User o1, User o2) {
-            return (o2.getTotalPoint()-o1.getTotalPoint());
-        }
-    };
-
-    Comparator<User> comparator_accuracy = new Comparator<User>() {
-        @Override
-        public int compare(User o1, User o2) {
-            return (o2.getAccuracy()-o1.getAccuracy());
-        }
-    };
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
@@ -58,33 +50,12 @@ public class HomeMenuFragment extends Fragment {
         adapter_list1 = new RankingAdapter(rankingArrayList1);
         adpater_list2 = new RankingAdapter(rankingArrayList2);
 
-        ListView listView1 = view.findViewById(R.id.ranking_list_total_point);
-        ListView listView2 = view.findViewById(R.id.ranking_list_accuracy);
-        listView1.setAdapter(adapter_list1);
-        listView2.setAdapter(adpater_list2);
+        point = view.findViewById(R.id.ranking_list_total_point);
+        accuracy = view.findViewById(R.id.ranking_list_accuracy);
 
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user1),"nabong",1000,10);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user2),"pury",2000,5);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user3),"sooyeon",3000,7);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user4),"woney",4000,2);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user5),"merong",5000,11);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user6),"dddd",6000,6);
-
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user1),"nabong",1000,10);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user2),"pury",2000,5);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user3),"sooyeon",3000,7);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user4),"woney",4000,2);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user5),"merong",5000,11);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user6),"dddd",6000,6);
-
-        Collections.sort(rankingArrayList1,comparator_point);
-        Collections.sort(rankingArrayList2,comparator_accuracy);
+        rankingPoint(view);
+        //rankingAccuracy(view);
         adapter_list1.notifyDataSetChanged();
-        adpater_list2.notifyDataSetChanged();
-
-        setListViewHeightBasedOnChildren(listView1);
-        setListViewHeightBasedOnChildren(listView2);
-
 
         work_start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +74,47 @@ public class HomeMenuFragment extends Fragment {
 
         return view;
     }
+    public void rankingPoint(final View view){
+        AsyncTask<Void, Void, List<User>> rankingPointTask = new AsyncTask<Void, Void, List<User>>() {
+            @Override
+            protected List<User> doInBackground(Void... usernfos) {
+                List<User> result = new ArrayList<User>();
+                try {
+                    result = RESTAPI.getInstance().rankingPoint();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(List<User> result){
+                for(int i=0;i<result.size();i++){
+                    if(i==0) {
+                       result.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking1));
+                    }
+                    else if(i==1){
+                        result.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking2));
+                    }
+                    else if(i==2){
+                        result.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking3));
+                    }
+                    else{
+                        result.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.user));
+                    }
+                    adapter_list1.addItem(result.get(i));
+                }
+                point.setAdapter(adapter_list1);
+                setListViewHeightBasedOnChildren(point);
+            }
+        };
+        rankingPointTask.execute();
+    }
+
+    public void rankingAccuracy(final View view){
+
+    }
+
 
     public static void setListViewHeightBasedOnChildren(@NonNull ListView listView) {
         RankingAdapter rankingAdapter = (RankingAdapter) listView.getAdapter();

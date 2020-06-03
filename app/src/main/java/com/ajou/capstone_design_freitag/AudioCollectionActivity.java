@@ -397,7 +397,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
             @Override
             protected Boolean doInBackground(Object... info) {
                 try {
-                    boolean result = RESTAPI.getInstance().collection_work((List<InputStream>)info[0],(List<String>)info[1],"audio/mp3",(String)info[2]);
+                    boolean result = RESTAPI.getInstance().collectionWork((List<InputStream>)info[0],(List<String>)info[1],"audio/mp3",(String)info[2]);
                     return result;
                 } catch (Exception e) {
                     e.printStackTrace();

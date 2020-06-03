@@ -58,7 +58,7 @@ android:id="@+id/fragment_home">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="5dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -74,7 +74,8 @@ android:id="@+id/fragment_home">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="5dp"
+            android:dividerHeight="4dp"/>
     </LinearLayout>
 </ScrollView>
 </RelativeLayout>
