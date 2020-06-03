@@ -4,6 +4,9 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,26 +14,30 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
+import com.ajou.capstone_design_freitag.AudioCollectionActivity;
 import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -91,6 +98,16 @@ public class ProjectMakeFragment extends Fragment {
     private EditText wayEditText;
     private EditText conditionEditText;
 
+    private ImageView example_image;
+    private LinearLayout example_audio_layout;
+
+    private ImageView play;
+    private ImageView pause;
+    private SeekBar seekBar;
+    MediaPlayer mediaPlayer;
+    boolean isPlaying = true;
+    ProgressUpdate progressUpdate;
+
     private Button makeButton;
 
     private String worktype;
@@ -136,6 +153,55 @@ public class ProjectMakeFragment extends Fragment {
     private void findViews(View view) {
         workTypeTextView = view.findViewById(R.id.workTypeTextView);
 
+        example_image = view.findViewById(R.id.make_example_image);
+        example_audio_layout = view.findViewById(R.id.make_example_audio);
+        example_audio_layout.setVisibility(View.GONE);
+        play = view.findViewById(R.id.make_play);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pause.setVisibility(View.VISIBLE);
+                play.setVisibility(View.GONE);
+                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition());
+                mediaPlayer.start();
+            }
+        });
+        pause = view.findViewById(R.id.make_pause);
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pause.setVisibility(View.GONE);
+                play.setVisibility(View.VISIBLE);
+                mediaPlayer.pause();
+            }
+        });
+        seekBar = view.findViewById(R.id.make_seekbar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.pause();
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.seekTo(seekBar.getProgress());
+                if(seekBar.getProgress()>0&&play.getVisibility()==View.GONE){
+                    mediaPlayer.start();
+                }
+            }
+        });
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                readyToPlay();
+            }
+        });
+
         collectionTypeLinearLayout = view.findViewById(R.id.collectionTypeLinearLayout);
         collectionTypeRadioGroup = view.findViewById(R.id.collectionTypeRadioGroup);
         collectionImageRadioButton = view.findViewById(R.id.collectionImageRadioButton);
@@ -148,12 +214,16 @@ public class ProjectMakeFragment extends Fragment {
                 switch (checkedId){
                     case R.id.collectionImageRadioButton:
                         datatype = "image";
+                        example_image.setVisibility(View.GONE);
+                        example_audio_layout.setVisibility(View.GONE);
                         textUploadWayLinearLayout.setVisibility(View.GONE);
                         uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
                         userInputExampleTextLinearLayout.setVisibility(View.GONE);
                         break;
                     case R.id.collectionTextRadioButton:
                         datatype = "text";
+                        example_image.setVisibility(View.GONE);
+                        example_audio_layout.setVisibility(View.GONE);
                         textUploadWayRadioGroup.clearCheck();
                         textUploadWayLinearLayout.setVisibility(View.VISIBLE);
                         uploadExampleDataLinearLayout.setVisibility(View.GONE);
@@ -161,6 +231,8 @@ public class ProjectMakeFragment extends Fragment {
                         break;
                     case R.id.collectionAudioRadioButton:
                         datatype = "audio";
+                        example_image.setVisibility(View.GONE);
+                        example_audio_layout.setVisibility(View.GONE);
                         textUploadWayLinearLayout.setVisibility(View.GONE);
                         uploadExampleDataLinearLayout.setVisibility(View.VISIBLE);
                         userInputExampleTextLinearLayout.setVisibility(View.GONE);
@@ -251,6 +323,7 @@ public class ProjectMakeFragment extends Fragment {
                 makeProject(view);
             }
         });
+
     }
 
     private void setAttributeByWorkType() {
@@ -323,6 +396,7 @@ public class ProjectMakeFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, EXAMPLE_IMAGE_REQUEST_CODE);
+        example_image.setVisibility(View.VISIBLE);
     }
 
     private void selectExampleAudio() {
@@ -346,11 +420,69 @@ public class ProjectMakeFragment extends Fragment {
         startActivityForResult(intent, LABELLING_IMAGE_REQUEST_CODE);
     }
 
+    class ProgressUpdate extends Thread{
+        @Override
+        public void run() {
+            while(isPlaying){
+                try {
+                    Thread.sleep(500);
+                    if(mediaPlayer!=null){
+                        seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                    }
+                } catch (Exception e) {
+                    Log.e("ProgressUpdate",e.getMessage());
+                }
+
+            }
+        }
+    }
+
+    public void readyToPlay() {
+        try {
+            seekBar.setProgress(0);
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(context, exampleDataUri);
+            mediaPlayer.prepare();
+            seekBar.setMax(mediaPlayer.getDuration());
+            if(mediaPlayer.isPlaying()){
+                play.setVisibility(View.GONE);
+                pause.setVisibility(View.VISIBLE);
+            }else{
+                play.setVisibility(View.VISIBLE);
+                pause.setVisibility(View.GONE);
+            }
+        }
+        catch (Exception e) {
+            Log.e("SimplePlayer", e.getMessage());
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if(requestCode == EXAMPLE_AUDIO_REQUEST_CODE || requestCode == EXAMPLE_TEXT_REQUEST_CODE || requestCode == EXAMPLE_IMAGE_REQUEST_CODE){
                 exampleDataUri = data.getData();
+                if (requestCode == EXAMPLE_IMAGE_REQUEST_CODE){
+                    InputStream inputStream = null;
+                    try {
+                        inputStream = context.getContentResolver().openInputStream(exampleDataUri);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    example_image.setImageBitmap(bitmap);
+                }
+                if (requestCode == EXAMPLE_AUDIO_REQUEST_CODE){
+                    example_audio_layout.setVisibility(View.VISIBLE);
+                    readyToPlay();
+                    progressUpdate = new ProgressUpdate();
+                    progressUpdate.start();
+                }
             } else if(requestCode == LABELLING_IMAGE_REQUEST_CODE) {
                 ClipData clipDatas = data.getClipData();
                 for (int i = 0; i < clipDatas.getItemCount(); i++) {

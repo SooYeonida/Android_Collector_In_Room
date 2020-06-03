@@ -10,28 +10,115 @@ tools:context=".ImageCollectionActivity">
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="114dp"
-        android:scaleType="fitStart"
-        android:src="@drawable/home_logo" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="10dp">
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="이미지 수집 작업"
+                android:textColor="#020202"
+                android:textSize="35sp"
+                android:fontFamily="@font/tmonmonsori" />
+
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/collector_in_room" />
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_centerInParent="true"
+        android:background="@color/grayBackGround"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:fontFamily="@font/jejugothic"
+        android:textColor="#80565858"
+        android:text="*이미지 수집 작업은 주어진 수집 데이터 목록에 해당하는 &#10; 이미지를 업로드하는 작업입니다. "/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_centerInParent="true"
+        android:background="@color/grayBackGround"
+        android:layout_marginTop="10dp"/>
+
+
+    <TextView
             android:id="@+id/image_collection_project_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="프로젝트 이름"
+            android:text="작업 이름"
             android:textSize="20sp"
             android:fontFamily="@font/tmonmonsori"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="작업 의뢰자:"
+            android:textSize="15sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:id="@+id/image_collection_work_requester"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="requester"
+            android:fontFamily="@font/jejugothic"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="&lt;데이터 라벨 목록&gt;"
+            android:textSize="15sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:id="@+id/image_classlist_project_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:text="클래스"
+            android:fontFamily="@font/jejugothic"
+            android:textSize="15sp" />
+    </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#80CCCECF"
         android:gravity="center"
         android:layout_marginTop="15dp"
-        android:text="프로젝트 진행 방법 "
+        android:text="작업 진행 방법 "
         android:textSize="20sp"
         android:fontFamily="@font/tmonmonsori" />
     <TextView
@@ -39,6 +126,7 @@ tools:context=".ImageCollectionActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="5dp"
         android:text="waycontent"
         android:textSize="15sp"/>
 
@@ -57,6 +145,7 @@ tools:context=".ImageCollectionActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="5dp"
         android:text="conditioncontent"
         android:textSize="15sp"/>
 
@@ -97,13 +186,14 @@ tools:context=".ImageCollectionActivity">
         android:layout_height="wrap_content"
         android:text="*이미지 등록버튼을 눌러야 작업이 완료됩니다. 버튼을 꼭 눌러주세요*"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/jejugothic"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <ImageView

@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:text="project name"
         android:textSize="25sp"
         android:fontFamily="@font/tmonmonsori"/>
@@ -113,7 +113,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="&lt;프로젝트 수집 데이터 목록&gt;"
+            android:text="&lt;데이터 라벨 목록&gt;"
             android:textSize="15sp"
             android:fontFamily="@font/tmonmonsori"/>
         <TextView
@@ -131,7 +131,7 @@
         android:layout_marginTop="10dp"
         android:background="#80CCCECF"
         android:gravity="center"
-        android:text="프로젝트 진행 방법"
+        android:text="작업 진행 방법"
         android:textSize="20sp"
         android:fontFamily="@font/tmonmonsori" />
     <TextView
@@ -150,7 +150,7 @@
         android:layout_marginTop="10dp"
         android:background="#80CCCECF"
         android:gravity="center"
-        android:text="프로젝트 조건"
+        android:text="작업 조건"
         android:textSize="20sp"
         android:fontFamily="@font/tmonmonsori" />
     <TextView

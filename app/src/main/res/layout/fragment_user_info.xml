@@ -7,7 +7,8 @@
         android:elevation="5dp"
         android:layout_gravity="center"
         android:background="@color/whiteCardColor"
-        android:id="@+id/fragment_my_page_update">
+        android:id="@+id/fragment_my_page_update"
+        android:layout_marginTop="10dp">
 
     <ScrollView
         style="@style/parent">
@@ -22,7 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_marginTop="5dp">
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"

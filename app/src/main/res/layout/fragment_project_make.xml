@@ -13,20 +13,20 @@
         android:layout_marginTop="10dp">
         
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
-            <TextView
-                android:id="@+id/workTypeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/tmonmonsori"
-                android:gravity="center"
-                android:textColor="#020202"
-                android:textSize="35sp" />
+        <TextView
+            android:id="@+id/workTypeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/tmonmonsori"
+            android:gravity="center"
+            android:textColor="#020202"
+            android:textSize="35sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,12 +38,12 @@
             android:textSize="35sp"
             android:fontFamily="@font/tmonmonsori" />
 
-            <ImageView
-                android:layout_marginLeft="10dp"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/collector_in_room" />
-        </LinearLayout>
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/collector_in_room" />
+    </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -60,7 +60,7 @@
             android:textSize="15sp"
             android:fontFamily="@font/jejugothic"
             android:textColor="#80565858"
-            android:text="이 페이지는 의뢰자가 방구석수집가에게 &#10; 의뢰하고자 하는 프로젝트를 생성하는 공간입니다."/>
+            android:text="이 페이지는 의뢰자가 방구석수집가에게 &#10; 의뢰하고자 하는 작업을 생성하는 공간입니다."/>
 
         <View
             android:layout_width="match_parent"
@@ -229,6 +229,51 @@
                 android:backgroundTint="#8028ADFC"
                 android:fontFamily="@font/tmonmonsori"
                 android:text="파일 업로드" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/make_example_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/make_example_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/make_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/play"
+                android:layout_marginTop="10dp"/>
+
+            <ImageView
+                android:id="@+id/make_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pause"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+
+
+        <SeekBar
+            android:id="@+id/make_seekbar"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
         </LinearLayout>
 
         <LinearLayout

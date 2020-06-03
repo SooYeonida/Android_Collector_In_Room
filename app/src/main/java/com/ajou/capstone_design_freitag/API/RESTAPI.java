@@ -49,7 +49,7 @@ public class RESTAPI {
 
     private static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://10.0.0.2:8080";
+    private String baseURL = "http://10.0.2.2:8080";
     //private String baseURL = "http://localhost:8080";
     private String token = null;
     private String state = null;
