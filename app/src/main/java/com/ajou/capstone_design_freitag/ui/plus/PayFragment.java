@@ -13,9 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
-import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
+import com.ajou.capstone_design_freitag.ui.dto.Project;
 
 import java.lang.ref.WeakReference;
 

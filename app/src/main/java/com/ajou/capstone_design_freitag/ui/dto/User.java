@@ -1,4 +1,4 @@
-package com.ajou.capstone_design_freitag.ui.home;
+package com.ajou.capstone_design_freitag.ui.dto;
 
 
 import android.graphics.drawable.Drawable;

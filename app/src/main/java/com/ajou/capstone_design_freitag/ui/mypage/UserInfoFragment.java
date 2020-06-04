@@ -13,8 +13,7 @@ import android.widget.TextView;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
-import com.ajou.capstone_design_freitag.ui.home.User;
-import com.google.android.material.tabs.TabLayout;
+import com.ajou.capstone_design_freitag.ui.dto.User;
 
 import org.json.JSONException;
 

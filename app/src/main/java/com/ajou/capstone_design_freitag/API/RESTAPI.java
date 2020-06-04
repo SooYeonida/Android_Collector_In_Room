@@ -5,39 +5,33 @@ import android.content.Intent;
 import android.hardware.usb.UsbRequest;
 import android.net.Uri;
 
-import com.ajou.capstone_design_freitag.ui.home.User;
-import com.ajou.capstone_design_freitag.ui.plus.Project;
+
+import com.ajou.capstone_design_freitag.ui.dto.User;
+import com.ajou.capstone_design_freitag.ui.dto.Project;
+import com.ajou.capstone_design_freitag.ui.dto.WorkHistory;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import awsauth.AWS4SignerBase;
 import awsauth.AWS4SignerForAuthorizationHeader;
-import http.HTTPRequest;
 
 public class RESTAPI {
     public static final int LOGIN_SUCCESS = 0;
@@ -298,7 +292,7 @@ public class RESTAPI {
         }
     }
 
-    public List<Project> projectList(String workType,String dataType,String subject, String difficulty) throws Exception {
+    public List<Project> projectList(String workType,String dataType,String subject, String difficulty)throws Exception  {
      APICaller projectList = new APICaller("GET",baseURL+"/api/project/list");
      projectList.setQueryParameter("workType",workType);
      projectList.setQueryParameter("dataType",dataType);
@@ -308,7 +302,9 @@ public class RESTAPI {
      String result;
      List<Project> project_list = new ArrayList<>();
      result = projectList.getBody();
+
      JSONArray jsonArray = new JSONArray(result);
+
      for(int i=0;i<jsonArray.length();i++){
 
          Project project = new Project();
@@ -351,7 +347,6 @@ public class RESTAPI {
     public List<Project> requestProjectList() throws Exception {
         APICaller requestproject = new APICaller("GET",baseURL+"/api/project/all");
         requestproject.setHeader("Authorization",token);
-        System.out.println("token:"+token);
         requestproject.request();
 
         String list;
@@ -466,7 +461,6 @@ public class RESTAPI {
 
         rankingPoint.request();
         result = rankingPoint.getHeader().get("ranking").get(0);
-        System.out.println(result);
 
         if(result.equals("fail")){
             System.out.println("랭킹 업로드 실패");
@@ -475,6 +469,7 @@ public class RESTAPI {
             System.out.println("랭킹 업로드 성공");
         }
 
+        Thread.sleep(200); //임시방편
         list = rankingPoint.getBody();
         JSONArray jsonArray = new JSONArray(list);
 
@@ -488,4 +483,42 @@ public class RESTAPI {
         }
         return  ranking;
     }
+
+    public List<WorkHistory> workHistory() throws Exception {
+        APICaller workHistory = new APICaller("GET",baseURL+"/api/work/all");
+        workHistory.setHeader("Authorization",token);
+        workHistory.request();
+
+        String result;
+        String list;
+        List<WorkHistory> workHistoryList = new ArrayList<>();
+
+        result = workHistory.getHeader().get("workList").get(0);
+
+        Thread.sleep(200); //임시방편
+        list = workHistory.getBody();
+        JSONArray jsonArray = new JSONArray(list);
+
+        if(result.equals("fail")){
+            System.out.println("사용자 작업 기록 업로드 실패");
+        }
+        else{
+            System.out.println("사용자 작업 기록 성공");
+       }
+
+        for(int i=0;i<jsonArray.length();i++){
+            WorkHistory work = new WorkHistory();
+            JSONObject jsonObject;
+            jsonObject = jsonArray.getJSONObject(i);
+            work.setProjectRequester(jsonObject.getString("projectRequester"));
+            work.setProjectName(jsonObject.getString("projectName"));
+            work.setProjectWorkType(jsonObject.getString("projectWorkType"));
+            work.setProjectDataType(jsonObject.getString("projectDataType"));
+            work.setProjectStatus(jsonObject.getString("projectStatus"));
+            work.setProblemId(Integer.parseInt(jsonObject.getString("problemId")));
+            workHistoryList.add(work);
+        }
+        return  workHistoryList;
+    }
+
 }
