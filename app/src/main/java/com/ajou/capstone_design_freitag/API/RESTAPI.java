@@ -2,13 +2,9 @@ package com.ajou.capstone_design_freitag.API;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.hardware.usb.UsbRequest;
 import android.net.Uri;
-
-
 import com.ajou.capstone_design_freitag.ui.dto.User;
 import com.ajou.capstone_design_freitag.ui.dto.Project;
-import com.ajou.capstone_design_freitag.ui.dto.WorkHistory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -45,7 +41,7 @@ public class RESTAPI {
     private static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
     private String baseURL = "http://10.0.2.2:8080";
-    //private String baseURL = "http://localhost:8080";
+    //private String baseURL = "http://101.101.208.224:8080";
     private String token = null;
     private String state = null;
 
@@ -90,7 +86,7 @@ public class RESTAPI {
     }
 
     public Integer signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
-        APICaller signup = new APICaller("GET", baseURL + "/api/signup");
+        APICaller signup = new APICaller("POST", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
         signup.setQueryParameter("userPassword", userPassword);
         signup.setQueryParameter("userName", userName);
@@ -102,7 +98,7 @@ public class RESTAPI {
         try {
             signup.request();
             result = signup.getHeader();
-            if(result.get("update").get(0).equals("success")) {
+            if(result.get("signup").get(0).equals("success")) {
                 state = signup.getHeader().get("state").get(0);
                 return REGISTER_SUCCESS;
             } else {
@@ -277,6 +273,7 @@ public class RESTAPI {
         return false;
     }
 
+
     public boolean payment(String method) throws Exception {
         APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/" + method + "/payment");
         pointPayment.setHeader("Authorization",token);
@@ -432,93 +429,83 @@ public class RESTAPI {
         }
     }
 
-    public Boolean collectionWork(List<InputStream> inputStream, List<String> fileName, String fileType, String classname) throws Exception {
-        APICaller collectionWork = new APICaller("POST",baseURL+"/api/work/collection");
-        collectionWork.setHeader("Authorization",token);
-        collectionWork.setHeader("bucketName",Project.getProjectinstance().getBucketName());
-        collectionWork.setHeader("projectId",Project.getProjectinstance().getProjectId());
-        collectionWork.setQueryParameter("className",classname);
-        Map<String, List<String>> header;
-        String result;
-        header = collectionWork.multipartList(inputStream, fileName, fileType);
-        result = header.get("upload").get(0);
-        if(result.equals("success")){
-            return true;
-        }else{
-            return false;
+    public Boolean collectionWork(List<InputStream> inputStreams, List<String> fileNames, String contentType, String classname) throws Exception {
+        HttpClient httpClient = new DefaultHttpClient();
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        System.out.println("이미지 수집 요청");
+        System.out.println("inputstreams size:"+inputStreams.size());
+        for(int i = 0; i < inputStreams.size(); i++) {
+            System.out.println("filename:"+ fileNames.get(i));
+            builder.addBinaryBody("files", inputStreams.get(i), ContentType.create(contentType), fileNames.get(i));
         }
+        HttpPost httpPost = new HttpPost(baseURL + "/api/work/collection");
+        httpPost.setHeader("Authorization", token);
+        httpPost.setHeader("bucketName", Project.getProjectinstance().getBucketName());
+        httpPost.setHeader("projectId",Project.getProjectinstance().getProjectId());
+        httpPost.setHeader("className",classname);
+        httpPost.setEntity(builder.build());
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            if(httpResponse.getFirstHeader("upload").getValue().equals("success")) {
+                return true;
+            }
+        }
+        else{
+            System.out.println("response: "+httpResponse.getStatusLine().getStatusCode());
+        }
+        return false;
     }
 
     public void logout() {
         token = null;
     }
 
-    public List<User> rankingPoint() throws Exception {
-        APICaller rankingPoint = new APICaller("GET",baseURL+"/api/ranking/point");
-        String result;
-        String list;
-        List<User> ranking = new ArrayList<>();
+public String rankingPoint() throws Exception {
+    APICaller rankingPoint = new APICaller("GET",baseURL+"/api/ranking/point");
+    String result;
+    String list;
+    rankingPoint.request();
+    result = rankingPoint.getHeader().get("ranking").get(0);
 
-        rankingPoint.request();
-        result = rankingPoint.getHeader().get("ranking").get(0);
-
-        if(result.equals("fail")){
-            System.out.println("랭킹 업로드 실패");
-        }
-        else{
-            System.out.println("랭킹 업로드 성공");
-        }
-
-        Thread.sleep(200); //임시방편
-        list = rankingPoint.getBody();
-        JSONArray jsonArray = new JSONArray(list);
-
-        for(int i=0;i<jsonArray.length();i++){
-            User user = new User();
-            JSONObject jsonObject;
-            jsonObject = jsonArray.getJSONObject(i);
-            user.setUserID(jsonObject.getString("userId"));
-            user.setTotalPoint(jsonObject.getString("totalPoint"));
-            ranking.add(user);
-        }
-        return  ranking;
+    if(result.equals("fail")){
+        System.out.println("point ranking fail");
     }
+    list = rankingPoint.getBody();
+    return list;
+}
 
-    public List<WorkHistory> workHistory() throws Exception {
+    public String workHistory() throws Exception {
         APICaller workHistory = new APICaller("GET",baseURL+"/api/work/all");
         workHistory.setHeader("Authorization",token);
-        workHistory.request();
-
         String result;
         String list;
-        List<WorkHistory> workHistoryList = new ArrayList<>();
-
+        workHistory.request();
         result = workHistory.getHeader().get("workList").get(0);
-
-        Thread.sleep(200); //임시방편
+        if (result.equals("fail")){
+            System.out.println("workhistory fail ");
+        }
         list = workHistory.getBody();
-        JSONArray jsonArray = new JSONArray(list);
-
-        if(result.equals("fail")){
-            System.out.println("사용자 작업 기록 업로드 실패");
-        }
-        else{
-            System.out.println("사용자 작업 기록 성공");
-       }
-
-        for(int i=0;i<jsonArray.length();i++){
-            WorkHistory work = new WorkHistory();
-            JSONObject jsonObject;
-            jsonObject = jsonArray.getJSONObject(i);
-            work.setProjectRequester(jsonObject.getString("projectRequester"));
-            work.setProjectName(jsonObject.getString("projectName"));
-            work.setProjectWorkType(jsonObject.getString("projectWorkType"));
-            work.setProjectDataType(jsonObject.getString("projectDataType"));
-            work.setProjectStatus(jsonObject.getString("projectStatus"));
-            work.setProblemId(Integer.parseInt(jsonObject.getString("problemId")));
-            workHistoryList.add(work);
-        }
-        return  workHistoryList;
+        System.out.println("workhistory list:"+list);
+        return list;
     }
 
+public String provideClassificationProblems(String dataType) throws Exception {
+    APICaller provideClassificationProblems = new APICaller("GET",baseURL+"/api/work/start");
+    provideClassificationProblems.setHeader("Authorization",token);
+    provideClassificationProblems.setHeader("dataType",dataType);
+    String result;
+    String list;
+    provideClassificationProblems.request();
+    result = provideClassificationProblems.getHeader().get("problems").get(0);
+    list = provideClassificationProblems.getBody();
+
+    if(result.equals("fail")){
+        System.out.println("classification problem fail");
+        return null;
+    }
+
+    return list;
+}
 }

@@ -172,7 +172,6 @@ public class APICaller {
         con.setRequestProperty("Content-Type","multipart/form-data;boundary=" + boundary);
 
         DataOutputStream dataStream = new DataOutputStream(con.getOutputStream());
-        //여기밑을 반복
         dataStream.writeBytes(twoHyphens + boundary + CRLF);
         dataStream.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + fileName + "\"" + CRLF);
         dataStream.writeBytes("Content-Type: " + type +  CRLF);
@@ -194,63 +193,8 @@ public class APICaller {
         inputStream.close();
         dataStream.flush();
         dataStream.close();
-        //
 
         if(con.getResponseCode() == 200) {
-            con.disconnect();
-            return con.getHeaderFields();
-        } else {
-            con.disconnect();
-            throw new Exception(con.getResponseCode() + " Error");
-        }
-    }
-
-    public Map<String, List<String>> multipartList(List<InputStream> inputStream, List<String> fileName, String type) throws Exception {
-        String CRLF = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****b*o*u*n*d*a*r*y*****";
-
-        makeURL();
-        con = (HttpURLConnection) new URL(url).openConnection();
-        con.setDoOutput(true);
-        con.setRequestMethod(method);
-
-        if (!headers.isEmpty()) {
-            for (String key : headers.keySet()) {
-                con.setRequestProperty(key, headers.get(key));
-            }
-        }
-
-        con.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-        DataOutputStream dataStream = new DataOutputStream(con.getOutputStream());
-
-        for(int i=0;i<inputStream.size();i++) {
-            dataStream.writeBytes(CRLF);
-            dataStream.writeBytes(twoHyphens + boundary + CRLF);
-            dataStream.writeBytes("Content-Disposition: form-data; name=\"files\"; filename=\"" + fileName.get(i) + "\"" + CRLF);
-            dataStream.writeBytes("Content-Type: " + type + CRLF);
-            dataStream.writeBytes(CRLF);
-
-            int bytesAvailable = inputStream.get(i).available();
-            int maxBufferSize = 1024;
-            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            byte[] buffer = new byte[bufferSize];
-            int bytesRead = inputStream.get(i).read(buffer, 0, bufferSize);
-            while (bytesRead > 0) {
-                dataStream.write(buffer, 0, bufferSize);
-                bytesAvailable = inputStream.get(i).available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = inputStream.get(i).read(buffer, 0, bufferSize);
-            }
-            inputStream.get(i).close();
-
-        }
-        dataStream.writeBytes(CRLF);
-        dataStream.writeBytes(twoHyphens + boundary + twoHyphens + CRLF); //이거 두개가 끝낸다는 표시
-        dataStream.flush();
-        dataStream.close();
-
-        if (con.getResponseCode() == 200) {
             con.disconnect();
             return con.getHeaderFields();
         } else {

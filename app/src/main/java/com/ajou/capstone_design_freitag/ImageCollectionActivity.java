@@ -138,14 +138,6 @@ public class ImageCollectionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dataURI.setText("");
                 Toast.makeText(getApplicationContext(),"이미지 등록 완료",Toast.LENGTH_LONG).show();
-
-//                for(int i=0;i<inputStreamList.size();i++){
-//                   finalinputstreamList.add(inputStreamList.get(i));
-//                   finalfilenameList.add(fileNameList.get(i));
-//                }
-
-//                inputStreamList.removeAll(inputStreamList);
-//                fileNameList.removeAll(fileNameList);
             }
         });
 
@@ -159,8 +151,6 @@ public class ImageCollectionActivity extends AppCompatActivity {
                     upload_image_data(inputStreamList,fileNameList,classname);
 
                     Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
                 }
             }
         });
@@ -227,6 +217,10 @@ public class ImageCollectionActivity extends AppCompatActivity {
                     protected void onPostExecute(Boolean result) {
                         if (result) {
                             Toast.makeText(getApplicationContext(), "수집 작업 이미지 업로드 성공", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(),PopupActivity.class);
+                            intent.putExtra("type","image");
+                            intent.putExtra("project", project);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(getApplicationContext(), "수집 작업 이미지 업로드 실패", Toast.LENGTH_LONG).show();
                         }

@@ -17,6 +17,10 @@ import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.ui.dto.WorkHistory;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +33,7 @@ public class CompleteWorkListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        workList();
     }
 
     @Override
@@ -40,10 +44,7 @@ public class CompleteWorkListFragment extends Fragment {
 
         workAdapter = new WorkAdapter(workHistoryArrayList);
         listView = view.findViewById(R.id.work_list_mypage);
-
-        workList(view);
         workAdapter.notifyDataSetChanged();
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -54,11 +55,11 @@ public class CompleteWorkListFragment extends Fragment {
         return view;
     }
 
-    public void workList(final View view){
-        AsyncTask<Void, Void, List<WorkHistory>> collectionListTask = new AsyncTask<Void, Void, List<WorkHistory>>() {
+    public void workList(){
+        AsyncTask<Void, Void, String> collectionListTask = new AsyncTask<Void, Void, String>() {
             @Override
-            protected List<WorkHistory> doInBackground(Void... info) {
-                List<WorkHistory> result = new ArrayList<WorkHistory>();
+            protected String doInBackground(Void... info) {
+               String result = null;
                 try {
                     result = RESTAPI.getInstance().workHistory();
                 } catch (Exception e) {
@@ -68,31 +69,55 @@ public class CompleteWorkListFragment extends Fragment {
             }
 
             @Override
-            protected void onPostExecute(List<WorkHistory> result){
-                for(int i=0;i<result.size();i++){
-                    if(result.get(i).getProjectWorkType().equals("collection")) {
-                        switch (result.get(i).getProjectDataType()) {
-                            case ("image"):
-                                result.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_image_black_24dp));
-                                break;
-                            case ("text"):
-                                result.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_text_black_24dp));
-                                break;
-                            case ("audio"):
-                                result.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_voice_black_24dp));
-                                break;
-                        }
+            protected void onPostExecute(String result){
+                try {
+                    if(result!=null) {
+                        jsonParse(result);
                     }
-                    else{
-                        result.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_label_black_24dp));
-                    }
-                    workAdapter.addItem(result.get(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                listView.setAdapter(workAdapter);
-                setListViewHeightBasedOnChildren(listView);
             }
         };
         collectionListTask.execute();
+    }
+
+    public void jsonParse(String list) throws JSONException {
+                List<WorkHistory> workHistoryList = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray(list);
+                for(int i=0;i<jsonArray.length();i++){
+                    WorkHistory work = new WorkHistory();
+                    JSONObject jsonObject;
+                    jsonObject = jsonArray.getJSONObject(i);
+                    work.setProjectRequester(jsonObject.getString("projectRequester"));
+                    work.setProjectName(jsonObject.getString("projectName"));
+                    work.setProjectWorkType(jsonObject.getString("projectWorkType"));
+                    work.setProjectDataType(jsonObject.getString("projectDataType"));
+                    work.setProjectStatus(jsonObject.getString("projectStatus"));
+                    work.setProblemId(Integer.parseInt(jsonObject.getString("problemId")));
+                    workHistoryList.add(work);
+                }
+        for(int i=0;i<workHistoryList.size();i++){
+            if(workHistoryList.get(i).getProjectWorkType().equals("collection")) {
+                switch (workHistoryList.get(i).getProjectDataType()) {
+                    case ("image"):
+                        workHistoryList.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_image_black_24dp));
+                        break;
+                    case ("text"):
+                        workHistoryList.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_text_black_24dp));
+                        break;
+                    case ("audio"):
+                        workHistoryList.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_voice_black_24dp));
+                        break;
+                }
+            }
+            else{
+                workHistoryList.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_label_black_24dp));
+            }
+            workAdapter.addItem(workHistoryList.get(i));
+        }
+        listView.setAdapter(workAdapter);
+        setListViewHeightBasedOnChildren(listView);
     }
 
     public static void setListViewHeightBasedOnChildren(@NonNull ListView listView) {

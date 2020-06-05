@@ -159,8 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="분류"
-                android:fontFamily="@font/jejugothic"
-                android:gravity=""/>
+                android:fontFamily="@font/jejugothic" />
 
             <RadioButton
                 android:id="@+id/labelingBoundingboxRadioButton"

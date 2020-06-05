@@ -57,5 +57,10 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="popupTheme" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 
 </resources>

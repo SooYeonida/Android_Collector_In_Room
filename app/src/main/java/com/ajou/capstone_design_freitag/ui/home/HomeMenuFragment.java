@@ -15,7 +15,13 @@ import android.widget.ListView;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
+
 import com.ajou.capstone_design_freitag.ui.dto.User;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +43,16 @@ public class HomeMenuFragment extends Fragment {
 
     HomeFragment homeFragment;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        rankingPoint();
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_home_menu,container,false);
-
         work_start = view.findViewById(R.id.banner1);
         create_project = view.findViewById(R.id.banner2);
 
@@ -51,8 +62,6 @@ public class HomeMenuFragment extends Fragment {
         point = view.findViewById(R.id.ranking_list_total_point);
         accuracy = view.findViewById(R.id.ranking_list_accuracy);
 
-        rankingPoint(view);
-        //rankingAccuracy(view);
         adapter_list1.notifyDataSetChanged();
 
         work_start.setOnClickListener(new View.OnClickListener() {
@@ -72,38 +81,28 @@ public class HomeMenuFragment extends Fragment {
 
         return view;
     }
-    public void rankingPoint(final View view){
-        AsyncTask<Void, Void, List<User>> rankingPointTask = new AsyncTask<Void, Void, List<User>>() {
+    public void rankingPoint(){
+        AsyncTask<Void, Void, String> rankingPointTask = new AsyncTask<Void, Void, String>() {
             @Override
-            protected List<User> doInBackground(Void... usernfos) {
-                List<User> result = new ArrayList<User>();
+            protected String doInBackground(Void... infos) {
                 try {
-                    result = RESTAPI.getInstance().rankingPoint();
+                    String result = RESTAPI.getInstance().rankingPoint();
+                    return result;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return result;
+                return null;
             }
 
             @Override
-            protected void onPostExecute(List<User> result){
-                for(int i=0;i<result.size();i++){
-                    if(i==0) {
-                       result.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking1));
+            protected void onPostExecute(String result){
+                try {
+                    if(result!=null){
+                        jsonParse(result);
                     }
-                    else if(i==1){
-                        result.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking2));
-                    }
-                    else if(i==2){
-                        result.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking3));
-                    }
-                    else{
-                        result.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.user));
-                    }
-                    adapter_list1.addItem(result.get(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                point.setAdapter(adapter_list1);
-                setListViewHeightBasedOnChildren(point);
             }
         };
         rankingPointTask.execute();
@@ -111,6 +110,35 @@ public class HomeMenuFragment extends Fragment {
 
     public void rankingAccuracy(final View view){
 
+    }
+
+    public void jsonParse(String list) throws JSONException {
+        List<User> ranking = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray(list);
+        for(int i=0;i<jsonArray.length();i++){
+            User user = new User();
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            user.setUserID(jsonObject.getString("userId"));
+            user.setTotalPoint(jsonObject.getString("totalPoint"));
+            ranking.add(user);
+        }
+        for(int i=0;i<ranking.size();i++){
+            if(i==0) {
+                ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking1));
+            }
+            else if(i==1){
+                ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking2));
+            }
+            else if(i==2){
+                ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking3));
+            }
+            else{
+                ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.user));
+            }
+            adapter_list1.addItem(ranking.get(i));
+        }
+        point.setAdapter(adapter_list1);
+        setListViewHeightBasedOnChildren(point);
     }
 
 

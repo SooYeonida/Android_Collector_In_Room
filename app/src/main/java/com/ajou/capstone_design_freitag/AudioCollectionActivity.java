@@ -196,8 +196,6 @@ public class AudioCollectionActivity extends AppCompatActivity {
                 else {
                     upload_audio_data(inputStreamList,fileNameList,classname);
                     Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
                 }
             }
         });
@@ -408,6 +406,10 @@ public class AudioCollectionActivity extends AppCompatActivity {
             protected void onPostExecute(Boolean result) {
                 if(result){
                     Toast.makeText(context, "수집 작업 오디오 업로드 완료",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(),PopupActivity.class);
+                    intent.putExtra("type","audio");
+                    intent.putExtra("project", project);
+                    startActivity(intent);
                 }
                 else{
                     Toast.makeText(context, "수집 작업 오디오 업로드 실패",Toast.LENGTH_LONG).show();
@@ -434,7 +436,6 @@ public class AudioCollectionActivity extends AppCompatActivity {
         if (requestCode == COLLECTION_AUDIO_REQUEST_CODE) {
             List<Uri> uriList = new ArrayList<>();
             uriList.add(data.getData());
-            System.out.println("urlList size:" + uriList.size());
             for (int i = 0; i < uriList.size(); i++) {
                 try {
                     InputStream inputStream = context.getContentResolver().openInputStream(uriList.get(i));
