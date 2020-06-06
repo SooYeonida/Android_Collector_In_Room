@@ -16,7 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PopupActivity" android:theme="@style/popupTheme" android:screenOrientation="portrait"></activity>
+        <activity android:name=".RequestDetailActivity"></activity>
+        <activity
+            android:name=".PopupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/popupTheme" />
         <activity android:name=".ClassificationActivity" />
         <activity android:name=".TextCollectionActivity" />
         <activity android:name=".AudioCollectionActivity" />
