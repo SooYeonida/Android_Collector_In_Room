@@ -71,4 +71,6 @@ public class RankingAdapter extends BaseAdapter {
         rankingArrayList.add(user);
     }
 
+    public void removeAll(){rankingArrayList.removeAll(rankingArrayList);}
+
 }
