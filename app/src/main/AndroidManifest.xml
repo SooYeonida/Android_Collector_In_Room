@@ -11,19 +11,20 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true">
-        <activity android:name=".TextCollectionActivity"/>
+        android:usesCleartextTraffic="true">
+        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".TextCollectionActivity" />
         <activity android:name=".AudioCollectionActivity" />
         <activity android:name=".ImageCollectionActivity" />
         <activity android:name=".ProjectDetailActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".Audio.AudioTrimmerActivity"
+        <activity
+            android:name=".Audio.AudioTrimmerActivity"
             android:theme="@style/Theme.Transparent" />
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
