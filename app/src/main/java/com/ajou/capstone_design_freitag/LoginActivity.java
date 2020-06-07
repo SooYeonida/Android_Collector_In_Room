@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     public void goToRegister(View view) {
         registerID.setText("");
         registerPassword.setText("");
+        registerPasswordSecond.setText("");
         registerName.setText("");
         registerPhone.setText("");
         registerEmail.setText("");
