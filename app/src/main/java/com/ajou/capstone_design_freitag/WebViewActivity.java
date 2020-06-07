@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -50,17 +51,14 @@ public class WebViewActivity extends AppCompatActivity {
         };
         webView.setWebViewClient(webViewClient);
 
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setDefaultTextEncodingName("UTF-8");
+
         Intent intent = getIntent();
         String url = intent.getStringExtra("URL");
         webView.loadUrl(url);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
     }
 }

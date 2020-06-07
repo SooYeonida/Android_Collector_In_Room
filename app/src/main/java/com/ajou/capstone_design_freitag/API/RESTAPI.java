@@ -119,7 +119,7 @@ public class RESTAPI {
         }
     }
 
-    public void registerOpenBanking(Activity activity) {
+    public String getRegisterOpenBankingURL() {
         APICaller registerOpenBanking = new APICaller("GET", "https://testapi.openbanking.or.kr/oauth/2.0/authorize");
         registerOpenBanking.setQueryParameter("auth_type", "0");
         registerOpenBanking.setQueryParameter("scope", "login+transfer+inquiry");
@@ -129,10 +129,7 @@ public class RESTAPI {
         registerOpenBanking.setQueryParameter("client_id", clientID);
         registerOpenBanking.setQueryParameter("state", state);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri uri = Uri.parse(registerOpenBanking.getUrl());
-        intent.setData(uri);
-        activity.startActivity(intent);
+        return registerOpenBanking.getUrl();
     }
 
     public User mypage(String userId) throws JSONException {

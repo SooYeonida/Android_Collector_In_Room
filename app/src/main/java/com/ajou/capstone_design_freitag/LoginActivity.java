@@ -1,6 +1,5 @@
 package com.ajou.capstone_design_freitag;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +14,8 @@ import com.ajou.capstone_design_freitag.API.RESTAPI;
 import java.lang.ref.WeakReference;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final int REGISTER_OPENBANKING_REQUEST_CODE = 100;
+
     private View layout_login;
     private View layout_register;
     private View layout_register_openbanking;
@@ -59,8 +60,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void registerOpenBanking(final View view) {
-        RESTAPI.getInstance().registerOpenBanking(this);
-        goToLogin(view);
+        String url = RESTAPI.getInstance().getRegisterOpenBankingURL();
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra("URL", url);
+        startActivityForResult(intent, REGISTER_OPENBANKING_REQUEST_CODE);
     }
 
     public void goToLogin(View view) {
@@ -230,6 +233,18 @@ public class LoginActivity extends AppCompatActivity {
                 case RESTAPI.REGISTER_FAIL:
                     showToast("회원 가입에 실패했습니다.");
                     break;
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REGISTER_OPENBANKING_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                goToLogin(null);
+            } else {
+                Toast.makeText(this, "오픈뱅킹 등록에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_LONG).show();
             }
         }
     }
