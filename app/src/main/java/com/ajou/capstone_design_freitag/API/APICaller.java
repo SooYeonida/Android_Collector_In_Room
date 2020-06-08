@@ -35,7 +35,7 @@ public class APICaller {
         queryParameters.put(key, value);
     }
 
-    public void setQueryParameter_class(String key,List<String> list){
+    public void setQueryParameter_list(String key, List<String> list){
         StringBuffer parameters = new StringBuffer();
         for(int i=0;i<list.size();i++){
             parameters.append(String.format("%s=%s",key,list.get(i)));
@@ -59,11 +59,8 @@ public class APICaller {
         int responseCode = con.getResponseCode();
 
         if(responseCode == 200) {
-            con.disconnect();
-
             return con.getHeaderFields();
         } else {
-            con.disconnect();
             throw new Exception(responseCode + " Error");
         }
     }
@@ -84,10 +81,8 @@ public class APICaller {
                 response.append(inputLine);
             }
             in.close();
-            con.disconnect();
             return response.toString();
         } else {
-            con.disconnect();
             throw new Exception(responseCode + " Error");
         }
     }
@@ -113,7 +108,7 @@ public class APICaller {
         con.getResponseCode();
     }
 
-    public void request_class() throws IOException {
+    public void request_list() throws IOException {
         con = (HttpURLConnection) new URL(params).openConnection();
         con.setRequestMethod(method);
 

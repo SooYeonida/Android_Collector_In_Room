@@ -192,9 +192,8 @@ public class ImageCollectionActivity extends AppCompatActivity {
 
     public void select_collection_image_data(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, COLLECTION_IMAGE_REQUEST_CODE);
     }
 

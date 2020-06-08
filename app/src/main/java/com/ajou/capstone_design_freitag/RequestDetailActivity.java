@@ -30,16 +30,13 @@ public class RequestDetailActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_request_detail);
         Intent intent = getIntent();
-        project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
-
-        System.out.println("total data:"+project.getTotalData());
-        System.out.println("progress data:"+project.getProgressData());
+        project = intent.getParcelableExtra("project");
 
         pieChart = (PieChart)findViewById(R.id.piechart);
         projectName = findViewById(R.id.project_name_request_detail);
         projectName.setText(project.getProjectName());
 
-        pieChart.setUsePercentValues(true);
+        pieChart.setUsePercentValues(false);
         pieChart.getDescription().setEnabled(false);
         pieChart.setExtraOffsets(5,10,5,5);
 
@@ -51,7 +48,9 @@ public class RequestDetailActivity extends AppCompatActivity {
 
         ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
 
-        yValues.add(new PieEntry(project.getProgressData(),"수집한 데이터"));
+        if(project.getProgressData()!=0){
+            yValues.add(new PieEntry(project.getProgressData(),"수집한 데이터"));
+        }
         yValues.add(new PieEntry(project.getTotalData()-project.getProgressData(),"남은 데이터"));
 
 

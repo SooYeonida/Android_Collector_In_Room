@@ -152,13 +152,13 @@ public class ProjectListFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case(R.id.data_type_image):
-                        dataType = image.getText().toString();
+                        dataType = "image";
                         break;
                     case(R.id.data_type_text):
-                        dataType = text.getText().toString();
+                        dataType = "text";
                         break;
                     case(R.id.data_type_audio):
-                        dataType = audio.getText().toString();
+                        dataType = "audio";
                         break;
                 }
             }
@@ -169,10 +169,10 @@ public class ProjectListFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case(R.id.labelling_boundingbox):
-                        dataType = bounding_box.getText().toString();
+                        dataType = "boundingbox";
                         break;
                     case(R.id.labelling_classification):
-                        dataType = classification.getText().toString();
+                        dataType = "classification";
                         break;
                 }
             }

@@ -56,4 +56,6 @@ dependencies {
     implementation files('libs/jna-platform-4.5.2.jar')
     implementation files('libs/HttpLibrary-1.0-20190628.011600-1.jar')
     implementation 'com.github.PhilJay:MpAndroidChart:v3.0.2'
+    implementation 'com.github.lakue119:LakuePagingButton:1.0.0'
+    implementation 'commons-io:commons-io:2.4'
 }

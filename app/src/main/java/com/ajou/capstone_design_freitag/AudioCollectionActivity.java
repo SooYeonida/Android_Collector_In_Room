@@ -382,7 +382,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void select_audio_collection_data(View view){
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("file/*");
+        intent.setType("audio/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setData(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);

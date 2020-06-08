@@ -3,6 +3,8 @@ package com.ajou.capstone_design_freitag.API;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+
+import com.ajou.capstone_design_freitag.ui.dto.LabellingWorkHistory;
 import com.ajou.capstone_design_freitag.ui.dto.User;
 import com.ajou.capstone_design_freitag.ui.dto.Project;
 
@@ -213,12 +215,12 @@ public class RESTAPI {
 
         List<String> id = new ArrayList<>();
         id.add(Project.getProjectinstance().getProjectId());
-        classname.setQueryParameter_class("className",classList);
-        classname.setQueryParameter_class("projectId",id);
-        String result = null;
+        classname.setQueryParameter_list("className",classList);
+        classname.setQueryParameter_list("projectId",id);
+        String result;
 
         try {
-            classname.request_class();
+            classname.request_list();
             result = classname.getHeader().get("class").get(0);
             Project.getProjectinstance().setBucketName(classname.getHeader().get("bucketName").get(0));
         } catch (Exception e) {
@@ -433,8 +435,6 @@ public class RESTAPI {
         HttpClient httpClient = new DefaultHttpClient();
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        System.out.println("이미지 수집 요청");
-        System.out.println("inputstreams size:"+inputStreams.size());
         for(int i = 0; i < inputStreams.size(); i++) {
             System.out.println("filename:"+ fileNames.get(i));
             builder.addBinaryBody("files", inputStreams.get(i), ContentType.create(contentType), fileNames.get(i));
@@ -500,12 +500,32 @@ public String provideClassificationProblems(String dataType) throws Exception {
     provideClassificationProblems.request();
     result = provideClassificationProblems.getHeader().get("problems").get(0);
     list = provideClassificationProblems.getBody();
+    String historyId = provideClassificationProblems.getHeader().get("workHistory").get(0);
+    LabellingWorkHistory.getInstance().setHistoryId(Integer.parseInt(historyId));
 
     if(result.equals("fail")){
         System.out.println("classification problem fail");
         return null;
     }
-
     return list;
 }
+    public Boolean labellingWork(List<String> problemId,JSONObject jsonObject) throws Exception {
+        String boundary = "*****b*o*u*n*d*a*r*y*****";
+        APICaller labellingWork = new APICaller("POST",baseURL+"/api/work/labelling");
+        labellingWork.setHeader("Content-Type","application/json=" + boundary);
+        labellingWork.setHeader("Authorization",token);
+        labellingWork.setHeader("historyId",Integer.toString(LabellingWorkHistory.getInstance().getHistoryId()));
+        for(int i=0;i<problemId.size();i++){
+            labellingWork.setJsonBody(problemId.get(i),jsonObject.getString(problemId.get(i)));
+            System.out.println("json body:"+jsonObject.getString(problemId.get(i)));
+        }
+
+        labellingWork.request();
+        if(labellingWork.getHeader().get("answer").get(0).equals("success")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
