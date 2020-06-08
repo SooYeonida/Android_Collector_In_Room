@@ -33,19 +33,15 @@ public class WebViewActivity extends AppCompatActivity {
                 try {
                     URI uri = new URI(url);
                     if(uri.getHost().equals(callbackHost)) {
-                        setResult(RESULT_OK);
+                        if(uri.getPath().equals("/registerOpenBankingSuccess.html")) {
+                            setResult(RESULT_OK);
+                        } else {
+                            setResult(RESULT_CANCELED);
+                        }
                         finish();
                     }
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                if(request.getUrl().getHost().equals(callbackHost)) {
-                    setResult(RESULT_CANCELED);
-                    finish();
                 }
             }
         };
