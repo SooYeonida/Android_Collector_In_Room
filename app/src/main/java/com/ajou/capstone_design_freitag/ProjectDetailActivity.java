@@ -13,8 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ajou.capstone_design_freitag.API.RESTAPI;
-import com.ajou.capstone_design_freitag.ui.plus.Project;
+import com.ajou.capstone_design_freitag.ui.dto.Project;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -61,6 +60,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
 
         if(project.getWorkType().equals("labelling")){
             className.setVisibility(View.GONE);
+            //이미지 바운딩 박스는 보여줌 분류는 상세페이지 자체가 없음
         }
 
         if(project.getWorkType().equals("collection")) {

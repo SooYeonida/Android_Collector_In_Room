@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Capstone_design_freitag</string>
+    <string name="app_name">방구석 수집가</string>
     <string name="title_activity_menu">MenuActivity</string>
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>

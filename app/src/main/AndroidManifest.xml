@@ -18,6 +18,8 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".WebViewActivity"></activity>
         <activity android:name=".TextCollectionActivity" />
+        <activity android:name=".PopupActivity" android:theme="@style/popupTheme" android:screenOrientation="portrait"></activity>
+        <activity android:name=".ClassificationActivity" />
         <activity android:name=".AudioCollectionActivity" />
         <activity android:name=".ImageCollectionActivity" />
         <activity android:name=".ProjectDetailActivity" />

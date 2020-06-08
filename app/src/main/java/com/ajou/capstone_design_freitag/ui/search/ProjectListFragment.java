@@ -1,6 +1,5 @@
 package com.ajou.capstone_design_freitag.ui.search;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,7 +24,7 @@ import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.ProjectDetailActivity;
 import com.ajou.capstone_design_freitag.R;
-import com.ajou.capstone_design_freitag.ui.plus.Project;
+import com.ajou.capstone_design_freitag.ui.dto.Project;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,8 +113,9 @@ public class ProjectListFragment extends Fragment {
             workType = "collection";
             projectList(view);
         }
-        else{
+        else{//라벨링
             datatype.setVisibility(View.GONE);
+            search_subject.setVisibility(View.GONE);
             workType = "labelling";
             projectList(view);
         }
@@ -238,10 +238,12 @@ public class ProjectListFragment extends Fragment {
                                 break;
                         }
                     }
-                    else{
+                    else{ //labelling
                         result.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_label_black_24dp));
                     }
-                    projectAdapter.addItem(result.get(i));
+                    if(!result.get(i).getDataType().equals("classification")){
+                        projectAdapter.addItem(result.get(i));
+                    }
                 }
                 listView.setAdapter(projectAdapter); //projectAdapter
                 setListViewHeightBasedOnChildren(listView);

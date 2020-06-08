@@ -1,5 +1,6 @@
 package com.ajou.capstone_design_freitag.ui.home;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,11 +13,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
 
+import com.ajou.capstone_design_freitag.ui.dto.User;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 
 
 public class HomeMenuFragment extends Fragment {
@@ -27,64 +35,34 @@ public class HomeMenuFragment extends Fragment {
     ArrayList<User> rankingArrayList1 = new ArrayList<User>();
     ArrayList<User> rankingArrayList2 = new ArrayList<User>();
 
+    ListView point;
+    ListView accuracy;
+
     Button work_start;
     Button create_project;
 
     HomeFragment homeFragment;
 
-
-    Comparator<User> comparator_point = new Comparator<User>() {
-        @Override
-        public int compare(User o1, User o2) {
-            return (o2.getTotalPoint()-o1.getTotalPoint());
-        }
-    };
-
-    Comparator<User> comparator_accuracy = new Comparator<User>() {
-        @Override
-        public int compare(User o1, User o2) {
-            return (o2.getAccuracy()-o1.getAccuracy());
-        }
-    };
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        rankingPoint();
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_home_menu,container,false);
-
         work_start = view.findViewById(R.id.banner1);
         create_project = view.findViewById(R.id.banner2);
 
         adapter_list1 = new RankingAdapter(rankingArrayList1);
         adpater_list2 = new RankingAdapter(rankingArrayList2);
 
-        ListView listView1 = view.findViewById(R.id.ranking_list_total_point);
-        ListView listView2 = view.findViewById(R.id.ranking_list_accuracy);
-        listView1.setAdapter(adapter_list1);
-        listView2.setAdapter(adpater_list2);
+        point = view.findViewById(R.id.ranking_list_total_point);
+        accuracy = view.findViewById(R.id.ranking_list_accuracy);
 
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user1),"nabong",1000,10);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user2),"pury",2000,5);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user3),"sooyeon",3000,7);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user4),"woney",4000,2);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user5),"merong",5000,11);
-        adapter_list1.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user6),"dddd",6000,6);
-
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user1),"nabong",1000,10);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user2),"pury",2000,5);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user3),"sooyeon",3000,7);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user4),"woney",4000,2);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user5),"merong",5000,11);
-        adpater_list2.addItem(ContextCompat.getDrawable(getActivity(),R.drawable.user6),"dddd",6000,6);
-
-        Collections.sort(rankingArrayList1,comparator_point);
-        Collections.sort(rankingArrayList2,comparator_accuracy);
         adapter_list1.notifyDataSetChanged();
-        adpater_list2.notifyDataSetChanged();
-
-        setListViewHeightBasedOnChildren(listView1);
-        setListViewHeightBasedOnChildren(listView2);
-
 
         work_start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +81,66 @@ public class HomeMenuFragment extends Fragment {
 
         return view;
     }
+    public void rankingPoint(){
+        AsyncTask<Void, Void, String> rankingPointTask = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... infos) {
+                try {
+                    String result = RESTAPI.getInstance().rankingPoint();
+                    return result;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String result){
+                try {
+                    if(result!=null){
+                        jsonParse(result);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        rankingPointTask.execute();
+    }
+
+    public void rankingAccuracy(final View view){
+
+    }
+
+    public void jsonParse(String list) throws JSONException {
+        List<User> ranking = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray(list);
+        for(int i=0;i<jsonArray.length();i++){
+            User user = new User();
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            user.setUserID(jsonObject.getString("userId"));
+            user.setTotalPoint(jsonObject.getString("totalPoint"));
+            ranking.add(user);
+        }
+        for(int i=0;i<ranking.size();i++){
+            if(i==0) {
+                ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking1));
+            }
+            else if(i==1){
+                ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking2));
+            }
+            else if(i==2){
+                ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking3));
+            }
+            else{
+                ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.user));
+            }
+            adapter_list1.addItem(ranking.get(i));
+        }
+        point.setAdapter(adapter_list1);
+        setListViewHeightBasedOnChildren(point);
+    }
+
 
     public static void setListViewHeightBasedOnChildren(@NonNull ListView listView) {
         RankingAdapter rankingAdapter = (RankingAdapter) listView.getAdapter();

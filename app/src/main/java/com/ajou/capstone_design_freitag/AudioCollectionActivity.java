@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.Audio.AudioTrimmerActivity;
-import com.ajou.capstone_design_freitag.ui.plus.Project;
+import com.ajou.capstone_design_freitag.ui.dto.Project;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +53,8 @@ public class AudioCollectionActivity extends AppCompatActivity {
     TextView projectName;
     TextView wayContent;
     TextView conditionContent;
-
+    TextView requester;
+    TextView classlistview;
     Button select;
     Button record;
     Button upload;
@@ -108,6 +109,8 @@ public class AudioCollectionActivity extends AppCompatActivity {
         delete.setVisibility(View.GONE);
         dataURI = findViewById(R.id.collection_audio_uri);
         class_list = findViewById(R.id.radioGroup_class_list_audio);
+        requester = findViewById(R.id.audio_collection_work_requester);
+        classlistview = findViewById(R.id.audio_classlist_project_detail);
 
         //radiobutton 동적생성
         for(int i=0;i<project.getClass_list().size();i++){
@@ -147,6 +150,8 @@ public class AudioCollectionActivity extends AppCompatActivity {
         projectName.setText(project.getProjectName());
         wayContent.setText(project.getWayContent());
         conditionContent.setText(project.getConditionContent());
+        requester.setText(project.getUserId());
+        classlistview.setText(project.getClass_list().toString());
 
 
         select.setOnClickListener(new View.OnClickListener() {
@@ -191,8 +196,6 @@ public class AudioCollectionActivity extends AppCompatActivity {
                 else {
                     upload_audio_data(inputStreamList,fileNameList,classname);
                     Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
                 }
             }
         });
@@ -392,7 +395,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
             @Override
             protected Boolean doInBackground(Object... info) {
                 try {
-                    boolean result = RESTAPI.getInstance().collection_work((List<InputStream>)info[0],(List<String>)info[1],"audio/mp3",(String)info[2]);
+                    boolean result = RESTAPI.getInstance().collectionWork((List<InputStream>)info[0],(List<String>)info[1],"audio/mp3",(String)info[2]);
                     return result;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -403,6 +406,10 @@ public class AudioCollectionActivity extends AppCompatActivity {
             protected void onPostExecute(Boolean result) {
                 if(result){
                     Toast.makeText(context, "수집 작업 오디오 업로드 완료",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(),PopupActivity.class);
+                    intent.putExtra("type","audio");
+                    intent.putExtra("project", project);
+                    startActivity(intent);
                 }
                 else{
                     Toast.makeText(context, "수집 작업 오디오 업로드 실패",Toast.LENGTH_LONG).show();
@@ -425,23 +432,22 @@ public class AudioCollectionActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == COLLECTION_AUDIO_REQUEST_CODE) {
             List<Uri> uriList = new ArrayList<>();
             uriList.add(data.getData());
-            System.out.println("urlList size:"+uriList.size());
-            for(int i = 0;i<uriList.size();i++){
+            for (int i = 0; i < uriList.size(); i++) {
                 try {
                     InputStream inputStream = context.getContentResolver().openInputStream(uriList.get(i));
                     inputStreamList.add(inputStream);
                     String fileName = getFileNameToUri(uriList.get(i));
-                    dataURI.setText(dataURI.getText() +"\n" + fileName);
+                    dataURI.setText(dataURI.getText() + "\n" + fileName);
                     fileNameList.add(fileName);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
-        }
-        else if (requestCode == ADD_AUDIO) {
+        } else if (requestCode == ADD_AUDIO) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     String path = data.getExtras().getString("INTENT_AUDIO_FILE");

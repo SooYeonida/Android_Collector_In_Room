@@ -15,6 +15,7 @@ public class SearchFragment extends Fragment {
 
     ProjectTypeFragment projectTypeFragment = new ProjectTypeFragment();
     ProjectListFragment projectListFragment = new ProjectListFragment();
+    DataTypeFragment dataTypeFragment = new DataTypeFragment();
     FragmentTransaction fragmentTransaction;
 
 
@@ -44,7 +45,14 @@ public class SearchFragment extends Fragment {
         }
         else if (index == 2) { //리스트
             if (!projectListFragment.isAdded()) {
-                fragmentTransaction.replace(R.id.fragment_search, ProjectListFragment.newInstance("라벨링"));
+                fragmentTransaction.replace(R.id.fragment_search, ProjectListFragment.newInstance("라벨링")); //바운딩 박스만
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        }
+        else if (index == 3){
+            if (!dataTypeFragment.isAdded()) {
+                fragmentTransaction.replace(R.id.fragment_search, dataTypeFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

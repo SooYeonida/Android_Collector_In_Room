@@ -12,8 +12,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:maxWidth="50dp"
-            android:maxHeight="50dp"
+            android:maxWidth="55dp"
+            android:maxHeight="55dp"
             android:scaleType="centerInside"/>
 
         <LinearLayout
@@ -26,7 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="user_name"
-                android:textSize="15sp"/>
+                android:textSize="18sp"
+                android:fontFamily="@font/jejugothic"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -37,33 +38,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Total Point:"
-                    android:textSize="10sp" />
+                    android:textSize="15sp"
+                    android:fontFamily="@font/jejugothic"/>
 
                 <TextView
                     android:id="@+id/user_point"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="user_total_point"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Accuracy:"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/total_task"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="user_accuracy"
-                    android:textSize="10sp" />
+                    android:textSize="14sp"
+                    android:fontFamily="@font/jejugothic"/>
             </LinearLayout>
 
         </LinearLayout>

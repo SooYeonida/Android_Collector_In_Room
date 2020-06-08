@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:gravity="center"
+tools:context=".ui.search.DataTypeFragment"
+android:layout_weight="1">
+
+<Button
+    android:id="@+id/classification_btn"
+    android:layout_width="270dp"
+    android:layout_height="150dp"
+    android:background="@drawable/button_background"
+    android:gravity="right"
+    android:paddingTop="55dp"
+    android:paddingRight="70dp"
+    android:text="분류"
+    android:textColor="#272424"
+    android:textSize="20sp"
+    android:fontFamily="@font/tmonmonsori" />
+
+<Button
+    android:id="@+id/boundingbox_btn"
+    android:layout_width="270dp"
+    android:layout_height="150dp"
+    android:layout_marginTop="30dp"
+    android:background="@drawable/button_background"
+    android:gravity="right"
+    android:paddingTop="55dp"
+    android:paddingRight="20dp"
+    android:text="바운딩 박스"
+    android:textColor="#272424"
+    android:textSize="20sp"
+    android:fontFamily="@font/tmonmonsori" />
+
+</LinearLayout>

@@ -37,7 +37,7 @@ public class ProjectTypeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 searchFragment = (SearchFragment)getParentFragment();
-                searchFragment.replaceFragment(2);
+                searchFragment.replaceFragment(3);
             }
         });
 

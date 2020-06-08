@@ -19,7 +19,7 @@ android:layout_weight="1">
     android:paddingRight="30dp"
     android:text="수집 작업 의뢰"
     android:textColor="#272424"
-    android:textSize="18sp"
+    android:textSize="20sp"
     android:fontFamily="@font/tmonmonsori" />
 
 <Button
@@ -33,7 +33,7 @@ android:layout_weight="1">
     android:paddingRight="20dp"
     android:text="라벨링 작업 의뢰"
     android:textColor="#272424"
-    android:textSize="18sp"
+    android:textSize="20sp"
     android:fontFamily="@font/tmonmonsori" />
 
 <!--<Button-->

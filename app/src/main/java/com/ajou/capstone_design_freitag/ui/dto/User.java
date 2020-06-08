@@ -1,4 +1,4 @@
-package com.ajou.capstone_design_freitag.ui.home;
+package com.ajou.capstone_design_freitag.ui.dto;
 
 
 import android.graphics.drawable.Drawable;
@@ -23,7 +23,7 @@ public class User {
     private String email;
     private String affiliation;
     private int visit;
-    private int totalPoint;
+    private String totalPoint;
     private int point;
     private int accuracy;
     private String level;
@@ -100,11 +100,11 @@ public class User {
         this.visit = visit;
     }
 
-    public int getTotalPoint() {
+    public String getTotalPoint() {
         return totalPoint;
     }
 
-    public void setTotalPoint(int totalPoint) {
+    public void setTotalPoint(String totalPoint) {
         this.totalPoint = totalPoint;
     }
 

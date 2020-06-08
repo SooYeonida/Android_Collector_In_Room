@@ -11,9 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
-import com.ajou.capstone_design_freitag.ui.home.User;
+import com.ajou.capstone_design_freitag.ui.dto.User;
 
 public class CheckPasswordFragment extends Fragment {
 

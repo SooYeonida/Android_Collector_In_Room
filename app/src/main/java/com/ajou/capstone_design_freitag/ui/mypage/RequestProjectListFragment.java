@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
-import com.ajou.capstone_design_freitag.ui.plus.Project;
+import com.ajou.capstone_design_freitag.ui.dto.Project;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,13 +69,13 @@ public class RequestProjectListFragment extends Fragment {
                 for(int i=0;i<result.size();i++){
                     if(result.get(i).getWorkType().equals("collection")) {
                         switch (result.get(i).getDataType()) {
-                            case ("이미지"):
+                            case ("image"):
                                 result.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_image_black_24dp));
                                 break;
-                            case ("텍스트"):
+                            case ("text"):
                                 result.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_text_black_24dp));
                                 break;
-                            case ("음성"):
+                            case ("audio"):
                                 result.get(i).setProjectIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_voice_black_24dp));
                                 break;
                         }

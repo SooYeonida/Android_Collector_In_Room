@@ -47,7 +47,7 @@ android:id="@+id/fragment_home">
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#8028ADFC"
+            android:background="@color/grayBackGround"
             android:gravity="center"
             android:text="누적 포인트별 랭킹"
             android:textSize="20sp"
@@ -58,12 +58,12 @@ android:id="@+id/fragment_home">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="5dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#8028ADFC"
+            android:background="@color/grayBackGround"
             android:gravity="center"
             android:text="정확도별 랭킹"
             android:textSize="20sp"
@@ -74,7 +74,8 @@ android:id="@+id/fragment_home">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="5dp"
+            android:dividerHeight="4dp"/>
     </LinearLayout>
 </ScrollView>
 </RelativeLayout>

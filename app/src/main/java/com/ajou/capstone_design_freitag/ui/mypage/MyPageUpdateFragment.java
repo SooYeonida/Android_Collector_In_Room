@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
-import com.ajou.capstone_design_freitag.ui.home.User;
+import com.ajou.capstone_design_freitag.ui.dto.User;
 
 public class MyPageUpdateFragment extends Fragment{
 

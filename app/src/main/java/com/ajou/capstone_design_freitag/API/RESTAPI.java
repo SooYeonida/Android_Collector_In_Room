@@ -3,40 +3,31 @@ package com.ajou.capstone_design_freitag.API;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-
-import com.ajou.capstone_design_freitag.ui.home.User;
-import com.ajou.capstone_design_freitag.ui.plus.Project;
+import com.ajou.capstone_design_freitag.ui.dto.User;
+import com.ajou.capstone_design_freitag.ui.dto.Project;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import awsauth.AWS4SignerBase;
 import awsauth.AWS4SignerForAuthorizationHeader;
-import http.HTTPRequest;
 
 public class RESTAPI {
     public static final int LOGIN_SUCCESS = 0;
@@ -49,8 +40,8 @@ public class RESTAPI {
 
     private static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
     private static RESTAPI instance = null;
-    private String baseURL = "http://10.0.0.2:8080";
-    //private String baseURL = "http://localhost:8080";
+    private String baseURL = "http://10.0.2.2:8080";
+    //private String baseURL = "http://101.101.208.224:8080";
     private String token = null;
     private String state = null;
 
@@ -95,7 +86,7 @@ public class RESTAPI {
     }
 
     public Integer signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
-        APICaller signup = new APICaller("GET", baseURL + "/api/signup");
+        APICaller signup = new APICaller("POST", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
         signup.setQueryParameter("userPassword", userPassword);
         signup.setQueryParameter("userName", userName);
@@ -107,7 +98,7 @@ public class RESTAPI {
         try {
             signup.request();
             result = signup.getHeader();
-            if(result.get("update").get(0).equals("success")) {
+            if(result.get("signup").get(0).equals("success")) {
                 state = signup.getHeader().get("state").get(0);
                 return REGISTER_SUCCESS;
             } else {
@@ -279,6 +270,7 @@ public class RESTAPI {
         return false;
     }
 
+
     public boolean payment(String method) throws Exception {
         APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/" + method + "/payment");
         pointPayment.setHeader("Authorization",token);
@@ -294,7 +286,7 @@ public class RESTAPI {
         }
     }
 
-    public List<Project> projectList(String workType,String dataType,String subject, String difficulty) throws Exception {
+    public List<Project> projectList(String workType,String dataType,String subject, String difficulty)throws Exception  {
      APICaller projectList = new APICaller("GET",baseURL+"/api/project/list");
      projectList.setQueryParameter("workType",workType);
      projectList.setQueryParameter("dataType",dataType);
@@ -304,7 +296,9 @@ public class RESTAPI {
      String result;
      List<Project> project_list = new ArrayList<>();
      result = projectList.getBody();
+
      JSONArray jsonArray = new JSONArray(result);
+
      for(int i=0;i<jsonArray.length();i++){
 
          Project project = new Project();
@@ -347,19 +341,11 @@ public class RESTAPI {
     public List<Project> requestProjectList() throws Exception {
         APICaller requestproject = new APICaller("GET",baseURL+"/api/project/all");
         requestproject.setHeader("Authorization",token);
-        System.out.println("token:"+token);
         requestproject.request();
 
-        String list = null;
-        String result;
-
+        String list;
         List<Project> project_list = new ArrayList<>();
-        try {
-            list = requestproject.getBody();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        list = requestproject.getBody();
         JSONArray jsonArray = new JSONArray(list);
 
         for(int i=0;i<jsonArray.length();i++){
@@ -440,25 +426,83 @@ public class RESTAPI {
         }
     }
 
-    public Boolean collection_work(List<InputStream> inputStream,List<String> fileName,String fileType,String classname) throws Exception {
-        APICaller collectionWork = new APICaller("POST",baseURL+"/api/work/collection");
-        collectionWork.setHeader("Authorization",token);
-        collectionWork.setHeader("bucketName",Project.getProjectinstance().getBucketName());
-        collectionWork.setHeader("projectId",Project.getProjectinstance().getProjectId());
-        collectionWork.setQueryParameter("className",classname);
-        Map<String, List<String>> header;
-        String result;
-        header = collectionWork.multipartList(inputStream, fileName, fileType);
-        result = header.get("upload").get(0);
-        System.out.println("result:"+result);
-        if(result.equals("success")){
-            return true;
-        }else{
-            return false;
+    public Boolean collectionWork(List<InputStream> inputStreams, List<String> fileNames, String contentType, String classname) throws Exception {
+        HttpClient httpClient = new DefaultHttpClient();
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        System.out.println("이미지 수집 요청");
+        System.out.println("inputstreams size:"+inputStreams.size());
+        for(int i = 0; i < inputStreams.size(); i++) {
+            System.out.println("filename:"+ fileNames.get(i));
+            builder.addBinaryBody("files", inputStreams.get(i), ContentType.create(contentType), fileNames.get(i));
         }
+        HttpPost httpPost = new HttpPost(baseURL + "/api/work/collection");
+        httpPost.setHeader("Authorization", token);
+        httpPost.setHeader("bucketName", Project.getProjectinstance().getBucketName());
+        httpPost.setHeader("projectId",Project.getProjectinstance().getProjectId());
+        httpPost.setHeader("className",classname);
+        httpPost.setEntity(builder.build());
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            if(httpResponse.getFirstHeader("upload").getValue().equals("success")) {
+                return true;
+            }
+        }
+        else{
+            System.out.println("response: "+httpResponse.getStatusLine().getStatusCode());
+        }
+        return false;
     }
 
     public void logout() {
         token = null;
     }
+
+public String rankingPoint() throws Exception {
+    APICaller rankingPoint = new APICaller("GET",baseURL+"/api/ranking/point");
+    String result;
+    String list;
+    rankingPoint.request();
+    result = rankingPoint.getHeader().get("ranking").get(0);
+
+    if(result.equals("fail")){
+        System.out.println("point ranking fail");
+    }
+    list = rankingPoint.getBody();
+    return list;
+}
+
+    public String workHistory() throws Exception {
+        APICaller workHistory = new APICaller("GET",baseURL+"/api/work/all");
+        workHistory.setHeader("Authorization",token);
+        String result;
+        String list;
+        workHistory.request();
+        result = workHistory.getHeader().get("workList").get(0);
+        if (result.equals("fail")){
+            System.out.println("workhistory fail ");
+        }
+        list = workHistory.getBody();
+        System.out.println("workhistory list:"+list);
+        return list;
+    }
+
+public String provideClassificationProblems(String dataType) throws Exception {
+    APICaller provideClassificationProblems = new APICaller("GET",baseURL+"/api/work/start");
+    provideClassificationProblems.setHeader("Authorization",token);
+    provideClassificationProblems.setHeader("dataType",dataType);
+    String result;
+    String list;
+    provideClassificationProblems.request();
+    result = provideClassificationProblems.getHeader().get("problems").get(0);
+    list = provideClassificationProblems.getBody();
+
+    if(result.equals("fail")){
+        System.out.println("classification problem fail");
+        return null;
+    }
+
+    return list;
+}
 }

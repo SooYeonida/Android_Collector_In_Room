@@ -2,7 +2,6 @@ package com.ajou.capstone_design_freitag.ui.home;
 
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ajou.capstone_design_freitag.R;
+import com.ajou.capstone_design_freitag.ui.dto.User;
 
 import java.util.ArrayList;
 
@@ -47,14 +47,12 @@ public class RankingAdapter extends BaseAdapter {
         ImageView userIconView = (ImageView) convertView.findViewById(R.id.user_image);
         TextView userNameView = (TextView) convertView.findViewById(R.id.user_name);
         TextView userPointView = (TextView) convertView.findViewById(R.id.user_point);
-        TextView userTotalTaskView = (TextView) convertView.findViewById(R.id.total_task);
 
         User ranking = rankingArrayList.get(position);
 
         userIconView.setImageDrawable(ranking.getUserIcon());
-        userNameView.setText(ranking.getName());
-        userPointView.setText(Integer.toString(ranking.getTotalPoint()));
-        userTotalTaskView.setText(Integer.toString(ranking.getAccuracy()));
+        userNameView.setText(ranking.getUserID());
+        userPointView.setText(ranking.getTotalPoint());
 
         return convertView;
     }
@@ -69,15 +67,8 @@ public class RankingAdapter extends BaseAdapter {
         return rankingArrayList.get(position);
     }
 
-    public void addItem(Drawable user_icon, String user_name, int user_point, int user_accuracy){
-        User ranking = new User();
-
-        ranking.setUserIcon(user_icon);
-        ranking.setName(user_name);
-        ranking.setTotalPoint(user_point);
-        ranking.setAccuracy(user_accuracy);
-
-        rankingArrayList.add(ranking);
+    public void addItem(User user){
+        rankingArrayList.add(user);
     }
 
 }
