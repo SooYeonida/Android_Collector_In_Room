@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -395,7 +396,7 @@ public class RESTAPI {
     }
 
 
-    public boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
+    public Boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
         String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + obejctName;
         String accessKey = "sQG5BeaHcnvvqK4FI01A";
         String secretKey = "mvNVjSac240XvnrK4qF39HpoMvvtMQMzUnnNHaRV";
@@ -423,7 +424,7 @@ public class RESTAPI {
                 }
                 return true;
             } else {
-                return false;
+                return null;
             }
         } catch(Exception ex) {
             System.out.print(ex);
@@ -492,7 +493,7 @@ public String rankingPoint() throws Exception {
     }
 
 public String provideClassificationProblems(String dataType) throws Exception {
-    APICaller provideClassificationProblems = new APICaller("GET",baseURL+"/api/work/start");
+    APICaller provideClassificationProblems = new APICaller("GET",baseURL+"/api/work/classification/start");
     provideClassificationProblems.setHeader("Authorization",token);
     provideClassificationProblems.setHeader("dataType",dataType);
     String result;
@@ -509,23 +510,36 @@ public String provideClassificationProblems(String dataType) throws Exception {
     }
     return list;
 }
-    public Boolean labellingWork(List<String> problemId,JSONObject jsonObject) throws Exception {
-        String boundary = "*****b*o*u*n*d*a*r*y*****";
-        APICaller labellingWork = new APICaller("POST",baseURL+"/api/work/labelling");
-        labellingWork.setHeader("Content-Type","application/json=" + boundary);
-        labellingWork.setHeader("Authorization",token);
-        labellingWork.setHeader("historyId",Integer.toString(LabellingWorkHistory.getInstance().getHistoryId()));
-        for(int i=0;i<problemId.size();i++){
-            labellingWork.setJsonBody(problemId.get(i),jsonObject.getString(problemId.get(i)));
-            System.out.println("json body:"+jsonObject.getString(problemId.get(i)));
+
+    public Boolean labellingWork(List<StringBuffer> answerList,List<String> problemIdList) throws Exception {
+        Map<String,String> headers = new HashMap<>();
+        HttpURLConnection con;
+
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",token);
+        headers.put("historyId",Integer.toString(LabellingWorkHistory.getInstance().getHistoryId()));
+
+        JSONObject jsonBody = new JSONObject();
+        for(int i=0;i<problemIdList.size();i++){
+           jsonBody.put(problemIdList.get(i),answerList.get(i).toString());
+        }
+        con = (HttpURLConnection) new URL(baseURL+"/api/work/classification").openConnection();
+        con.setRequestMethod("POST");
+
+        if(!headers.isEmpty()) {
+            for(String key : headers.keySet()) {
+                con.setRequestProperty(key, headers.get(key));
+            }
         }
 
-        labellingWork.request();
-        if(labellingWork.getHeader().get("answer").get(0).equals("success")){
+        if(jsonBody.length()!=0) {
+            con.setDoOutput(true);
+            con.getOutputStream().write(jsonBody.toString().getBytes());
+        }
+
+        if(con.getResponseCode()==200){
             return true;
         }
-        else{
-            return false;
-        }
+        return false;
     }
 }

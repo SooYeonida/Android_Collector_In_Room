@@ -34,9 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //오디오가 되긴되는데 프로그레스바 안움직이고 중단버튼도 안뜸 글고 한번만 재생 아마 뷰페이저로 뷰미리 만들어놓고 재생해서 그런 것 같음
 public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
@@ -53,17 +51,19 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
     ImageView play;
     ImageView pause;
 
-    Map<String,String> finalAnswer = new HashMap<>();
     List<String> problemId = new ArrayList<>();
     MediaPlayer mediaPlayer = new MediaPlayer();
     JSONObject jsonObject = new JSONObject();
     List<String> answer = new ArrayList<>();
+
+    List<StringBuffer> classAnswers = new ArrayList<>();
+
     int currenPage;
 
-    public PagerAdapter(Context context, List<ProblemWithClass> problemWithClassList) throws FileNotFoundException {
-         mContext = context ;
+    public PagerAdapter(Context context, List<ProblemWithClass> problemWithClassList){
+         mContext = context;
         if(problemWithClassList==null){
-            problemList = new ArrayList<ProblemWithClass>();
+            problemList = new ArrayList<>();
         }
         else{
             problemList = problemWithClassList;
@@ -72,8 +72,8 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
-        if (position==0){ //바로 문제 뜨게하면 첫번째 문제가 느리게 떠서 준비화면 만들었음.
-            View view = null;
+        if (position==0){ //문제 시작 전 설명 화면
+            View view;
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.layout_prepare_problem, container, false);
             container.addView(view);
@@ -127,22 +127,16 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+
+                //content type 받아와도 그게 어디 포함하는건지 구분해야되서 우선 일케해놓음
                 if (file_extension.equals("jpg") || file_extension.equals("png") || file_extension.equals("jpeg")) { //흠 고쳐야하는뎅
-                    try {
                         imageView.setVisibility(View.VISIBLE);
                         audiolayout.setVisibility(View.GONE);
                         getClassificationData(position, "이미지");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 } else if (file_extension.equals("mp3") || file_extension.equals("wav") || file_extension.equals("m4a")) { //흠
-                    try {
                         imageView.setVisibility(View.GONE);
                         audiolayout.setVisibility(View.VISIBLE);
                         getClassificationData(position, "음성");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
             play.setOnClickListener(new View.OnClickListener() {
@@ -178,11 +172,7 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        uploadUserAnswer(answer);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    uploadUserAnswer(answer);
                 }
             });
             if (position ==5){
@@ -214,54 +204,56 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
         return (view == (View)object);
     }
 
-    public void uploadUserAnswer(List<String> answers) throws JSONException {
-        if(jsonObject.has(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()))){
-            jsonObject.remove(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()));
-        }
-        StringBuffer parameters = new StringBuffer();
-        for(int i=0;i<answers.size();i++){
-            parameters.append(String.format("%s",answers.get(i)));
-        }
-        problemId.add(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()));
-        finalAnswer.put(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()),parameters.toString());
-        answers.removeAll(answers);
-        Toast.makeText(mContext, "작업 등록 성공", Toast.LENGTH_LONG).show();
+public void uploadUserAnswer(List<String> answers) {
+
+        //확인해보기
+    if(classAnswers.contains(problemList.get(currenPage-1).getProblem().getProblemId())){
+        classAnswers.remove(problemList.get(currenPage-1).getProblem().getProblemId());
+    }
+    if(problemId.contains(problemList.get(currenPage-1).getProblem().getProblemId())){
+        problemId.remove(problemList.get(currenPage-1).getProblem().getProblemId());
     }
 
-    public void classificationWorkDone(){
-        AsyncTask<Void,Void,Boolean> classificationTask = new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                Boolean result = null;
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    for( Map.Entry<String, String> entry : finalAnswer.entrySet() ) {
-                        String key = entry.getKey();
-                        Object value = entry.getValue();
-                        jsonObject.put(key, value);
-                    }
-                    result = RESTAPI.getInstance().labellingWork(problemId,jsonObject);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return result;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result){
-                if(result !=true){
-                    Toast.makeText(mContext, "분류 작업 실패", Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-        classificationTask.execute();
+    StringBuffer stringBuffer = new StringBuffer();
+    for(int i=0;i<answers.size();i++){
+       stringBuffer.append(String.format("%s",answers.get(i)));
+       if(i!=answers.size()-1){
+           stringBuffer.append("&");
+       }
     }
+    classAnswers.add(stringBuffer);
+    problemId.add(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()));
+    answers.removeAll(answers);
+    Toast.makeText(mContext, "작업 등록 성공", Toast.LENGTH_LONG).show();
+}
 
-    public void getClassificationData(int position, final String dataType) throws IOException {
+public void classificationWorkDone(){
+    AsyncTask<Void,Void,Boolean> classificationTask = new AsyncTask<Void, Void, Boolean>() {
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Boolean result = null;
+            try {
+                result = RESTAPI.getInstance().labellingWork(classAnswers,problemId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+        @Override
+        protected void onPostExecute(Boolean result){
+            if(result !=true){
+                Toast.makeText(mContext, "분류 작업 실패", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+    classificationTask.execute();
+}
+
+    public void getClassificationData(int position, final String dataType) {
         AsyncTask<Object, Void, Boolean> downloadExampleTask = new AsyncTask<Object, Void, Boolean>() {
             protected Boolean doInBackground(Object... dataInfos) {
                 Boolean result = RESTAPI.getInstance().downloadObject((String)dataInfos[0],(String)dataInfos[1],(OutputStream)dataInfos[2]);
