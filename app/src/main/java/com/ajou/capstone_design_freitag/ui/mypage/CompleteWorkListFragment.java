@@ -59,13 +59,13 @@ public class CompleteWorkListFragment extends Fragment {
         AsyncTask<Void, Void, String> collectionListTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... info) {
-               String result = null;
                 try {
-                    result = RESTAPI.getInstance().workHistory();
+                  String result = RESTAPI.getInstance().workHistory();
+                  return result;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return result;
+                return null;
             }
 
             @Override

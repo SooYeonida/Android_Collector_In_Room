@@ -1,5 +1,6 @@
 package com.ajou.capstone_design_freitag.ui.mypage;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -15,6 +16,7 @@ import android.widget.ListView;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
+import com.ajou.capstone_design_freitag.RequestDetailActivity;
 import com.ajou.capstone_design_freitag.ui.dto.Project;
 
 import java.util.ArrayList;
@@ -45,6 +47,10 @@ public class RequestProjectListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Project project = (Project) projectAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), RequestDetailActivity.class);
+                intent.putExtra("project", project);
+                startActivity(intent);
             }
         });
         return view;

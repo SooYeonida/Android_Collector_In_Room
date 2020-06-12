@@ -19,8 +19,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
     private static final int LOGIN_REQUEST_CODE = 102;
 
-    private NavController navController;
-    private Menu menu;
+    private static NavController navController;
+    private static Menu menu;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -61,11 +61,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
-    public void goToHome() {
+    public static void goToHome() {
         navController.navigate(R.id.navigation_home);
     }
 
-    public void loginSuccess() {
+    public static void loginSuccess() {
         menu.findItem(R.id.action_login).setVisible(false);
         menu.findItem(R.id.action_logout).setVisible(true);
     }

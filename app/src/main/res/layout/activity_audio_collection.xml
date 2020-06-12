@@ -293,14 +293,6 @@
             android:backgroundTint="#8028ADFC"
             android:text="오디오 등록"
             android:fontFamily="@font/tmonmonsori"/>
-        <Button
-            android:id="@+id/work_done_audio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="#8028ADFC"
-            android:text="작업 완료"
-            android:fontFamily="@font/tmonmonsori"/>
     </LinearLayout>
 
 

@@ -81,7 +81,23 @@ public class ProjectDetailActivity extends AppCompatActivity {
         }
 
         projectName.setText(project.getProjectName());
-        dataType.setText(project.getDataType());
+        switch (project.getDataType()){
+            case "image":
+                dataType.setText("이미지");
+                break;
+            case "text":
+                dataType.setText("텍스트");
+                break;
+            case "audio":
+                dataType.setText("음성");
+                break;
+            case "boundingbox":
+                dataType.setText("바운딩박스");
+                break;
+            case "classification":
+                dataType.setText("분류");
+                break;
+        }
         subject.setText(project.getSubject());
         requester.setText(project.getUserId());
         wayContent.setText(project.getWayContent());

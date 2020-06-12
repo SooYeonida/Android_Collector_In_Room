@@ -46,18 +46,17 @@ public class HomeMenuFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rankingPoint();
+        adapter_list1 = new RankingAdapter(rankingArrayList1);
+        adpater_list2 = new RankingAdapter(rankingArrayList2);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
     {
+        rankingPoint();
         View view = inflater.inflate(R.layout.fragment_home_menu,container,false);
         work_start = view.findViewById(R.id.banner1);
         create_project = view.findViewById(R.id.banner2);
-
-        adapter_list1 = new RankingAdapter(rankingArrayList1);
-        adpater_list2 = new RankingAdapter(rankingArrayList2);
 
         point = view.findViewById(R.id.ranking_list_total_point);
         accuracy = view.findViewById(R.id.ranking_list_accuracy);
@@ -81,6 +80,7 @@ public class HomeMenuFragment extends Fragment {
 
         return view;
     }
+
     public void rankingPoint(){
         AsyncTask<Void, Void, String> rankingPointTask = new AsyncTask<Void, Void, String>() {
             @Override
@@ -122,6 +122,7 @@ public class HomeMenuFragment extends Fragment {
             user.setTotalPoint(jsonObject.getString("totalPoint"));
             ranking.add(user);
         }
+        adapter_list1.removeAll();
         for(int i=0;i<ranking.size();i++){
             if(i==0) {
                 ranking.get(i).setUserIcon(ContextCompat.getDrawable(getContext(), R.drawable.ranking1));

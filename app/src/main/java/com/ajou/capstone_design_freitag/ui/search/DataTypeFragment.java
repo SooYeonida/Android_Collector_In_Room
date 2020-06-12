@@ -9,12 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.ClassificationActivity;
+import com.ajou.capstone_design_freitag.LoginActivity;
+import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.ProjectDetailActivity;
 import com.ajou.capstone_design_freitag.R;
 
+import static android.app.Activity.RESULT_OK;
+
 public class DataTypeFragment extends Fragment {
+    private static final int LOGIN_REQUEST_CODE = 102;
 
     Button classfication_btn;
     Button boundingbox_btn;
@@ -31,8 +38,14 @@ public class DataTypeFragment extends Fragment {
        classfication_btn.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               Intent intent = new Intent(getActivity(), ClassificationActivity.class);
-               startActivity(intent);
+               if(RESTAPI.getInstance().getToken()==null){
+                   Intent intent = new Intent(getActivity(), LoginActivity.class);
+                   startActivityForResult(intent, LOGIN_REQUEST_CODE);
+               }
+               else {
+                   Intent intent = new Intent(getActivity(), ClassificationActivity.class);
+                   startActivity(intent);
+               }
            }
        });
 
@@ -45,5 +58,18 @@ public class DataTypeFragment extends Fragment {
        });
 
        return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                Toast.makeText(getActivity(), "로그인이 필요합니다.", Toast.LENGTH_LONG).show();
+                MainActivity.goToHome();
+            } else {
+                MainActivity.loginSuccess();
+            }
+        }
     }
 }

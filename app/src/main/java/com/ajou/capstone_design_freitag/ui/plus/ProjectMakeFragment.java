@@ -250,7 +250,7 @@ public class ProjectMakeFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.labelingClassificationRadioButton:
-                        datatype = "classfication";
+                        datatype = "classification";
                         break;
                     case R.id.labelingBoundingboxRadioButton:
                         datatype = "boundingBox";

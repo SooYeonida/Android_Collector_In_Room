@@ -48,8 +48,31 @@ public class ProjectAdapter  extends BaseAdapter {
 
         projectTypeView.setImageDrawable(project.getProjectIcon());
         projectName.setText(project.getProjectName());
-        projectType.setText(project.getWorkType());
-        workType.setText(project.getDataType());
+        switch (project.getWorkType()){
+            case "collection":
+                projectType.setText("수집");
+                break;
+            case "labelling":
+                projectType.setText("라벨링");
+                break;
+        }
+        switch (project.getDataType()){
+            case "image":
+                workType.setText("이미지");
+                break;
+            case "text":
+                workType.setText("텍스트");
+                break;
+            case "audio":
+                workType.setText("음성");
+                break;
+            case "boundingbox":
+                workType.setText("바운딩박스");
+                break;
+            case "classification":
+                workType.setText("분류");
+                break;
+        }
 
         return convertView;
     }
