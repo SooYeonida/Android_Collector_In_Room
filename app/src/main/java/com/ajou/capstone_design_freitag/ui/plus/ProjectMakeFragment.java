@@ -593,14 +593,26 @@ public class ProjectMakeFragment extends Fragment {
             if(fragment == null)
                 return null;
 
-            String[] proj = { MediaStore.Files.FileColumns.DISPLAY_NAME };
-            Cursor cursor = fragment.getContext().getContentResolver().query(uri, proj, null, null, null);
-            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME);
-            cursor.moveToFirst();
-            String path = cursor.getString(columnIndex);
-            String name = path.substring(path.lastIndexOf("/")+1);
-            cursor.close();
-            return name;
+            String result = null;
+
+            if (uri.getScheme().equals("content")) {
+                String[] proj = { MediaStore.Files.FileColumns.DISPLAY_NAME };
+                try (Cursor cursor = fragment.getContext().getContentResolver().query(uri, proj, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        result = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
+                    }
+                }
+            }
+
+            if (result == null) {
+                result = uri.getPath();
+                int cut = result.lastIndexOf('/');
+                if (cut != -1) {
+                    result = result.substring(cut + 1);
+                }
+            }
+
+            return result;
         }
 
         private boolean sendExampleData() {
