@@ -1,12 +1,9 @@
 package com.ajou.capstone_design_freitag.API;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-
 import com.ajou.capstone_design_freitag.ui.dto.LabellingWorkHistory;
-import com.ajou.capstone_design_freitag.ui.dto.User;
 import com.ajou.capstone_design_freitag.ui.dto.Project;
+import com.ajou.capstone_design_freitag.ui.dto.User;
+import com.google.common.net.UrlEscapers;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -41,7 +38,7 @@ public class RESTAPI {
     public static final int REGISTER_VALIDATION_FAIL = 1;
     public static final int REGISTER_FAIL = 2;
 
-    private static final String clientID = "XXyvh2Ij7l9rss0HAVObS880qY3penX57JXkib9q";
+    private static final String clientID = "R9zNr3OIJNyJfj8pbMnBATU9OF6RtGb7Ih63xAdq";
     private static RESTAPI instance = null;
     private String baseURL = "http://10.0.2.2:8080";
     //private String baseURL = "http://101.101.208.224:8080";
@@ -88,7 +85,7 @@ public class RESTAPI {
         }
     }
 
-    public Integer signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
+    public int signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
         APICaller signup = new APICaller("POST", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
         signup.setQueryParameter("userPassword", userPassword);
@@ -235,7 +232,7 @@ public class RESTAPI {
         uploadFile.setHeader("Authorization",token);
         System.out.println(Project.getProjectinstance().getBucketName());
         uploadFile.setHeader("bucketName",Project.getProjectinstance().getBucketName());
-        header = uploadFile.multipart(inputStream, fileName, fileType);
+        header = uploadFile.multipart(inputStream, UrlEscapers.urlFragmentEscaper().escape(fileName), fileType);
         String result;
         result = header.get("example").get(0);
         if(result.equals("success")) {
@@ -256,7 +253,7 @@ public class RESTAPI {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         for(int i = 0; i < inputStreams.length; i++) {
-            builder.addBinaryBody("files", inputStreams[i], ContentType.create(contentTypes[i]), fileNames[i]);
+            builder.addBinaryBody("files", inputStreams[i], ContentType.create(contentTypes[i]), UrlEscapers.urlFragmentEscaper().escape(fileNames[i]));
         }
         HttpPost httpPost = new HttpPost(baseURL + "/api/project/upload/labelling");
         httpPost.setHeader("Authorization", token);
@@ -394,7 +391,7 @@ public class RESTAPI {
 
 
     public Boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
-        String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + obejctName;
+        String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + UrlEscapers.urlFragmentEscaper().escape(obejctName);
         String accessKey = "sQG5BeaHcnvvqK4FI01A";
         String secretKey = "mvNVjSac240XvnrK4qF39HpoMvvtMQMzUnnNHaRV";
         String serviceName = "s3";
@@ -421,7 +418,7 @@ public class RESTAPI {
                 }
                 return true;
             } else {
-                return null;
+                return false;
             }
         } catch(Exception ex) {
             System.out.print(ex);
@@ -435,7 +432,7 @@ public class RESTAPI {
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         for(int i = 0; i < inputStreams.size(); i++) {
             System.out.println("filename:"+ fileNames.get(i));
-            builder.addBinaryBody("files", inputStreams.get(i), ContentType.create(contentType), fileNames.get(i));
+            builder.addBinaryBody("files", inputStreams.get(i), ContentType.create(contentType), UrlEscapers.urlFragmentEscaper().escape(fileNames.get(i)));
         }
         HttpPost httpPost = new HttpPost(baseURL + "/api/work/collection");
         httpPost.setHeader("Authorization", token);
