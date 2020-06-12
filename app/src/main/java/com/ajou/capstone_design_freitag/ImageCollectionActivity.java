@@ -1,6 +1,7 @@
 package com.ajou.capstone_design_freitag;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.ClipData;
 import android.content.Context;
@@ -35,10 +36,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ImageCollectionActivity extends AppCompatActivity {
 
     private static final int COLLECTION_IMAGE_REQUEST_CODE = 100;
+    private static final int COLLECTION_IMAGE_CAPTURE_REQUEST_CODE = 101;
 
     TextView projectName;
     TextView wayContent;
@@ -49,6 +52,7 @@ public class ImageCollectionActivity extends AppCompatActivity {
     TextView dataURI;
     RadioGroup selectClass;
     Button select;
+    Button capture;
     Button upload;
     Context context;
     Project project;
@@ -80,6 +84,7 @@ public class ImageCollectionActivity extends AppCompatActivity {
         conditionContent = findViewById(R.id.image_collection_condition_content);
         dataURI = findViewById(R.id.collection_image_uri);
         select = findViewById(R.id.collection_image_select);
+        capture = findViewById(R.id.collection_image_capture);
         upload = findViewById(R.id.collection_image_upload);
         exampleContent = findViewById(R.id.work_example_content_image);
         selectClass = findViewById(R.id.radioGroup_class_list_image);
@@ -121,6 +126,13 @@ public class ImageCollectionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 select_collection_image_data(v);
+            }
+        });
+
+        capture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                capture_collection_image_data(v);
             }
         });
 
@@ -182,6 +194,11 @@ public class ImageCollectionActivity extends AppCompatActivity {
         startActivityForResult(intent, COLLECTION_IMAGE_REQUEST_CODE);
     }
 
+    public void capture_collection_image_data(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, COLLECTION_IMAGE_CAPTURE_REQUEST_CODE);
+    }
+
     public void upload_image_data(List<InputStream> inputStreams, List<String> filenames, String classname){
             try {
                 AsyncTask<Object, Void, Boolean> uploadImageTask = new AsyncTask<Object, Void, Boolean>() {
@@ -217,37 +234,75 @@ public class ImageCollectionActivity extends AppCompatActivity {
             }
     }
 
-    public String getFileNameToUri(Uri data) {
-        String[] proj = {MediaStore.Files.FileColumns.DISPLAY_NAME};
-        Cursor cursor = context.getContentResolver().query(data, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME);
-        cursor.moveToFirst();
-        String imgPath = cursor.getString(column_index);
-        String imgName = imgPath.substring(imgPath.lastIndexOf("/") + 1);
-        return imgName;
+    public String getFileNameToUri(Uri uri) {
+        String result = null;
+
+        if (uri.getScheme().equals("content")) {
+            String[] proj = { MediaStore.Files.FileColumns.DISPLAY_NAME };
+            try (Cursor cursor = getContentResolver().query(uri, proj, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
+                }
+            }
+        }
+
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+
+        return result;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
-            ClipData clipData = data.getClipData();
-            classList.add(classname);
-            System.out.println(classname + ":" + clipData.getItemCount());
+        if(resultCode == RESULT_OK) {
+            if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
+                ClipData clipData = data.getClipData();
+                classList.add(classname);
+                System.out.println(classname + ":" + clipData.getItemCount());
 
-            for (int i = 0; i < clipData.getItemCount(); i++) {
-                if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
-                    try {
-                        InputStream inputStream = context.getContentResolver().openInputStream(clipData.getItemAt(i).getUri());
-                        inputStreamList.add(inputStream);
-                        String fileName = getFileNameToUri(clipData.getItemAt(i).getUri());
-                        dataURI.setText(dataURI.getText() + "\n" + fileName);
-                        fileNameList.add(fileName);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
+                        try {
+                            Uri uri = clipData.getItemAt(i).getUri();
+                            addFileToList(uri);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
+                }
+            } else if (requestCode == COLLECTION_IMAGE_CAPTURE_REQUEST_CODE) {
+                try {
+                    String dirPath = getCacheDir().getAbsolutePath() + "/freitag";
+                    File dir = new File(dirPath);
+                    if(!dir.exists()) {
+                        dir.mkdir();
+                    }
+                    String filePath = dirPath + "/" + UUID.randomUUID() + ".jpg";
+                    FileOutputStream fileOutputStream = new FileOutputStream(new File(filePath));
+
+                    Bitmap image = (Bitmap) data.getExtras().get("data");
+                    image.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                    fileOutputStream.close();
+
+                    addFileToList(Uri.fromFile(new File(filePath)));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
+    }
+
+    private void addFileToList(Uri uri) throws FileNotFoundException {
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        inputStreamList.add(inputStream);
+        String fileName = getFileNameToUri(uri);
+        dataURI.setText(dataURI.getText() + "\n" + fileName);
+        fileNameList.add(fileName);
     }
 }
