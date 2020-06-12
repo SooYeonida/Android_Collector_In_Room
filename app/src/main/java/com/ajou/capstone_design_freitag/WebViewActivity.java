@@ -18,7 +18,7 @@ import java.net.URL;
 
 public class WebViewActivity extends AppCompatActivity {
     private WebView webView;
-    private final String callbackHost = "wodnd999999.iptime.org";
+    private final String callbackHost = "101.101.208.224";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
