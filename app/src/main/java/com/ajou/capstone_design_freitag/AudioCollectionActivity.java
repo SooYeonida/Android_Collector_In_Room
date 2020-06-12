@@ -40,9 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 public class AudioCollectionActivity extends AppCompatActivity {
@@ -54,12 +52,12 @@ public class AudioCollectionActivity extends AppCompatActivity {
     TextView wayContent;
     TextView conditionContent;
     TextView requester;
-    TextView classlistview;
+    TextView classListView;
     Button select;
     Button record;
     Button upload;
-    Button work_done;
     Button delete;
+    RadioGroup selectClass;
     TextView dataURI;
     Context context;
     Project project;
@@ -72,13 +70,9 @@ public class AudioCollectionActivity extends AppCompatActivity {
     boolean isPlaying = true;
     ProgressUpdate progressUpdate;
 
-    RadioGroup class_list;
-
     List<InputStream> inputStreamList = new ArrayList<>();
     List<String> fileNameList = new ArrayList<>();
     List<String> classList = new ArrayList<>();
-
-    Map<String,Integer> class_count = new HashMap<>();
 
     File file = new File("/data/data/com.ajou.capstone_design_freitag/files/project_example.mp3");
     OutputStream outputStream = new FileOutputStream(file);
@@ -103,14 +97,13 @@ public class AudioCollectionActivity extends AppCompatActivity {
         conditionContent = findViewById(R.id.audio_collection_condition_content);
         select = findViewById(R.id.collection_audio_select);
         record = findViewById(R.id.collection_audio_record);
-        work_done = findViewById(R.id.work_done_audio);
         upload = findViewById(R.id.collection_upload_audio);
         delete = findViewById(R.id.delete_audio_file);
         delete.setVisibility(View.GONE);
         dataURI = findViewById(R.id.collection_audio_uri);
-        class_list = findViewById(R.id.radioGroup_class_list_audio);
+        selectClass = findViewById(R.id.radioGroup_class_list_audio);
         requester = findViewById(R.id.audio_collection_work_requester);
-        classlistview = findViewById(R.id.audio_classlist_project_detail);
+        classListView = findViewById(R.id.audio_classlist_project_detail);
 
         //radiobutton 동적생성
         for(int i=0;i<project.getClass_list().size();i++){
@@ -119,11 +112,11 @@ public class AudioCollectionActivity extends AppCompatActivity {
             radioButton.setLayoutParams(param);
             radioButton.setText(project.getClass_list().get(i));
             radioButton.setId(i);
-            class_list.addView(radioButton);
+            selectClass.addView(radioButton);
         }
 
         //라디오버튼 리스너
-        class_list.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        selectClass.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 for(int i=0;i<project.getClass_list().size();i++){
@@ -151,7 +144,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
         wayContent.setText(project.getWayContent());
         conditionContent.setText(project.getConditionContent());
         requester.setText(project.getUserId());
-        classlistview.setText(project.getClass_list().toString());
+        classListView.setText(project.getClass_list().toString());
 
 
         select.setOnClickListener(new View.OnClickListener() {
@@ -177,19 +170,9 @@ public class AudioCollectionActivity extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                class_count.put(classname,inputStreamList.size());//클래스에 해당하는 데이타 개수 몇개인지 저장.
                 classList.add(classname);
                 System.out.println(classname+":"+inputStreamList.size());
 
-                dataURI.setText("");
-                Toast.makeText(getApplicationContext(),"오디오 등록 완료",Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-        work_done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 if (inputStreamList.size()==0){
                     Toast.makeText(getApplicationContext(),"데이터를 업로드 하셔야 합니다.",Toast.LENGTH_LONG).show();
                 }
@@ -197,6 +180,7 @@ public class AudioCollectionActivity extends AppCompatActivity {
                     upload_audio_data(inputStreamList,fileNameList,classname);
                     Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
                 }
+
             }
         });
 
@@ -273,18 +257,6 @@ public class AudioCollectionActivity extends AppCompatActivity {
                 else
                 {
                     System.out.println("예시 다운로드 성공");
-                    InputStream inputStream = null;
-                    try {
-                        inputStream = new FileInputStream(file);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     readyToPlay();
                     progressUpdate = new ProgressUpdate();
                     progressUpdate.start();

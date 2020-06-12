@@ -34,9 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ImageCollectionActivity extends AppCompatActivity {
 
@@ -47,11 +45,10 @@ public class ImageCollectionActivity extends AppCompatActivity {
     TextView conditionContent;
     ImageView exampleContent;
     TextView requester;
-    TextView classlistview;
+    TextView classListView;
     TextView dataURI;
-    RadioGroup class_list;
+    RadioGroup selectClass;
     Button select;
-    Button work_done;
     Button upload;
     Context context;
     Project project;
@@ -60,7 +57,6 @@ public class ImageCollectionActivity extends AppCompatActivity {
     List<InputStream> inputStreamList = new ArrayList<>();
     List<String> fileNameList = new ArrayList<>();
     List<String> classList = new ArrayList<>();
-    Map<String,Integer> class_count = new HashMap<>();
 
     File file = new File("/data/data/com.ajou.capstone_design_freitag/files/project_example.jpg");
     OutputStream outputStream = new FileOutputStream(file);
@@ -84,13 +80,12 @@ public class ImageCollectionActivity extends AppCompatActivity {
         conditionContent = findViewById(R.id.image_collection_condition_content);
         dataURI = findViewById(R.id.collection_image_uri);
         select = findViewById(R.id.collection_image_select);
-        work_done = findViewById(R.id.work_done_image);
         upload = findViewById(R.id.collection_image_upload);
         exampleContent = findViewById(R.id.work_example_content_image);
-        class_list = findViewById(R.id.radioGroup_class_list_image);
+        selectClass = findViewById(R.id.radioGroup_class_list_image);
 
         requester = findViewById(R.id.image_collection_work_requester);
-        classlistview = findViewById(R.id.image_classlist_project_detail);
+        classListView = findViewById(R.id.image_classlist_project_detail);
 
         for(int i=0;i<project.getClass_list().size();i++){
             RadioButton radioButton = new RadioButton(context);
@@ -98,24 +93,20 @@ public class ImageCollectionActivity extends AppCompatActivity {
             radioButton.setLayoutParams(param);
             radioButton.setText(project.getClass_list().get(i));
             radioButton.setId(i);
-            class_list.addView(radioButton);
+            selectClass.addView(radioButton);
         }
 
-        try {
             getExampleData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         projectName.setText(project.getProjectName());
         wayContent.setText(project.getWayContent());
         conditionContent.setText(project.getConditionContent());
 
         requester.setText(project.getUserId());
-        classlistview.setText(project.getClass_list().toString());
+        classListView.setText(project.getClass_list().toString());
 
         //라디오버튼 리스너
-        class_list.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        selectClass.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 for(int i=0;i<project.getClass_list().size();i++){
@@ -137,13 +128,6 @@ public class ImageCollectionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dataURI.setText("");
-                Toast.makeText(getApplicationContext(),"이미지 등록 완료",Toast.LENGTH_LONG).show();
-            }
-        });
-
-        work_done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 if (inputStreamList.size()==0){
                     Toast.makeText(getApplicationContext(),"데이터를 업로드 하셔야 합니다.",Toast.LENGTH_LONG).show();
                 }
@@ -154,9 +138,10 @@ public class ImageCollectionActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
-    private void getExampleData() throws IOException {
+    private void getExampleData(){
         AsyncTask<Object, Void, Boolean> downloadExampleTask = new AsyncTask<Object, Void, Boolean>() {
             protected Boolean doInBackground(Object... dataInfos) {
                 Boolean result = RESTAPI.getInstance().downloadObject((String)dataInfos[0],(String)dataInfos[1],(OutputStream)dataInfos[2]);
@@ -247,8 +232,6 @@ public class ImageCollectionActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
             ClipData clipData = data.getClipData();
-
-            class_count.put(classname, clipData.getItemCount());//클래스에 해당하는 데이타 개수 몇개인지 저장.
             classList.add(classname);
             System.out.println(classname + ":" + clipData.getItemCount());
 

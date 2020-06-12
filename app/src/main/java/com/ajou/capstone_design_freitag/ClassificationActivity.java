@@ -5,6 +5,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.ui.dto.ClassDto;
@@ -15,12 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassificationActivity extends AppCompatActivity {
-    private static final int LOGIN_REQUEST_CODE = 102;
     List<ProblemWithClass> problemWithClassList = new ArrayList<>();
 
     private ViewPager viewPager ;
@@ -59,11 +58,7 @@ public class ClassificationActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            pagerAdapter = new PagerAdapter(getApplicationContext(),problemWithClassList) ;
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
+                        pagerAdapter = new PagerAdapter(getApplicationContext(),problemWithClassList) ;
                         viewPager.setAdapter(pagerAdapter) ;
                     }
                 });
@@ -109,6 +104,11 @@ public class ClassificationActivity extends AppCompatActivity {
 
             problemWithClassList.add(problemWithClass);
         }
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        Log.d("onPostCreate", "onDestroy");
     }
 
 }

@@ -24,7 +24,6 @@ import com.ajou.capstone_design_freitag.ui.dto.ProblemWithClass;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +52,6 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
 
     List<String> problemId = new ArrayList<>();
     MediaPlayer mediaPlayer = new MediaPlayer();
-    JSONObject jsonObject = new JSONObject();
     List<String> answer = new ArrayList<>();
 
     List<StringBuffer> classAnswers = new ArrayList<>();
