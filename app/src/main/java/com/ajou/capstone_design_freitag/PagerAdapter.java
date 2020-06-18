@@ -39,6 +39,7 @@ import java.util.List;
 public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
 
     // LayoutInflater 서비스 사용을 위한 Context 참조 저장.
+    private ClassificationActivity classificationActivity;
     private Context mContext;
     private List<ProblemWithClass> problemList;
     String file_extension;
@@ -58,8 +59,9 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
 
     int currenPage;
 
-    public PagerAdapter(Context context, List<ProblemWithClass> problemWithClassList){
-         mContext = context;
+    public PagerAdapter(ClassificationActivity classificationActivity, List<ProblemWithClass> problemWithClassList){
+        this.classificationActivity = classificationActivity;
+        mContext = classificationActivity.getApplicationContext();
         if(problemWithClassList==null){
             problemList = new ArrayList<>();
         }
@@ -135,7 +137,11 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
                         imageView.setVisibility(View.GONE);
                         audiolayout.setVisibility(View.VISIBLE);
                         getClassificationData(position, "음성");
+                } else if(file_extension.equals("txt")) {
+                    imageView.setVisibility(View.GONE);
+                    audiolayout.setVisibility(View.GONE);
                 }
+
             }
             play.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -180,6 +186,7 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
                 @Override
                 public void onClick(View v) {
                     classificationWorkDone();
+                    classificationActivity.finish();
                 }
             });
 
@@ -231,6 +238,10 @@ public void classificationWorkDone(){
         protected Boolean doInBackground(Void... voids) {
             Boolean result = null;
             try {
+                for (int i = 0; i < classAnswers.size(); i++) {
+                    System.out.println(classAnswers.get(i));
+                    System.out.println(problemId.get(i));
+                }
                 result = RESTAPI.getInstance().labellingWork(classAnswers,problemId);
             } catch (IOException e) {
                 e.printStackTrace();

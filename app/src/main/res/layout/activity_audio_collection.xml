@@ -154,7 +154,7 @@
         android:background="#80CCCECF"
         android:gravity="center"
         android:layout_marginTop="15dp"
-        android:text="프로젝트 예시"
+        android:text="작업 예시"
         android:textSize="20sp"
         android:fontFamily="@font/tmonmonsori" />
 
