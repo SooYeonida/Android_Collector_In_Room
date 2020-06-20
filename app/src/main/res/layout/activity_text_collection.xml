@@ -21,7 +21,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="텍스 수집 작업"
+            android:text="텍스트 수집 작업"
             android:textColor="#020202"
             android:textSize="35sp"
             android:fontFamily="@font/tmonmonsori" />
@@ -58,7 +58,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
         android:layout_marginTop="10dp"/>
 
     <TextView
-        android:id="@+id/audio_collection_project_name"
+        android:id="@+id/text_collection_project_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -80,7 +80,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
             android:textSize="15sp"
             android:fontFamily="@font/tmonmonsori"/>
         <TextView
-            android:id="@+id/audio_collection_work_requester"
+            android:id="@+id/text_collection_work_requester"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="requester"
@@ -101,7 +101,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
             android:textSize="15sp"
             android:fontFamily="@font/tmonmonsori"/>
         <TextView
-            android:id="@+id/audio_classlist_project_detail"
+            android:id="@+id/text_classlist_project_detail"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
@@ -120,7 +120,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
         android:textSize="20sp"
         android:fontFamily="@font/tmonmonsori"/>
     <TextView
-        android:id="@+id/audio_collection_way_content"
+        android:id="@+id/text_collection_way_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -139,7 +139,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
         android:fontFamily="@font/tmonmonsori" />
 
     <TextView
-        android:id="@+id/audio_collection_condition_content"
+        android:id="@+id/text_collection_condition_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -164,6 +164,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
         android:layout_gravity="center">
 
         <TextView
+            android:layout_marginTop="15dp"
             android:id="@+id/work_example_content_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -182,7 +183,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/radioGroup_class_list_audio"
+        android:id="@+id/radioGroup_class_list_text"
         android:orientation="horizontal"
         android:layout_gravity="center">
     </RadioGroup>
@@ -201,11 +202,13 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
         android:orientation="horizontal"
         android:layout_gravity="center">
         <RadioButton
+            android:id="@+id/text_file_upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="파일 업로드"
             android:fontFamily="@font/jejugothic"/>
         <RadioButton
+            android:id="@+id/user_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="직접 입력"
@@ -231,7 +234,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
             android:gravity="center"
             android:fontFamily="@font/tmonmonsori"/>
         <Button
-            android:id="@+id/collection_audio_select"
+            android:id="@+id/collection_text_select"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
@@ -239,7 +242,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/select_text_input"
+        android:id="@+id/select_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -254,13 +257,13 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="음성 녹음"
+            android:text="질문&amp;답변 추가"
             android:gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:fontFamily="@font/tmonmonsori"/>
         <Button
-            android:id="@+id/collection_audio_record"
+            android:id="@+id/collection_text_user"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
@@ -268,11 +271,33 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
     </LinearLayout>
 
     <TextView
-        android:id="@+id/collection_audio_uri"
+        android:id="@+id/collection_text_uri"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text=""
         android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/question_and_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/quesiton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/answer">
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -280,20 +305,12 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
         android:layout_gravity="center"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/collection_upload_audio"
+            android:id="@+id/collection_upload_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="#8028ADFC"
             android:text="텍스트 등록"
-            android:fontFamily="@font/tmonmonsori"/>
-        <Button
-            android:id="@+id/work_done_audio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="#8028ADFC"
-            android:text="작업 완료"
             android:fontFamily="@font/tmonmonsori"/>
     </LinearLayout>
 

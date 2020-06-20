@@ -279,23 +279,31 @@
             android:id="@+id/userInputExampleTextLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
+            android:orientation="vertical">
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/tmonmonsori"
-                android:text="예시 데이터 입력:" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/tmonmonsori"
+                    android:layout_marginTop="5dp"
+                    android:text="예시 데이터 입력:" />
+                    <Button
+                        android:id="@+id/make_example_text_user"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/ic_add_box_black_24dp"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/userInputExampleTextEditText"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:hint="예시"
-                android:textSize="15sp"
-                android:inputType="textMultiLine"
-                android:maxLines="10" />
+                android:layout_height="wrap_content"
+                android:id="@+id/question_and_answer_make"
+                android:orientation="vertical">
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

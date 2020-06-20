@@ -41,6 +41,11 @@ public class PopupActivity extends AppCompatActivity {
             intent.putExtra("project", project);
             startActivity(intent);
         }
+        else if(type.equals("text")){
+            Intent intent = new Intent(getApplicationContext(), TextCollectionActivity.class);
+            intent.putExtra("project", project);
+            startActivity(intent);
+        }
     }
     public void no(View view){
         finish();

@@ -34,9 +34,13 @@ import com.ajou.capstone_design_freitag.LoginActivity;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -81,7 +85,6 @@ public class ProjectMakeFragment extends Fragment {
     private Button uploadExampleDataButton;
 
     private LinearLayout userInputExampleTextLinearLayout;
-    private EditText userInputExampleTextEditText;
 
     private LinearLayout classLinearLayout;
     private Button createNewClassButton;
@@ -116,6 +119,12 @@ public class ProjectMakeFragment extends Fragment {
     List<String> classList = new ArrayList<>();
 
     private Context context;
+
+    private LinearLayout setLayout;
+    private Button add;
+    int editTextNum=0;
+    private List<EditText> questionList = new ArrayList<>();
+    private List<EditText> answerList = new ArrayList<>();
 
     public static ProjectMakeFragment newInstance(String worktype) {
         ProjectMakeFragment fragment = new ProjectMakeFragment();
@@ -289,7 +298,6 @@ public class ProjectMakeFragment extends Fragment {
         });
 
         userInputExampleTextLinearLayout = view.findViewById(R.id.userInputExampleTextLinearLayout);
-        userInputExampleTextEditText = view.findViewById(R.id.userInputExampleTextEditText);
 
         classLinearLayout = view.findViewById(R.id.classLinearLayout);
         createNewClassButton = view.findViewById(R.id.createNewClassButton);
@@ -321,6 +329,40 @@ public class ProjectMakeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 makeProject(view);
+            }
+        });
+
+        setLayout = view.findViewById(R.id.question_and_answer_make);
+        add = view.findViewById(R.id.make_example_text_user);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                TextView question = new TextView(context);
+                question.setLayoutParams(params);
+                question.setText("질문: ");
+                setLayout.addView(question);
+                editTextNum++;
+
+                EditText questionEditText = new EditText(context);
+                questionEditText.setLayoutParams(params);
+                questionEditText.setId(editTextNum);
+                setLayout.addView(questionEditText);
+                questionList.add(questionEditText);
+                editTextNum++;
+
+                TextView answer = new TextView(context);
+                answer.setLayoutParams(params);
+                answer.setText("답: ");
+                setLayout.addView(answer);
+                editTextNum++;
+
+                EditText answerEditText = new EditText(context);
+                answerEditText.setLayoutParams(params);
+                answerEditText.setId(editTextNum);
+                setLayout.addView(answerEditText);
+                answerList.add(answerEditText);
+                editTextNum++;
             }
         });
 
@@ -409,7 +451,7 @@ public class ProjectMakeFragment extends Fragment {
     private void selectExampleText() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        intent.setDataAndType(MediaStore.Downloads.EXTERNAL_CONTENT_URI, "file/*");
+        intent.setDataAndType(MediaStore.Downloads.EXTERNAL_CONTENT_URI, "text/*");
         startActivityForResult(intent, EXAMPLE_TEXT_REQUEST_CODE);
     }
 
@@ -501,17 +543,41 @@ public class ProjectMakeFragment extends Fragment {
 
     private Uri getExampleDataUri() throws Exception {
         if(collectionTextRadioButton.isChecked()) {
-            String exampleText = userInputExampleTextEditText.getText().toString();
-            String dirPath = getContext().getCacheDir().getAbsolutePath() + "/freitag";
+//            String exampleText = userInputExampleTextEditText.getText().toString();
+//            String dirPath = getContext().getCacheDir().getAbsolutePath() + "/freitag";
+//            File dir = new File(dirPath);
+//            if(!dir.exists()) {
+//                dir.mkdir();
+//            }
+//            String fileName = dirPath + "/example.txt";
+//            FileOutputStream fileOutputStream = new FileOutputStream(new File(fileName));
+//            fileOutputStream.write(exampleText.getBytes());
+//            fileOutputStream.close();
+
+            JSONObject userInput = new JSONObject();
+            JSONArray setArray = new JSONArray();
+
+            for(int i=0;i<questionList.size();i++) {
+                JSONObject setObject = new JSONObject();
+                setObject.put("question",questionList.get(i).getText().toString());
+                setObject.put("answer",answerList.get(i).getText().toString());
+                setArray.add(setObject);
+            }
+            userInput.put("set",setArray);
+            String dirPath = context.getCacheDir().getAbsolutePath() + "/freitag";
             File dir = new File(dirPath);
             if(!dir.exists()) {
                 dir.mkdir();
             }
-            String fileName = dirPath + "/example.txt";
-            FileOutputStream fileOutputStream = new FileOutputStream(new File(fileName));
-            fileOutputStream.write(exampleText.getBytes());
-            fileOutputStream.close();
-            return Uri.fromFile(new File(fileName));
+            String fileName = "example.txt";
+            String filePath= dirPath + "/"+ fileName;
+
+            FileWriter file = new FileWriter(filePath);
+            file.write(userInput.toJSONString());
+            file.flush();
+            file.close();
+
+            return Uri.fromFile(new File(filePath));
         }
         return exampleDataUri;
     }
