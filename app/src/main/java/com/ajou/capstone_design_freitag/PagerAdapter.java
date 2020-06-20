@@ -11,9 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,14 +25,21 @@ import com.ajou.capstone_design_freitag.ui.dto.ProblemWithClass;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,22 +48,24 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
 
     // LayoutInflater 서비스 사용을 위한 Context 참조 저장.
     private ClassificationActivity classificationActivity;
-    private Context mContext;
+    private static Context mContext;
     private List<ProblemWithClass> problemList;
     String file_extension;
-    File file;
+    static File file;
     OutputStream outputStream;
 
-    ImageView imageView;
+    static ImageView imageView;
     LinearLayout audiolayout;
-    ImageView play;
-    ImageView pause;
+    static TextView textView;
+    static ImageView play;
+    static ImageView pause;
 
-    List<String> problemId = new ArrayList<>();
-    MediaPlayer mediaPlayer = new MediaPlayer();
-    List<String> answer = new ArrayList<>();
+    static List<String> problemId = new ArrayList<>();
+    static MediaPlayer mediaPlayer = new MediaPlayer();
+    String answer = null;
 
-    List<StringBuffer> classAnswers = new ArrayList<>();
+   //String classAnswers;
+   static List<StringBuffer> classAnswers = new ArrayList<>();
 
     int currenPage;
 
@@ -95,26 +105,29 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
                 audiolayout = view.findViewById(R.id.classification_audio_layout);
                 audiolayout.setVisibility(View.GONE);
 
-                LinearLayout classList = view.findViewById(R.id.classification_checkbox_group);
+                textView = view.findViewById(R.id.classification_text);
+                textView.setVisibility(View.GONE);
+
+                RadioGroup classList = view.findViewById(R.id.classification_checkbox_group);
                 for (int i = 0; i < problemList.get(position-1).getClassNameList().size()+1; i++) {
-                    final CheckBox checkBox = new CheckBox(mContext);
+                    final RadioButton radioButton = new RadioButton(mContext);
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    checkBox.setLayoutParams(param);
-                    checkBox.setOnClickListener(new View.OnClickListener() {
+                    radioButton.setLayoutParams(param);
+                    radioButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             currenPage = position;
-                            answer.add(checkBox.getText().toString());
+                            answer = radioButton.getText().toString();
                         }
                     });
                     if (i==problemList.get(position-1).getClassNameList().size()){
-                        checkBox.setText("없음");
+                        radioButton.setText("없음");
                     }
                     else{
-                        checkBox.setText(problemList.get(position-1).getClassNameList().get(i).getClassName());
+                        radioButton.setText(problemList.get(position-1).getClassNameList().get(i).getClassName());
                     }
-                    checkBox.setId(i);
-                    classList.addView(checkBox);
+                    radioButton.setId(i);
+                    classList.addView(radioButton);
                 }
 
                 work_num.setText(Integer.toString(position));
@@ -132,14 +145,18 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
                 if (file_extension.equals("jpg") || file_extension.equals("png") || file_extension.equals("jpeg")) { //흠 고쳐야하는뎅
                         imageView.setVisibility(View.VISIBLE);
                         audiolayout.setVisibility(View.GONE);
+                        textView.setVisibility(View.GONE);
                         getClassificationData(position, "이미지");
                 } else if (file_extension.equals("mp3") || file_extension.equals("wav") || file_extension.equals("m4a")) { //흠
                         imageView.setVisibility(View.GONE);
                         audiolayout.setVisibility(View.VISIBLE);
+                        textView.setVisibility(View.GONE);
                         getClassificationData(position, "음성");
                 } else if(file_extension.equals("txt")) {
                     imageView.setVisibility(View.GONE);
                     audiolayout.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
+                    getClassificationData(position, "텍스트");
                 }
 
             }
@@ -209,7 +226,7 @@ public class PagerAdapter extends androidx.viewpager.widget.PagerAdapter {
         return (view == (View)object);
     }
 
-public void uploadUserAnswer(List<String> answers) {
+public void uploadUserAnswer(String answer) {
 
         //확인해보기
     if(classAnswers.contains(problemList.get(currenPage-1).getProblem().getProblemId())){
@@ -220,88 +237,133 @@ public void uploadUserAnswer(List<String> answers) {
     }
 
     StringBuffer stringBuffer = new StringBuffer();
-    for(int i=0;i<answers.size();i++){
-       stringBuffer.append(String.format("%s",answers.get(i)));
-       if(i!=answers.size()-1){
-           stringBuffer.append("&");
-       }
-    }
+    stringBuffer.append(String.format("%s",answer));
     classAnswers.add(stringBuffer);
     problemId.add(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()));
-    answers.removeAll(answers);
     Toast.makeText(mContext, "작업 등록 성공", Toast.LENGTH_LONG).show();
 }
 
 public void classificationWorkDone(){
-    AsyncTask<Void,Void,Boolean> classificationTask = new AsyncTask<Void, Void, Boolean>() {
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            Boolean result = null;
-            try {
-                for (int i = 0; i < classAnswers.size(); i++) {
-                    System.out.println(classAnswers.get(i));
-                    System.out.println(problemId.get(i));
-                }
-                result = RESTAPI.getInstance().labellingWork(classAnswers,problemId);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
-        @Override
-        protected void onPostExecute(Boolean result){
-            if(result !=true){
-                Toast.makeText(mContext, "분류 작업 실패", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
+    ClassificationTask classificationTask = new ClassificationTask();
     classificationTask.execute();
 }
 
-    public void getClassificationData(int position, final String dataType) {
-        AsyncTask<Object, Void, Boolean> downloadExampleTask = new AsyncTask<Object, Void, Boolean>() {
-            protected Boolean doInBackground(Object... dataInfos) {
-                Boolean result = RESTAPI.getInstance().downloadObject((String)dataInfos[0],(String)dataInfos[1],(OutputStream)dataInfos[2]);
-                return result;
+private static class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
+    @Override
+    protected Boolean doInBackground(Void... voids) {
+        Boolean result = null;
+        try {
+            for (int i = 0; i < classAnswers.size(); i++) {
+                System.out.println(problemId.get(i)+": "+classAnswers.get(i));
             }
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if(!result){
-                    System.out.println("문제 데이터 다운로드 실패");
-                }
-                else
-                {
-                    System.out.println("문제 데이터 다운로드 성공");
-                    InputStream inputStream = null;
-                    try {
-                        inputStream = new FileInputStream(file);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    if(dataType.equals("이미지")) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        imageView.setImageBitmap(bitmap);
-                        try {
-                            inputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else if(dataType.equals("음성")){
-                        readyToPlay();
-                    }
-                }
-            }
-
-        };
-        downloadExampleTask.execute(problemList.get(position-1).getProblem().getBucketName(),problemList.get(position-1).getProblem().getObjectName(),outputStream);
+            result = RESTAPI.getInstance().labellingWork(classAnswers,problemId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    public void readyToPlay() {
+    @Override
+    protected void onPostExecute(Boolean result){
+        if(result !=true){
+            Toast.makeText(mContext, "분류 작업 실패", Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(mContext, "분류 작업 완료", Toast.LENGTH_LONG).show();
+        }
+    }
+}
+
+    public void getClassificationData(int position, final String dataType) {
+        DownloadExampleTask downloadExampleTask = new DownloadExampleTask();
+        downloadExampleTask.execute(problemList.get(position-1).getProblem().getBucketName(),problemList.get(position-1).getProblem().getObjectName(),outputStream,dataType);
+    }
+
+    private static class DownloadExampleTask extends AsyncTask<Object, Void, Boolean>{
+        String dataType;
+        protected Boolean doInBackground(Object... dataInfos) {
+            Boolean result = RESTAPI.getInstance().downloadObject((String)dataInfos[0],(String)dataInfos[1],(OutputStream)dataInfos[2]);
+            dataType = (String)dataInfos[3];
+            return result;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(!result){
+                System.out.println("문제 데이터 다운로드 실패");
+            }
+            else
+            {
+                System.out.println("문제 데이터 다운로드 성공");
+                InputStream inputStream = null;
+                try {
+                    inputStream = new FileInputStream(file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                if(dataType.equals("이미지")) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    imageView.setImageBitmap(bitmap);
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if(dataType.equals("음성")){
+                    readyToPlay();
+                }
+                else if(dataType.equals("텍스트")){
+                    try {
+                        jsonParse(inputStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public static void jsonParse(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        StringBuffer strBuffer = new StringBuffer();
+        while(true){
+            try {
+                if (!((line=reader.readLine())!=null)) break;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            strBuffer.append(line+"\n");
+        }
+        reader.close();
+        inputStream.close();
+        JSONParser jsonParser = new JSONParser();
+        String textData = "";
+        try {
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(strBuffer.toString());
+            JSONArray setArray = (JSONArray) jsonObject.get("set");
+            for(int i=0;i<setArray.size();i++){
+                JSONObject set = (JSONObject)setArray.get(i);
+                textData+="질문:"+set.get("question")+"\n";
+                textData+="답:"+set.get("answer")+"\n";
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        textView.setText(textData);
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void readyToPlay() {
         try {
             Uri uri = Uri.fromFile(file);
             mediaPlayer.reset();
