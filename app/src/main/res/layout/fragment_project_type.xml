@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".ui.search.SearchFragment"
+    tools:context=".UI.search.SearchFragment"
     android:id="@+id/project_type_fragment"
     android:layout_weight="1">
 

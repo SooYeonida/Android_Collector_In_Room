@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grayBackGround"
+            android:gravity="center"
+            android:text="분류 작업"
+            android:textSize="20sp"
+            android:fontFamily="@font/tmonmonsori"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="*분류 문제마다 작업 결과를 등록해야 분류 작업이 완료됩니다."
+        android:textColor="#F2F34D4D"
+        android:fontFamily="@font/jejugothic"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp">
+    <TextView
+        android:id="@+id/classification_work_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="worknum"
+        android:layout_gravity="center"
+        android:textSize="25sp"
+        android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="번째 문제"
+            android:textSize="25sp"
+            android:layout_gravity="center"
+            android:fontFamily="@font/tmonmonsori"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="문제 번호:"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:fontFamily="@font/jejugothic"/>
+        <TextView
+            android:id="@+id/classification_problem_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="number of problem"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:fontFamily="@font/jejugothic"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="데이터에 해당하는 라벨을 선택하시면 됩니다!"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:fontFamily="@font/jejugothic"/>
+
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:id="@+id/classification_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/classification_text"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/classification_audio_layout"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/classification_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play"
+            android:layout_marginTop="10dp"/>
+
+        <ImageView
+            android:id="@+id/classification_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pause"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;데이터 라벨&gt;"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:fontFamily="@font/jejugothic"/>
+
+    <RadioGroup
+        android:id="@+id/classification_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+    </RadioGroup>
+
+
+    <Button
+        android:id="@+id/classification_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#8028ADFC"
+        android:text="작업 결과 등록"
+        android:fontFamily="@font/tmonmonsori"/>
+    <Button
+        android:id="@+id/classification_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#B69AE3"
+        android:text="작업 완료"
+        android:fontFamily="@font/tmonmonsori"/>
+
+        </LinearLayout>
+    </ScrollView>

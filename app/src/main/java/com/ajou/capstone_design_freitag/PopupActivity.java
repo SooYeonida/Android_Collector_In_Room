@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.ajou.capstone_design_freitag.ui.dto.Project;
+import com.ajou.capstone_design_freitag.Work.AudioCollectionActivity;
+import com.ajou.capstone_design_freitag.Work.ImageCollectionActivity;
+import com.ajou.capstone_design_freitag.Work.TextCollectionActivity;
+import com.ajou.capstone_design_freitag.UI.dto.Project;
 
 public class PopupActivity extends AppCompatActivity {
 

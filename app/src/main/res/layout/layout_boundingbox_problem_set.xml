@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grayBackGround"
+            android:gravity="center"
+            android:text="바운딩박스 작업"
+            android:textSize="20sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="*바운딩박스 문제마다 작업 결과를 등록해야 작업이 완료됩니다."
+            android:textColor="#F2F34D4D"
+            android:fontFamily="@font/jejugothic"
+            android:layout_marginTop="20dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/boundingbox_work_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="worknum"
+                android:layout_gravity="center"
+                android:textSize="25sp"
+                android:fontFamily="@font/tmonmonsori"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="번째 문제"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/tmonmonsori"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="라벨을 택하고 해당하는 곳에 바운딩을 해주세요."
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp"
+            android:fontFamily="@font/jejugothic"/>
+
+        <ImageView
+            android:layout_marginTop="20dp"
+            android:id="@+id/boundingbox_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <com.ajou.capstone_design_freitag.Work.CustomView
+            android:id="@+id/customView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="&lt;데이터 라벨&gt;"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp"
+            android:fontFamily="@font/jejugothic"/>
+
+        <RadioGroup
+            android:id="@+id/boundingbox_radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+        </RadioGroup>
+
+
+        <Button
+            android:id="@+id/boundingbox_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#8028ADFC"
+            android:text="작업 결과 등록"
+            android:fontFamily="@font/tmonmonsori"/>
+        <Button
+            android:id="@+id/boundingbox_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#B69AE3"
+            android:text="작업 완료"
+            android:fontFamily="@font/tmonmonsori"/>
+
+    </LinearLayout>
+</LinearLayout>

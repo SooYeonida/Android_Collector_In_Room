@@ -3,7 +3,7 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
-android:layout_height="match_parent" tools:context=".TextCollectionActivity">
+android:layout_height="match_parent" tools:context=".Work.TextCollectionActivity">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -48,7 +48,7 @@ android:layout_height="match_parent" tools:context=".TextCollectionActivity">
         android:textSize="15sp"
         android:fontFamily="@font/jejugothic"
         android:textColor="#80565858"
-        android:text="*음성 수집 작업은 주어진 수집 데이터 목록에 해당하는 &#10; 음성을 업로드하는 작업입니다. "/>
+        android:text="*텍스트 수집 작업은 주어진 수집 데이터 목록에 해당하는 &#10; 텍스트를 업로드하는 작업입니다. "/>
 
     <View
         android:layout_width="match_parent"

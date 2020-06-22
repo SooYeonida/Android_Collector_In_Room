@@ -16,17 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WebViewActivity"></activity>
-        <activity android:name=".TextCollectionActivity" />
-        <activity android:name=".RequestDetailActivity"></activity>
+        <activity android:name=".Work.BoundingBoxActivity"></activity>
+        <activity android:name=".WebViewActivity" />
+        <activity android:name=".Work.TextCollectionActivity" />
+        <activity android:name=".UI.mypage.RequestDetailActivity" />
         <activity
             android:name=".PopupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/popupTheme" />
-        <activity android:name=".ClassificationActivity" />
-        <activity android:name=".AudioCollectionActivity" />
-        <activity android:name=".ImageCollectionActivity" />
-        <activity android:name=".ProjectDetailActivity" />
+        <activity android:name=".Work.ClassificationActivity" />
+        <activity android:name=".Work.AudioCollectionActivity" />
+        <activity android:name=".Work.ImageCollectionActivity" />
+        <activity android:name=".Work.ProjectDetailActivity" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".Audio.AudioTrimmerActivity"

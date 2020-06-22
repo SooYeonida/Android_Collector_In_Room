@@ -1,8 +1,9 @@
 package com.ajou.capstone_design_freitag.API;
 
-import com.ajou.capstone_design_freitag.ui.dto.LabellingWorkHistory;
-import com.ajou.capstone_design_freitag.ui.dto.Project;
-import com.ajou.capstone_design_freitag.ui.dto.User;
+import com.ajou.capstone_design_freitag.UI.dto.LabellingWorkHistory;
+import com.ajou.capstone_design_freitag.UI.dto.Problem;
+import com.ajou.capstone_design_freitag.UI.dto.Project;
+import com.ajou.capstone_design_freitag.UI.dto.User;
 import com.google.common.net.UrlEscapers;
 
 import org.apache.http.HttpResponse;
@@ -457,19 +458,19 @@ public class RESTAPI {
         token = null;
     }
 
-public String rankingPoint() throws Exception {
-    APICaller rankingPoint = new APICaller("GET",baseURL+"/api/ranking/point");
-    String result;
-    String list;
-    rankingPoint.request();
-    result = rankingPoint.getHeader().get("ranking").get(0);
+    public String rankingPoint() throws Exception {
+        APICaller rankingPoint = new APICaller("GET",baseURL+"/api/ranking/point");
+        String result;
+        String list;
+        rankingPoint.request();
+        result = rankingPoint.getHeader().get("ranking").get(0);
 
-    if(result.equals("fail")){
-        System.out.println("point ranking fail");
+        if(result.equals("fail")){
+            System.out.println("point ranking fail");
+        }
+        list = rankingPoint.getBody();
+        return list;
     }
-    list = rankingPoint.getBody();
-    return list;
-}
 
     public String workHistory() throws Exception {
         APICaller workHistory = new APICaller("GET",baseURL+"/api/work/all");
@@ -486,26 +487,26 @@ public String rankingPoint() throws Exception {
         return list;
     }
 
-public String provideClassificationProblems(String dataType) throws Exception {
-    APICaller provideClassificationProblems = new APICaller("GET",baseURL+"/api/work/classification/start");
-    provideClassificationProblems.setHeader("Authorization",token);
-    provideClassificationProblems.setHeader("dataType",dataType);
-    String result;
-    String list;
-    provideClassificationProblems.request();
-    result = provideClassificationProblems.getHeader().get("problems").get(0);
-    list = provideClassificationProblems.getBody();
-    String historyId = provideClassificationProblems.getHeader().get("workHistory").get(0);
-    LabellingWorkHistory.getInstance().setHistoryId(Integer.parseInt(historyId));
+    public String getClassificationProblems(String dataType) throws Exception { //5개
+        APICaller provideClassificationProblems = new APICaller("GET",baseURL+"/api/work/classification/start");
+        provideClassificationProblems.setHeader("Authorization",token);
+        provideClassificationProblems.setHeader("dataType",dataType);
+        String result;
+        String list;
+        provideClassificationProblems.request();
+        result = provideClassificationProblems.getHeader().get("problems").get(0);
+        list = provideClassificationProblems.getBody();
+        String historyId = provideClassificationProblems.getHeader().get("workHistory").get(0);
+        LabellingWorkHistory.getInstance().setHistoryId(Integer.parseInt(historyId));
 
-    if(result.equals("fail")){
-        System.out.println("classification problem fail");
-        return null;
+        if(result.equals("fail")){
+            System.out.println("classification problem fail");
+            return null;
+        }
+        return list;
     }
-    return list;
-}
 
-    public Boolean labellingWork(List<StringBuffer> answerList,List<String> problemIdList) throws Exception {
+    public Boolean ClassificationWork(List<StringBuffer> answerList, List<String> problemIdList) throws Exception {
         Map<String,String> headers = new HashMap<>();
         HttpURLConnection con;
 
@@ -536,4 +537,57 @@ public String provideClassificationProblems(String dataType) throws Exception {
         }
         return false;
     }
+
+    public String getBoundingBoxProblems() throws Exception { //5개
+        APICaller getBoundingBoxProblems = new APICaller("GET",baseURL+"/api/work/boundingbox/start");
+        getBoundingBoxProblems.setHeader("Authorization",token);
+        getBoundingBoxProblems.setHeader("projectId",Project.getProjectinstance().getProjectId());
+        String result;
+        String list;
+        getBoundingBoxProblems.request();
+        result = getBoundingBoxProblems.getHeader().get("problems").get(0);
+        list = getBoundingBoxProblems.getBody();
+        String historyId = getBoundingBoxProblems.getHeader().get("workHistory").get(0);
+        LabellingWorkHistory.getInstance().setHistoryId(Integer.parseInt(historyId));
+
+        if(result.equals("fail")){
+            System.out.println("boundingBox problem fail");
+            return null;
+        }
+        return list;
+    }
+
+    //프로젝트 아이디.히스토리아이디.프라블럼아이디 한문제씩
+    public Boolean BoundingBoxWork(StringBuffer coordinateList, String problemId,String className) throws Exception {
+        Map<String,String> headers = new HashMap<>();
+        HttpURLConnection con;
+
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",token);
+        headers.put("historyId",Integer.toString(LabellingWorkHistory.getInstance().getHistoryId()));
+        headers.put("projectId",Project.getProjectinstance().getProjectId());
+        headers.put("problemId",problemId);
+
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put(className,coordinateList.toString());
+        con = (HttpURLConnection) new URL(baseURL+"/api/work/boundingbox").openConnection();
+        con.setRequestMethod("POST");
+
+        if(!headers.isEmpty()) {
+            for(String key : headers.keySet()) {
+                con.setRequestProperty(key, headers.get(key));
+            }
+        }
+
+        if(jsonBody.length()!=0) {
+            con.setDoOutput(true);
+            con.getOutputStream().write(jsonBody.toString().getBytes());
+        }
+
+        if(con.getResponseCode()==200){
+            return true;
+        }
+        return false;
+    }
+
 }
