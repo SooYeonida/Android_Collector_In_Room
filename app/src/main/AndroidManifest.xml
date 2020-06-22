@@ -17,6 +17,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".Work.BoundingBoxActivity"></activity>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"></activity>
         <activity android:name=".WebViewActivity" />
         <activity android:name=".Work.TextCollectionActivity" />
         <activity android:name=".UI.mypage.RequestDetailActivity" />

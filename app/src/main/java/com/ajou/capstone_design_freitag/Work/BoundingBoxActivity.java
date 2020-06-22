@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
@@ -14,11 +16,15 @@ import com.ajou.capstone_design_freitag.UI.dto.ClassDto;
 import com.ajou.capstone_design_freitag.UI.dto.Problem;
 import com.ajou.capstone_design_freitag.UI.dto.ProblemWithClass;
 import com.ajou.capstone_design_freitag.UI.dto.Project;
+import com.theartofdev.edmodo.cropper.CropImage;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +33,14 @@ public class BoundingBoxActivity extends AppCompatActivity {
 
     static Project project;
 
-    List<ProblemWithClass> problemWithClassList = new ArrayList<>();
+    static List<ProblemWithClass> problemWithClassList = new ArrayList<>();
 
     private CustomViewPager viewPager;
     private BoundingBoxPagerAdapter pagerAdapter;
+
+    static File file;
+    static OutputStream outputStream;
+    static Bitmap bitmap=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,4 +165,30 @@ public class BoundingBoxActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // handle result of CropImageActivity
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                // ((ImageView) findViewById(R.id.quick_start_cropped_image)).setImageURI(result.getUri());
+                Toast.makeText(
+                        this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG)
+                        .show();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == CropImage.BOUNDING_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                float[] result = data.getFloatArrayExtra("rect");
+//        4   3
+//        1   2
+                System.out.println("left" + result[0]);
+                System.out.println("top" + result[1]);
+                System.out.println("right" + result[4]);
+                System.out.println("bottom" + result[5]);
+            }
+        }
+    }
 }

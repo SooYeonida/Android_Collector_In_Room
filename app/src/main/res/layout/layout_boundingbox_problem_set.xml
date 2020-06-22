@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -65,11 +65,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-        <com.ajou.capstone_design_freitag.Work.CustomView
-            android:id="@+id/customView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+<!--        <com.ajou.capstone_design_freitag.Work.CustomView-->
+<!--            android:id="@+id/customView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center" />-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,6 +89,13 @@
         </RadioGroup>
 
 
+        <ImageView
+            android:id="@+id/boundingbox_start"
+            android:layout_marginTop="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/boundingbox2"
+            android:layout_gravity="center"/>
         <Button
             android:id="@+id/boundingbox_upload"
             android:layout_width="wrap_content"
@@ -109,4 +116,4 @@
             android:fontFamily="@font/tmonmonsori"/>
 
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
