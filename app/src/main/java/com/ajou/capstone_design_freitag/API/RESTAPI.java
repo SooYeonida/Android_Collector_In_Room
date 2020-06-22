@@ -23,8 +23,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -558,7 +560,7 @@ public class RESTAPI {
     }
 
     //프로젝트 아이디.히스토리아이디.프라블럼아이디 한문제씩
-    public Boolean BoundingBoxWork(StringBuffer coordinateList, String problemId,String className) throws Exception {
+    public Boolean BoundingBoxWork(List<StringBuffer> coordinateList, String problemId,List<String> className) throws Exception {
         Map<String,String> headers = new HashMap<>();
         HttpURLConnection con;
 
@@ -566,11 +568,26 @@ public class RESTAPI {
         headers.put("Authorization",token);
         headers.put("historyId",Integer.toString(LabellingWorkHistory.getInstance().getHistoryId()));
         headers.put("projectId",Project.getProjectinstance().getProjectId());
-        headers.put("problemId",problemId);
 
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put(className,coordinateList.toString());
-        con = (HttpURLConnection) new URL(baseURL+"/api/work/boundingbox").openConnection();
+        for(int i=0;i<coordinateList.size();i++) {
+            jsonBody.put(className.get(i), coordinateList.get(i).toString());
+        }
+
+        String url = baseURL+"/api/work/boundingbox";
+
+        Map<String, String> queryParameters = new HashMap<>();
+        queryParameters.put("problemId",problemId);
+        if(!queryParameters.isEmpty()) {
+            Iterator<String> iterator = queryParameters.keySet().iterator();
+            String key = iterator.next();
+            url += "?" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(queryParameters.get(key), "UTF-8");
+            while(iterator.hasNext()) {
+                key = iterator.next();
+                url += "&" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(queryParameters.get(key), "UTF-8");
+            }
+        }
+        con = (HttpURLConnection) new URL(url).openConnection();
         con.setRequestMethod("POST");
 
         if(!headers.isEmpty()) {

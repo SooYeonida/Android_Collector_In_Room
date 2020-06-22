@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -23,8 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +34,11 @@ public class BoundingBoxActivity extends AppCompatActivity {
 
     private CustomViewPager viewPager;
     private BoundingBoxPagerAdapter pagerAdapter;
-
-    static File file;
-    static OutputStream outputStream;
-    static Bitmap bitmap=null;
+    private static String preLabel;
+    private static String labelName;
+    private static String problemId;
+    private static List<StringBuffer> coordinate = new ArrayList<>();
+    private static List<String> classList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +99,51 @@ public class BoundingBoxActivity extends AppCompatActivity {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    pagerAdapter = new BoundingBoxPagerAdapter(activity, problemWithClassList,project);
+                    pagerAdapter = new BoundingBoxPagerAdapter(activity, problemWithClassList, project, new BoundingBoxPagerAdapter.OnRadioCheckedChanged() {
+                        @Override
+                        public void onRadioCheckedChanged(String label,int problem) {
+                            labelName = label;
+                            if(!labelName.equals(preLabel)){
+                                preLabel = labelName;
+                            }
+                            problemId = Integer.toString(problem);
+                        }
+                    }, new BoundingBoxPagerAdapter.RegisterListener() {
+                        @Override
+                        public void clickBtn() {
+                            //프라블럼아이디, 클래스리스트,스트링버퍼리스
+                            BoundingBoxTask boundingBoxTask = new BoundingBoxTask();
+                            boundingBoxTask.execute();
+                        }
+                    });
                     viewPager.setAdapter(pagerAdapter);
                 }
             });
+        }
+
+        private static class BoundingBoxTask extends AsyncTask<Void,Void,Boolean>{
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                Boolean result = null;
+
+                try {
+                    result = RESTAPI.getInstance().BoundingBoxWork(coordinate,problemId,classList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result){
+                if(result !=true){
+                    System.out.println("바운딩 작업 실패");
+                }
+                else{
+                    System.out.println("바운딩 작업 성공");
+                }
+            }
         }
 
         public void jsonParse(String list) throws JSONException {
@@ -182,12 +221,25 @@ public class BoundingBoxActivity extends AppCompatActivity {
         } else if (requestCode == CropImage.BOUNDING_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 float[] result = data.getFloatArrayExtra("rect");
-//        4   3
-//        1   2
-                System.out.println("left" + result[0]);
-                System.out.println("top" + result[1]);
-                System.out.println("right" + result[4]);
-                System.out.println("bottom" + result[5]);
+                StringBuffer stringBuffer = new StringBuffer();
+                stringBuffer.append(result[0]);
+                stringBuffer.append(" ");
+                stringBuffer.append(result[1]);
+                stringBuffer.append(" ");
+                stringBuffer.append(result[4]);
+                stringBuffer.append(" ");
+                stringBuffer.append(result[5]);
+
+                if(!preLabel.equals(labelName)) {
+                    classList.add(labelName);
+                    coordinate.add(stringBuffer);
+                }
+//                else{
+//                    coordinate.get().append("&").append(stringBuffer)
+//                    temp.append("&");
+//                    temp.append(stringBuffer);
+//
+//                }
             }
         }
     }

@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
@@ -26,7 +24,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.apache.commons.io.FilenameUtils;
-import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,10 +58,16 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
     static Map<Integer,Uri> positionUri = new HashMap<>();
     static int currentPosition;
 
-    public BoundingBoxPagerAdapter(BoundingBoxActivity boundingBoxActivity, List<ProblemWithClass> problemWithClassList,Project projectInfo){
+    private OnRadioCheckedChanged mOnRadioCheckedChanged;
+    private RegisterListener mregisterListener;
+
+    public BoundingBoxPagerAdapter(BoundingBoxActivity boundingBoxActivity, List<ProblemWithClass> problemWithClassList,
+                                   Project projectInfo, OnRadioCheckedChanged onRadioCheckedChanged, RegisterListener registerListener){
         this.boundingBoxActivity = boundingBoxActivity;
         mContext = boundingBoxActivity.getApplicationContext();
         project = projectInfo;
+        this.mOnRadioCheckedChanged = onRadioCheckedChanged;
+        this.mregisterListener = registerListener;
         if(problemWithClassList==null){
             problemList = new ArrayList<>();
         }
@@ -72,6 +75,15 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
             problemList = problemWithClassList;
         }
     }
+
+    //activity로 데이터 주기 위한 interface들 구현
+    public interface OnRadioCheckedChanged {
+        void onRadioCheckedChanged(String label,int problemId);
+    }
+    public interface RegisterListener {
+        void clickBtn();
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
         if (position==0){ //문제 시작 전 설명 화면
@@ -141,11 +153,12 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
             }
             container.addView(view);
 
-            ImageView boundinbBoxStart = view.findViewById(R.id.boundingbox_start);
-            boundinbBoxStart.setOnClickListener(new View.OnClickListener() {
+            ImageView boundingBoxStart = view.findViewById(R.id.boundingbox_start);
+            boundingBoxStart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     System.out.println("crop position: "+position);
+                    mOnRadioCheckedChanged.onRadioCheckedChanged(label,problemList.get(position-1).getProblem().getProblemId());
                     CropImage.activity(positionUri.get(position))
                             .setGuidelines(CropImageView.Guidelines.ON)
                             .setActivityTitle("My Crop")
@@ -166,7 +179,7 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    mregisterListener.clickBtn();
                 }
             });
             done.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +212,6 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
         return (view == (View)object);
     }
 
-
     private static class DownloadDataTask extends AsyncTask<Object, Void, Boolean>{
         String dataType;
         protected Boolean doInBackground(Object... dataInfos) {
@@ -221,7 +233,6 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
                 if(dataType.equals("바운딩박스")) {
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream).copy(Bitmap.Config.ARGB_8888, true);
                     //bitmap = Bitmap.createScaledBitmap(bitmap, 800, 600, true);
@@ -244,5 +255,6 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
             }
         }
     }
+
 
 }
