@@ -32,7 +32,7 @@ public class CustomView extends View{
     protected void onDraw(Canvas canvas){
         if(myBitmap!=null){
             canvas.drawColor(Color.TRANSPARENT);
-//            Bitmap resizeImgBitmap = Bitmap.createScaledBitmap(myBitmap, 800, 600, true);
+//            Bitmap resizeImgBitmap = Bitmap.createScaledBitmap(myBitmap, x, y, true);
             canvas.drawBitmap(myBitmap, 0, 0, null);
             for(int i=0;i<rect.size()/4;i++) {
                 Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -65,7 +65,8 @@ public class CustomView extends View{
 
     @Override
     protected void onMeasure(int widthMeasureSpec,int heightMeasureSpec){
-        setMeasuredDimension(800, 600);//캔버스 사이즈 지정해줘
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec),MeasureSpec.getSize(heightMeasureSpec));//캔버스 사이즈 지정해줘
+        //setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec),MeasureSpec.getSize(heightMeasureSpec));
     }
 
     @Override

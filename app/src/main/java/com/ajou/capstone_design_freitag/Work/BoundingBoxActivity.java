@@ -108,8 +108,7 @@ public class BoundingBoxActivity extends AppCompatActivity {
                     }, new BoundingBoxPagerAdapter.RegisterListener() {
                         @Override
                         public void clickBtn() {
-                            //프라블럼아이디, 클래스리스트,스트링버퍼리스
-                            BoundingBoxTask boundingBoxTask = new BoundingBoxTask();
+                            BoundingBoxTask boundingBoxTask = new BoundingBoxTask(getActivity());
                             boundingBoxTask.execute();
                         }
                     });
@@ -119,6 +118,8 @@ public class BoundingBoxActivity extends AppCompatActivity {
         }
 
         private static class BoundingBoxTask extends AsyncTask<Void,Void,Boolean>{
+            private WeakReference<BoundingBoxActivity> activityReference;
+
             @Override
             protected Boolean doInBackground(Void... voids) {
                 Boolean result = null;
@@ -131,15 +132,41 @@ public class BoundingBoxActivity extends AppCompatActivity {
 
                 return result;
             }
+            public BoundingBoxTask(BoundingBoxActivity context) {
+                activityReference = new WeakReference<>(context);
+            }
+
+            BoundingBoxActivity getActivity() {
+                BoundingBoxActivity activity = activityReference.get();
+                if (activity == null || activity.isFinishing()) {
+                    return null;
+                }
+                return activity;
+            }
 
             @Override
             protected void onPostExecute(Boolean result){
+                final BoundingBoxActivity activity = getActivity();
                 if(result !=true){
-                    System.out.println("바운딩 작업 실패");
+                   activity.runOnUiThread(new Runnable()
+                    {
+                        public void run()
+                        {
+                            Toast.makeText(activity, "바운딩박스 작업 실패", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
                 else{
-                    System.out.println("바운딩 작업 성공");
+                    activity.runOnUiThread(new Runnable()
+                    {
+                        public void run()
+                        {
+                            Toast.makeText(activity, "바운딩박스 작업 성공", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
+                classList.clear();
+                coordinate.clear();
             }
         }
 

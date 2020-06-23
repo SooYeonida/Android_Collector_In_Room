@@ -117,10 +117,12 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
 
                 TextView work_num = view.findViewById(R.id.boundingbox_work_num);
                 work_num.setText(Integer.toString(position));
+                TextView problem_num = view.findViewById(R.id.boundingbox_problem_num);
+                problem_num.setText(Integer.toString(problemList.get(position-1).getProblem().getProblemId()));
                 boundingImage = view.findViewById(R.id.boundingbox_image);
 
                 RadioGroup classList = view.findViewById(R.id.boundingbox_radio_group);
-                for (int i = 0; i < problemList.get(position-1).getClassNameList().size()+1; i++) {
+                for (int i = 0; i < problemList.get(position-1).getClassNameList().size(); i++) {
                     final RadioButton radioButton = new RadioButton(mContext);
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     radioButton.setLayoutParams(param);
@@ -131,12 +133,8 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
                             label = radioButton.getText().toString();
                         }
                     });
-                    if (i==problemList.get(position-1).getClassNameList().size()){
-                        radioButton.setText("없음");
-                    }
-                    else{
-                        radioButton.setText(problemList.get(position-1).getClassNameList().get(i).getClassName());
-                    }
+
+                    radioButton.setText(problemList.get(position-1).getClassNameList().get(i).getClassName());
                     radioButton.setId(i);
                     classList.addView(radioButton);
                 }
@@ -157,7 +155,6 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
             boundingBoxStart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("crop position: "+position);
                     mOnRadioCheckedChanged.onRadioCheckedChanged(label,problemList.get(position-1).getProblem().getProblemId());
                     CropImage.activity(positionUri.get(position))
                             .setGuidelines(CropImageView.Guidelines.ON)
