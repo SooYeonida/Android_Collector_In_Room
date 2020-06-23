@@ -43,29 +43,37 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-//오디오가 되긴되는데 프로그레스바 안움직이고 중단버튼도 안뜸 글고 한번만 재생 아마 뷰페이저로 뷰미리 만들어놓고 재생해서 그런 것 같음
+
 public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerAdapter {
 
     // LayoutInflater 서비스 사용을 위한 Context 참조 저장.
     private ClassificationActivity classificationActivity;
     private static Context mContext;
-    private List<ProblemWithClass> problemList;
+    private static List<ProblemWithClass> problemList;
+    //다운로드
     String file_extension;
     static File file;
     OutputStream outputStream;
 
+    //이미지
     static ImageView imageView;
+    //오디오
     LinearLayout audiolayout;
     static TextView textView;
     static ImageView play;
     static ImageView pause;
-
     static MediaPlayer mediaPlayer = new MediaPlayer();
-    String answer = null;
 
+    //바운딩박스
+    static TextView conditionView;
+    static CustomView boundingBoxView;
+    static LinearLayout boundingBoxQuestionLayout;
+
+    //답제출
+    static StringBuffer answer = new StringBuffer();
     static List<String> problemId = new ArrayList<>();
     static List<StringBuffer> classAnswers = new ArrayList<>();
-    int currenPage;
+    static int currentPage;
 
     public ClassificationPagerAdapter(ClassificationActivity classificationActivity, List<ProblemWithClass> problemWithClassList){
         this.classificationActivity = classificationActivity;
@@ -106,6 +114,16 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
                 textView = view.findViewById(R.id.classification_text);
                 textView.setVisibility(View.GONE);
 
+                TextView conditionText = view.findViewById(R.id.conditionText);
+                conditionText.setVisibility(View.GONE);
+                conditionView = view.findViewById(R.id.conditionView);
+                conditionView.setVisibility(View.GONE);
+                boundingBoxView = view.findViewById(R.id.boundingBoxView);
+                boundingBoxView.setVisibility(View.GONE);
+                boundingBoxQuestionLayout = view.findViewById(R.id.boundingQuestionLayout);
+                boundingBoxQuestionLayout.setVisibility(View.GONE);
+                TextView labelTextView = view.findViewById(R.id.labelTextView);
+
                 RadioGroup classList = view.findViewById(R.id.classification_radio_group);
                 for (int i = 0; i < problemList.get(position-1).getClassNameList().size()+1; i++) {
                     final RadioButton radioButton = new RadioButton(mContext);
@@ -114,8 +132,8 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
                     radioButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            currenPage = position;
-                            answer = radioButton.getText().toString();
+                            currentPage = position;
+                            answer.append(radioButton.getText().toString());
                         }
                     });
                     if (i==problemList.get(position-1).getClassNameList().size()){
@@ -139,13 +157,27 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
                     e.printStackTrace();
                 }
 
-                //content type 받아와도 그게 어디 포함하는건지 구분해야되서 우선 일케해놓음
-                if (file_extension.equals("jpg") || file_extension.equals("png") || file_extension.equals("jpeg")) { //흠 고쳐야하는뎅
+                if (file_extension.equals("jpg") || file_extension.equals("png") || file_extension.equals("jpeg")) {
+                    if(problemList.get(position-1).getBoundingBoxList() == null) {
                         imageView.setVisibility(View.VISIBLE);
                         audiolayout.setVisibility(View.GONE);
                         textView.setVisibility(View.GONE);
                         getClassificationData(position, "이미지");
-                } else if (file_extension.equals("mp3") || file_extension.equals("wav") || file_extension.equals("m4a")) { //흠
+                    }
+                    else{
+                        imageView.setVisibility(View.GONE);
+                        audiolayout.setVisibility(View.GONE);
+                        textView.setVisibility(View.GONE);
+                        classList.setVisibility(View.GONE);
+                        conditionText.setVisibility(View.VISIBLE);
+                        conditionView.setVisibility(View.VISIBLE);
+                        conditionView.setText(problemList.get(position-1).getConditionContent());
+                        boundingBoxView.setVisibility(View.VISIBLE);
+                        boundingBoxQuestionLayout.setVisibility(View.VISIBLE);
+                        labelTextView.setVisibility(View.GONE);
+                        getClassificationData(position, "바운딩박스");
+                    }
+                } else if (file_extension.equals("mp3") || file_extension.equals("wav") || file_extension.equals("m4a")) {
                         imageView.setVisibility(View.GONE);
                         audiolayout.setVisibility(View.VISIBLE);
                         textView.setVisibility(View.GONE);
@@ -224,15 +256,17 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
         return (view == (View)object);
     }
 
-public void uploadUserAnswer(String answer) {
-        if(problemId.contains(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()))){
-            problemId.remove(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()));
-            classAnswers.remove(currenPage-1);
+public void uploadUserAnswer(StringBuffer answer) {
+        if(problemId.contains(Integer.toString(problemList.get(currentPage -1).getProblem().getProblemId()))){
+            problemId.remove(Integer.toString(problemList.get(currentPage -1).getProblem().getProblemId()));
+            classAnswers.remove(currentPage -1);
         }
-    StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append(String.format("%s",answer));
-    classAnswers.add(stringBuffer);
-    problemId.add(Integer.toString(problemList.get(currenPage-1).getProblem().getProblemId()));
+    System.out.println("현재페이지: "+currentPage);
+    System.out.println("등록되는 답: "+answer.toString());
+    classAnswers.add(answer);
+    answer.delete(0,answer.length());
+    System.out.println("아이디: "+problemList.get(currentPage -1).getProblem().getProblemId());
+    problemId.add(Integer.toString(problemList.get(currentPage -1).getProblem().getProblemId()));
     Toast.makeText(mContext, "작업 등록 성공", Toast.LENGTH_LONG).show();
 }
 
@@ -246,9 +280,6 @@ private static class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
     protected Boolean doInBackground(Void... voids) {
         Boolean result = null;
         try {
-            for (int i = 0; i < classAnswers.size(); i++) {
-                System.out.println(problemId.get(i)+": "+classAnswers.get(i));
-            }
             result = RESTAPI.getInstance().ClassificationWork(classAnswers,problemId);
         } catch (IOException e) {
             e.printStackTrace();
@@ -273,14 +304,16 @@ private static class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
 
     public void getClassificationData(int position, final String dataType) {
         DownloadDataTask downloadDataTask = new DownloadDataTask();
-        downloadDataTask.execute(problemList.get(position-1).getProblem().getBucketName(),problemList.get(position-1).getProblem().getObjectName(),outputStream,dataType);
+        downloadDataTask.execute(problemList.get(position-1).getProblem().getBucketName(),problemList.get(position-1).getProblem().getObjectName(),outputStream,dataType,position);
     }
 
     private static class DownloadDataTask extends AsyncTask<Object, Void, Boolean>{
         String dataType;
+        int position;
         protected Boolean doInBackground(Object... dataInfos) {
             Boolean result = RESTAPI.getInstance().downloadObject((String)dataInfos[0],(String)dataInfos[1],(OutputStream)dataInfos[2]);
             dataType = (String)dataInfos[3];
+            position = (int)dataInfos[4];
             return result;
         }
         @Override
@@ -316,6 +349,88 @@ private static class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
                         jsonParse(inputStream);
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                }
+                else if(dataType.equals("바운딩박스")){
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream).copy(Bitmap.Config.ARGB_8888,true);
+                    boundingBoxView.setBitmap(bitmap
+                    );
+                    List<String> labelList = new ArrayList<>();
+                    List<String> rectList = new ArrayList<>();
+
+                    for (int i = 0; i < problemList.get(position-1).getBoundingBoxList().size(); i++) {
+                        labelList.add(Integer.toString(problemList.get(position - 1).getBoundingBoxList().get(i).getBoxId()));
+                        String[] rect = problemList.get(position - 1).getBoundingBoxList().get(i).getCoordinates().split(" ");
+                        for(int j=0;j<rect.length;j++){
+                            rectList.add(rect[j]);
+                        }
+                    }
+                    boundingBoxView.setLabel(labelList);
+                    boundingBoxView.setRect(rectList);
+
+
+                    for (int i = 0; i < problemList.get(position-1).getBoundingBoxList().size(); i++) {
+                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                        LinearLayout sentence1 = new LinearLayout(mContext);
+                        sentence1.setOrientation(LinearLayout.HORIZONTAL);
+                        sentence1.setLayoutParams(param);
+                        TextView q = new TextView(mContext);
+                        q.setText("Q. 위 사진 속 ");
+                        q.setLayoutParams(param);
+                        sentence1.addView(q);
+                        final TextView boxId = new TextView(mContext);
+                        boxId.setLayoutParams(param);
+                        boxId.setText(Integer.toString(problemList.get(position-1).getBoundingBoxList().get(i).getBoxId()));
+                        sentence1.addView(boxId);
+                        TextView q2 = new TextView(mContext);
+                        q2.setLayoutParams(param);
+                        q2.setText("번 바운딩 박스가 주어진 작업 조건에 맞게");
+                        sentence1.addView(q2);
+
+                        LinearLayout sentence2 = new LinearLayout(mContext);
+                        sentence2.setOrientation(LinearLayout.HORIZONTAL);
+                        sentence2.setLayoutParams(param);
+                        TextView label = new TextView(mContext);
+                        label.setText(problemList.get(position-1).getBoundingBoxList().get(i).getClassName());
+                        label.setLayoutParams(param);
+                        sentence2.addView(label);
+                        TextView q3 = new TextView(mContext);
+                        q3.setText("을 포함하고 있습니까?");
+                        q3.setLayoutParams(param);
+                        sentence2.addView(q3);
+
+                        boundingBoxQuestionLayout.addView(sentence1);
+                        boundingBoxQuestionLayout.addView(sentence2);
+
+                        RadioGroup answerRadioGroup = new RadioGroup(mContext);
+                        answerRadioGroup.setLayoutParams(param);
+                        answerRadioGroup.setOrientation(LinearLayout.HORIZONTAL);
+
+                        final RadioButton yes = new RadioButton(mContext);
+                        final RadioButton no = new RadioButton(mContext);
+                        yes.setLayoutParams(param);
+                        yes.setText("예");
+                        no.setLayoutParams(param);
+                        no.setText("아니오");
+
+                        yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                currentPage = position;
+                                answer.append(boxId.getText().toString());
+                                answer.append(" ");
+                            }
+                        });
+                        no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+                        answerRadioGroup.addView(yes);
+                        answerRadioGroup.addView(no);
+                        boundingBoxQuestionLayout.addView(answerRadioGroup);
                     }
                 }
             }

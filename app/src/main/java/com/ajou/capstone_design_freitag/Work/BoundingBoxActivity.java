@@ -103,9 +103,6 @@ public class BoundingBoxActivity extends AppCompatActivity {
                         @Override
                         public void onRadioCheckedChanged(String label,int problem) {
                             labelName = label;
-                            if(!labelName.equals(preLabel)){
-                                preLabel = labelName;
-                            }
                             problemId = Integer.toString(problem);
                         }
                     }, new BoundingBoxPagerAdapter.RegisterListener() {
@@ -230,16 +227,9 @@ public class BoundingBoxActivity extends AppCompatActivity {
                 stringBuffer.append(" ");
                 stringBuffer.append(result[5]);
 
-                if(!preLabel.equals(labelName)) {
                     classList.add(labelName);
                     coordinate.add(stringBuffer);
-                }
-//                else{
-//                    coordinate.get().append("&").append(stringBuffer)
-//                    temp.append("&");
-//                    temp.append(stringBuffer);
-//
-//                }
+
             }
         }
     }

@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
+import com.ajou.capstone_design_freitag.UI.dto.BoundingBoxDto;
 import com.ajou.capstone_design_freitag.UI.dto.ClassDto;
 import com.ajou.capstone_design_freitag.UI.dto.Problem;
 import com.ajou.capstone_design_freitag.UI.dto.ProblemWithClass;
@@ -95,10 +96,28 @@ public class ClassificationActivity extends AppCompatActivity {
                 JSONObject jsonObject;
                 JSONObject problemJsonObject;
                 JSONArray classNameList;
+                JSONArray boundingList;
 
                 jsonObject = jsonArray.getJSONObject(i);
                 problemJsonObject = jsonObject.getJSONObject("problemDto");
                 classNameList = jsonObject.getJSONArray("classNameList");
+
+                List<BoundingBoxDto> boundingBoxDtoList = new ArrayList<>();
+                if(!jsonObject.isNull("boundingBoxList")) {
+                    boundingList = jsonObject.getJSONArray("boundingBoxList");
+                    for (int j = 0; j < boundingList.length(); j++) {
+                        JSONObject bounding;
+                        bounding = boundingList.getJSONObject(j);
+                        BoundingBoxDto boundingBoxDto = new BoundingBoxDto();
+                        boundingBoxDto.setBoxId(Integer.parseInt(bounding.getString("boxId")));
+                        boundingBoxDto.setProblemId(Integer.parseInt(bounding.getString("problemId")));
+                        boundingBoxDto.setClassName(bounding.getString("className"));
+                        boundingBoxDto.setCoordinates(bounding.getString("coordinates"));
+                        boundingBoxDtoList.add(boundingBoxDto);
+                    }
+                    problemWithClass.setBoundingBoxList(boundingBoxDtoList);
+                }
+                problemWithClass.setConditionContent(jsonObject.getString("conditionContent"));
 
                 Problem problem = new Problem();
                 List<ClassDto> classDtoList = new ArrayList<>();

@@ -10,10 +10,14 @@ public class ProblemWithClass implements Parcelable {
 
     private Problem problem;
     private List<ClassDto> classNameList;
+    private List<BoundingBoxDto> boundingBoxList;
+    private String conditionContent;
 
     public ProblemWithClass(Parcel in) {
         problem = in.readParcelable(Problem.class.getClassLoader());
         classNameList = in.createTypedArrayList(ClassDto.CREATOR);
+        boundingBoxList = in.createTypedArrayList(BoundingBoxDto.CREATOR);
+        conditionContent = in.readString();
     }
 
     public static final Creator<ProblemWithClass> CREATOR = new Creator<ProblemWithClass>() {
@@ -48,6 +52,22 @@ public class ProblemWithClass implements Parcelable {
         this.classNameList = classNameList;
     }
 
+    public List<BoundingBoxDto> getBoundingBoxList() {
+        return boundingBoxList;
+    }
+
+    public void setBoundingBoxList(List<BoundingBoxDto> boundingBoxList) {
+        this.boundingBoxList = boundingBoxList;
+    }
+
+    public String getConditionContent() {
+        return conditionContent;
+    }
+
+    public void setConditionContent(String conditionContent) {
+        this.conditionContent = conditionContent;
+    }
+
 
     @Override
     public int describeContents() {
@@ -58,6 +78,7 @@ public class ProblemWithClass implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(problem, flags);
         dest.writeTypedList(classNameList);
+        dest.writeTypedList(boundingBoxList);
+        dest.writeString(conditionContent);
     }
-
 }
