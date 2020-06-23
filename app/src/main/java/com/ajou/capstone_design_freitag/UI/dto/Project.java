@@ -30,6 +30,7 @@ public class Project implements Parcelable {
         description = in.readString();
         totalData = in.readInt();
         progressData = in.readInt();
+        validationData = in.readInt();
         cost = in.readInt();
         class_list = in.createStringArrayList();
     }
@@ -69,6 +70,7 @@ public class Project implements Parcelable {
     private String description;
     private int totalData;
     private int progressData;
+    private int validationData;
     private int cost;
     private List<String> class_list;
 
@@ -80,7 +82,13 @@ public class Project implements Parcelable {
         this.class_list = class_list;
     }
 
+    public int getValidationData() {
+        return validationData;
+    }
 
+    public void setValidationData(int validationData) {
+        this.validationData = validationData;
+    }
 
     public Drawable getProjectIcon() {
         return projectIcon;
@@ -241,6 +249,7 @@ public class Project implements Parcelable {
         dest.writeString(description);
         dest.writeInt(totalData);
         dest.writeInt(progressData);
+        dest.writeInt(validationData);
         dest.writeInt(cost);
         dest.writeStringList(class_list);
     }

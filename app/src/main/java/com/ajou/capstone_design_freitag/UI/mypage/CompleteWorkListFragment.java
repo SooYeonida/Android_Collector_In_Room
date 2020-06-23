@@ -27,7 +27,7 @@ import java.util.List;
 public class CompleteWorkListFragment extends Fragment {
 
     ArrayList<WorkHistory> workHistoryArrayList = new ArrayList<>();
-    WorkAdapter workAdapter;
+    CompleteWorkAdapter workAdapter;
     ListView listView;
 
     @Override
@@ -42,7 +42,7 @@ public class CompleteWorkListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_complete_work_list, container, false);
 
-        workAdapter = new WorkAdapter(workHistoryArrayList);
+        workAdapter = new CompleteWorkAdapter(workHistoryArrayList);
         listView = view.findViewById(R.id.work_list_mypage);
         workAdapter.notifyDataSetChanged();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -121,7 +121,7 @@ public class CompleteWorkListFragment extends Fragment {
     }
 
     public static void setListViewHeightBasedOnChildren(@NonNull ListView listView) {
-        WorkAdapter workAdapter = (WorkAdapter) listView.getAdapter();
+        CompleteWorkAdapter workAdapter = (CompleteWorkAdapter) listView.getAdapter();
 
         int totalHeight = 0;
         for (int i = 0; i < workAdapter.getCount(); i++) {

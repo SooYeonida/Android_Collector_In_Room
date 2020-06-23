@@ -25,7 +25,7 @@ import java.util.List;
 public class RequestProjectListFragment extends Fragment {
 
     ArrayList<Project> projectArrayList = new ArrayList<>();
-    ProjectAdapter projectAdapter;
+    RequestProjectAdapter projectAdapter;
     ListView listView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,9 +35,9 @@ public class RequestProjectListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_request_project_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_request_project, container, false);
 
-        projectAdapter = new ProjectAdapter(projectArrayList);
+        projectAdapter = new RequestProjectAdapter(projectArrayList);
         listView  = view.findViewById(R.id.project_list_mypage);
 
         projectList(view);
@@ -98,7 +98,7 @@ public class RequestProjectListFragment extends Fragment {
     }
 
     public static void setListViewHeightBasedOnChildren(@NonNull ListView listView) {
-        com.ajou.capstone_design_freitag.UI.mypage.ProjectAdapter projectAdapter = (com.ajou.capstone_design_freitag.UI.mypage.ProjectAdapter) listView.getAdapter();
+        RequestProjectAdapter projectAdapter = (RequestProjectAdapter) listView.getAdapter();
 
         int totalHeight = 0;
         for (int i = 0; i < projectAdapter.getCount(); i++) {

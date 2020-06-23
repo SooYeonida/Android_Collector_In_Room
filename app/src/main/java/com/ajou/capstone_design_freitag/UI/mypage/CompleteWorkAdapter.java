@@ -13,11 +13,11 @@ import com.ajou.capstone_design_freitag.UI.dto.WorkHistory;
 
 import java.util.ArrayList;
 
-public class WorkAdapter extends BaseAdapter {
+public class CompleteWorkAdapter extends BaseAdapter {
 
     private ArrayList<WorkHistory> workHistoryArrayList = new ArrayList<>();
 
-    public WorkAdapter(ArrayList<WorkHistory> workList){
+    public CompleteWorkAdapter(ArrayList<WorkHistory> workList){
         if(workHistoryArrayList==null){
             workHistoryArrayList = new ArrayList<>();
         }

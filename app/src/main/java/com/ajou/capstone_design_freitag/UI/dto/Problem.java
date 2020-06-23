@@ -11,7 +11,6 @@ public class Problem implements Parcelable {
     private String finalAnswer;
     private String validationStatus;
     private String userId;
-
     private int problemId;
 
     public Problem(Parcel in) {

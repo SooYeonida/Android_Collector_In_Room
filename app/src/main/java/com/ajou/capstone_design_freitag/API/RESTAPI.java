@@ -1,7 +1,8 @@
 package com.ajou.capstone_design_freitag.API;
 
+import android.widget.BaseAdapter;
+
 import com.ajou.capstone_design_freitag.UI.dto.LabellingWorkHistory;
-import com.ajou.capstone_design_freitag.UI.dto.Problem;
 import com.ajou.capstone_design_freitag.UI.dto.Project;
 import com.ajou.capstone_design_freitag.UI.dto.User;
 import com.google.common.net.UrlEscapers;
@@ -349,6 +350,7 @@ public class RESTAPI {
         String list;
         List<Project> project_list = new ArrayList<>();
         list = requestproject.getBody();
+        System.out.println("request: "+list);
         JSONArray jsonArray = new JSONArray(list);
 
         for(int i=0;i<jsonArray.length();i++){
@@ -375,6 +377,7 @@ public class RESTAPI {
             project.setExampleContent(project_object.getString("exampleContent"));
             project.setDescription(project_object.getString("description"));
             project.setTotalData(project_object.getInt("totalData"));
+            project.setValidationData(project_object.getInt("validatedData"));
             project.setProgressData(project_object.getInt("progressData"));
             project.setCost(project_object.getInt("cost"));
             project_list.add(project);
@@ -392,9 +395,8 @@ public class RESTAPI {
         return project_list;
     }
 
-
     public Boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
-        String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + UrlEscapers.urlFragmentEscaper().escape(obejctName);
+        String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + UrlEscapers.urlFragmentEscaper().escape(obejctName.replace(" ", "%20"));
         String accessKey = "sQG5BeaHcnvvqK4FI01A";
         String secretKey = "mvNVjSac240XvnrK4qF39HpoMvvtMQMzUnnNHaRV";
         String serviceName = "s3";
@@ -403,6 +405,7 @@ public class RESTAPI {
         try {
             AWS4SignerForAuthorizationHeader a = new AWS4SignerForAuthorizationHeader(new URL(url),"GET", serviceName, regionName);
             HttpGet httpget = new HttpGet(url);
+            System.out.println(httpget.getURI().getPath());
             Map<String,String> header = new HashMap<>();
             Map<String,String> q = new HashMap<>();
             header.put("x-amz-content-sha256", UNSIGNED_PAYLOAD);
@@ -413,6 +416,7 @@ public class RESTAPI {
             for(String key : header.keySet()) {
                 httpget.setHeader(key, header.get(key));
             }
+
             httpget.setHeader("Authorization", auth);
             HttpResponse response = httpclient.execute(httpget);
             if(response.getStatusLine().getStatusCode() == 200) {
@@ -421,6 +425,9 @@ public class RESTAPI {
                 }
                 return true;
             } else {
+                if(outputStream != null) {
+                    response.getEntity().writeTo(System.out);
+                }
                 return false;
             }
         } catch(Exception ex) {
@@ -508,7 +515,7 @@ public class RESTAPI {
         return list;
     }
 
-    public Boolean ClassificationWork(List<StringBuffer> answerList, List<String> problemIdList) throws Exception {
+    public Boolean classificationWork(List<StringBuffer> answerList, List<String> problemIdList) throws Exception {
         Map<String,String> headers = new HashMap<>();
         HttpURLConnection con;
 
@@ -559,8 +566,7 @@ public class RESTAPI {
         return list;
     }
 
-    //프로젝트 아이디.히스토리아이디.프라블럼아이디 한문제씩
-    public Boolean BoundingBoxWork(List<StringBuffer> coordinateList, String problemId,List<String> className) throws Exception {
+    public Boolean boundingBoxWork(List<StringBuffer> coordinateList, String problemId, List<String> className) throws Exception {
         Map<String,String> headers = new HashMap<>();
         HttpURLConnection con;
 
@@ -605,6 +611,59 @@ public class RESTAPI {
             return true;
         }
         return false;
+    }
+
+    public JSONObject validatedProblemList() throws Exception {
+        APICaller validatedProblemList = new APICaller("GET",baseURL+"/api/project/crossvalidation");
+        validatedProblemList.setHeader("Authorization",token);
+        validatedProblemList.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        validatedProblemList.request();
+        JSONObject list = new JSONObject(validatedProblemList.getBody());
+
+        return list;
+    }
+
+    public String terminateProject() throws Exception {
+        APICaller terminateProject = new APICaller("GET",baseURL+"/api/project/terminate");
+        terminateProject.setHeader("Authorization",token);
+        terminateProject.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminateProject.request();
+        String finalCost;
+        String result;
+        finalCost = terminateProject.getHeader().get("finalCost").get(0);
+        result = terminateProject.getHeader().get("project").get(0);
+        if(result.equals("fail")){
+            System.out.println("terminate project fail");
+        }
+        return finalCost;
+    }
+
+    public Boolean terminatePoint() throws Exception {
+        APICaller terminatePoint = new APICaller("GET",baseURL+"/api/project/terminate/point");
+        terminatePoint.setHeader("Authorization",token);
+        terminatePoint.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminatePoint.request();
+        String result;
+        result = terminatePoint.getHeader().get("project").get(0);
+        if(result.equals("fail")){
+            System.out.println("terminate project fail");
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean terminateAccount() throws Exception {
+        APICaller terminateAccount = new APICaller("GET",baseURL+"/api/project/terminate/account");
+        terminateAccount.setHeader("Authorization",token);
+        terminateAccount.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminateAccount.request();
+        String result;
+        result = terminateAccount.getHeader().get("payment").get(0);
+        if(result.equals("fail")){
+            System.out.println("account payment fail");
+            return false;
+        }
+        return true;
     }
 
 }

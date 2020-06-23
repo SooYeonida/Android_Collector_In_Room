@@ -47,8 +47,8 @@ public class RESTAPITest {
 
     @Test
     public void downloadCat() throws FileNotFoundException {
-        OutputStream outputStream = new FileOutputStream("/Users/choejaeung/Desktop/download/cat.jpg");
-        assertTrue(RESTAPI.getInstance().downloadObject("woneyhoney1", "cat.jpg", outputStream));
+        OutputStream outputStream = new FileOutputStream("/Users/sooyeon/Desktop/data/흐엉.jpg");
+        assertTrue(RESTAPI.getInstance().downloadObject("pury90", "흐엉.jpg", outputStream));
     }
 
 }

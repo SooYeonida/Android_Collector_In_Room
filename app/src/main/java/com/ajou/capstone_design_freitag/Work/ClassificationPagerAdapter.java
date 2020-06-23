@@ -280,7 +280,7 @@ private static class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
     protected Boolean doInBackground(Void... voids) {
         Boolean result = null;
         try {
-            result = RESTAPI.getInstance().ClassificationWork(classAnswers,problemId);
+            result = RESTAPI.getInstance().classificationWork(classAnswers,problemId);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

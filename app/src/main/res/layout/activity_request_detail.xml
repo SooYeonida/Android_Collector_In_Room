@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,13 +7,168 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80CCCECF"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="작업 상세 페이지"
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori" />
+        <TextView
+            android:id="@+id/project_name_request_detail1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="project name"
+            android:fontFamily="@font/tmonmonsori"
+            android:textColor="@color/colorBlue"
+            android:layout_gravity="center"
+            android:textSize="25sp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="작업 데이터 종류:"
+            android:textSize="15sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <ImageView
+            android:id="@+id/project_icon_request"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:adjustViewBounds="true"
+            android:maxWidth="50dp"
+            android:maxHeight="50dp" />
+        <TextView
+            android:id="@+id/work_data_type_request"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="data type"
+            android:textSize="15sp"
+            android:fontFamily="@font/jejugothic"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="작업 주제:"
+            android:textSize="15sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:id="@+id/work_subject_request"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="subject"
+            android:fontFamily="@font/jejugothic"
+            android:textSize="15sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="작업 의뢰자:"
+            android:textSize="15sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:id="@+id/work_requester_request"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="requester"
+            android:fontFamily="@font/jejugothic"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/work_class_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="&lt;데이터 라벨 목록&gt;"
+            android:textSize="15sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:id="@+id/classlist_project_detail_request"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:text="클래스"
+            android:fontFamily="@font/jejugothic"
+            android:textSize="15sp" />
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#80CCCECF"
+        android:gravity="center"
+        android:text="작업 진행 방법"
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori" />
+    <TextView
+        android:id="@+id/work_waycontent_request"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="waycontent"
+        android:fontFamily="@font/jejugothic"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#80CCCECF"
+        android:gravity="center"
+        android:text="작업 조건"
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori" />
+    <TextView
+        android:id="@+id/work_conditioncontent_request"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="conditioncontent"
+        android:fontFamily="@font/jejugothic"
+        android:textSize="15sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_centerInParent="true"
+            android:background="@color/grayBackGround"
+            android:layout_marginTop="20dp"/>
+
+        <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center">
     <TextView
-        android:id="@+id/project_name_request_detail"
+        android:id="@+id/project_name_request_detail2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="project name"
@@ -36,12 +191,46 @@
         android:fontFamily="@font/tmonmonsori"
         android:layout_gravity="center"
         android:textSize="20sp"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="검증 완료된 데이터를 클릭하면 데이터를 확인 할 수 있습니다."
+            android:fontFamily="@font/jejugothic"
+            android:layout_gravity="center"
+            android:textSize="10sp"/>
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/piechart">
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/piechart"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"></com.github.mikephil.charting.charts.PieChart>
 
-    </com.github.mikephil.charting.charts.PieChart>
+        <Button
+            android:id="@+id/validatedDataDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#8028ADFC"
+            android:text="검증완료 데이터 상세보기"
+            android:fontFamily="@font/tmonmonsori"/>
 
-</LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_centerInParent="true"
+            android:background="@color/grayBackGround"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/work_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#8028ADFC"
+            android:text="작업 종료"
+            android:fontFamily="@font/tmonmonsori"/>
+
+    </LinearLayout>
+</ScrollView>

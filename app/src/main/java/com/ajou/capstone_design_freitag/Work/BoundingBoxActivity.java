@@ -125,7 +125,7 @@ public class BoundingBoxActivity extends AppCompatActivity {
                 Boolean result = null;
 
                 try {
-                    result = RESTAPI.getInstance().BoundingBoxWork(coordinate,problemId,classList);
+                    result = RESTAPI.getInstance().boundingBoxWork(coordinate,problemId,classList);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
