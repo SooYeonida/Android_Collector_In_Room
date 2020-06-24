@@ -31,7 +31,7 @@ public class UserInfoFragment extends Fragment {
     TextView userEmail;
     TextView userPhoneNumber;
     TextView userAffiliation;
-    TextView userLevel;
+    TextView userAccuracy;
     TextView userPoint;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -42,7 +42,7 @@ public class UserInfoFragment extends Fragment {
         userEmail = (TextView) view.findViewById(R.id.user_email_mypage);
         userPhoneNumber = (TextView) view.findViewById(R.id.user_phone_mypage);
         userAffiliation = (TextView) view.findViewById(R.id.user_affiliation_mypage);
-        userLevel = (TextView) view.findViewById(R.id.user_level_mypage);
+        userAccuracy = (TextView) view.findViewById(R.id.user_accuracy_mypage);
         userPoint = (TextView) view.findViewById(R.id.user_point_mypage);
         update = (Button)view.findViewById(R.id.update_user_info_btn);
         update.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +83,7 @@ public class UserInfoFragment extends Fragment {
                 userEmail.setText(user.getEmail());
                 userPhoneNumber.setText(user.getPhonenumber());
                 userAffiliation.setText(user.getAffiliation());
-                userLevel.setText(user.getLevel());
+                userAccuracy.setText(String.format("%.2f %%", user.getAccuracy()));
                 userPoint.setText(String.valueOf(user.getPoint())); //포인트 안받아와서 일단은 이렇게 해놓음
             }
 
