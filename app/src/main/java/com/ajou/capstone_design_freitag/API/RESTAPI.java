@@ -1,7 +1,5 @@
 package com.ajou.capstone_design_freitag.API;
 
-import android.widget.BaseAdapter;
-
 import com.ajou.capstone_design_freitag.UI.dto.LabellingWorkHistory;
 import com.ajou.capstone_design_freitag.UI.dto.Project;
 import com.ajou.capstone_design_freitag.UI.dto.User;
@@ -275,13 +273,12 @@ public class RESTAPI {
         return false;
     }
 
-
     public boolean payment(String method) throws Exception {
         APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/" + method + "/payment");
         pointPayment.setHeader("Authorization",token);
         pointPayment.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
         pointPayment.request();
-        String result = null;
+        String result;
         result = pointPayment.getHeader().get("payment").get(0);
 
         if(result.equals("success")) {
@@ -291,12 +288,12 @@ public class RESTAPI {
         }
     }
 
-    public List<Project> projectList(String workType,String dataType,String subject, String difficulty)throws Exception  {
+    public List<Project> projectList(String workType,String dataType,String subject)throws Exception  {
      APICaller projectList = new APICaller("GET",baseURL+"/api/project/list");
      projectList.setQueryParameter("workType",workType);
      projectList.setQueryParameter("dataType",dataType);
      projectList.setQueryParameter("subject",subject);
-     projectList.setQueryParameter("difficulty",difficulty);
+     projectList.setQueryParameter("difficulty","-1");
      projectList.request();
      String result;
      List<Project> project_list = new ArrayList<>();
@@ -484,6 +481,20 @@ public class RESTAPI {
         return list;
     }
 
+    public String rankingAccuracy() throws Exception{
+        APICaller rankingAccuracy = new APICaller("GET",baseURL+"/api/ranking/accuracy");
+        String result;
+        String list;
+        rankingAccuracy.request();
+        result = rankingAccuracy.getHeader().get("ranking").get(0);
+
+        if(result.equals("fail")){
+            System.out.println("accuracy ranking fail");
+        }
+        list = rankingAccuracy.getBody();
+        return list;
+    }
+
     public String workHistory() throws Exception {
         APICaller workHistory = new APICaller("GET",baseURL+"/api/work/all");
         workHistory.setHeader("Authorization",token);
@@ -569,7 +580,7 @@ public class RESTAPI {
         return list;
     }
 
-    public Boolean boundingBoxWork(List<StringBuffer> coordinateList, String problemId, List<String> className) throws Exception {
+    public Boolean boundingBoxWork(String coordinateList, int problemId, String className) throws Exception {
         Map<String,String> headers = new HashMap<>();
         HttpURLConnection con;
 
@@ -579,16 +590,12 @@ public class RESTAPI {
         headers.put("projectId",Project.getProjectinstance().getProjectId());
 
         JSONObject jsonBody = new JSONObject();
-        for(int i=0;i<coordinateList.size();i++) {
-            jsonBody.put(className.get(i), coordinateList.get(i).toString());
-            System.out.println("파라미터에 넣어지는 클래스이름: "+className.get(i));
-            System.out.println("파라미터에 넣어지는 박스좌표:"+coordinateList.get(i).toString());
-        }
+            jsonBody.put(className, coordinateList);
 
         String url = baseURL+"/api/work/boundingbox";
 
         Map<String, String> queryParameters = new HashMap<>();
-        queryParameters.put("problemId",problemId);
+        queryParameters.put("problemId", Integer.toString(problemId));
         if(!queryParameters.isEmpty()) {
             Iterator<String> iterator = queryParameters.keySet().iterator();
             String key = iterator.next();
