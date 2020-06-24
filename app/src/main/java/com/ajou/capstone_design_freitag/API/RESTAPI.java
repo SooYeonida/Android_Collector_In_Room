@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -63,17 +65,34 @@ public class RESTAPI {
         return instance;
     }
 
+    public static String SHA256(String str){
+        String SHA = "";
+        try{
+            MessageDigest sh = MessageDigest.getInstance("SHA-256");
+            sh.update(str.getBytes());
+            byte byteData[] = sh.digest();
+            StringBuffer sb = new StringBuffer();
+            for(int i = 0 ; i < byteData.length ; i++){
+                sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+            }
+            SHA = sb.toString();
+        }catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+        return SHA;
+    }
+
     public int login(String userID, String userPassword) {
         APICaller login = new APICaller("POST", baseURL + "/api/login");
         login.setQueryParameter("userId", userID);
-        login.setQueryParameter("userPassword", userPassword);
+        login.setQueryParameter("userPassword", SHA256(userPassword));
         Map<String, List<String>> result;
         try {
             login.request();
             result = login.getHeader();
             if(result.get("login").get(0).equals("success")) {
                 User.getUserinstance().setUserID(userID);
-                User.getUserinstance().setUserPwd(userPassword);
+                User.getUserinstance().setUserPwd(SHA256(userPassword));
                 token = result.get("Authorization").get(0);
                 System.out.println(token);
                 if(result.get("reward") == null) {
@@ -93,7 +112,7 @@ public class RESTAPI {
     public int signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
         APICaller signup = new APICaller("POST", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
-        signup.setQueryParameter("userPassword", userPassword);
+        signup.setQueryParameter("userPassword", SHA256(userPassword));
         signup.setQueryParameter("userName", userName);
         signup.setQueryParameter("userPhone", userPhone);
         signup.setQueryParameter("userEmail", userEmail);
