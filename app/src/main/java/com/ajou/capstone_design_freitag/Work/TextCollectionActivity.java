@@ -1,18 +1,24 @@
 package com.ajou.capstone_design_freitag.Work;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -48,6 +54,8 @@ public class TextCollectionActivity extends AppCompatActivity {
 
     //파일 이름 뒤에 붙일 string 모
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    AppCompatDialog progressDialog;
 
     //view
     private TextView projectName;
@@ -229,6 +237,7 @@ public class TextCollectionActivity extends AppCompatActivity {
                 }
                 else {
                     upload_text_data(inputStreamList,fileNameList,classname);
+                    progressON(TextCollectionActivity.this,"Loading..");
                     Toast.makeText(context, "작업 완료",Toast.LENGTH_LONG).show();
                 }
             }
@@ -322,12 +331,14 @@ public class TextCollectionActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                progressOFF();
                 Toast.makeText(context, "수집 작업 텍스트 업로드 성공", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(context, PopupActivity.class);
                 intent.putExtra("type","text");
                 intent.putExtra("project", project);
                 startActivity(intent);
             } else {
+                progressOFF();
                 Toast.makeText(context, "수집 작업 텍스트 업로드 실패", Toast.LENGTH_LONG).show();
             }
         }
@@ -381,6 +392,60 @@ public class TextCollectionActivity extends AppCompatActivity {
         return imgName;
     }
 
+    public void progressON(Activity activity, String message) {
+
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressSET(message);
+        } else {
+
+            progressDialog = new AppCompatDialog(activity);
+            progressDialog.setCancelable(false);
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            progressDialog.setContentView(R.layout.layout_dialog);
+            progressDialog.show();
+
+        }
+
+
+        final ImageView img_loading_frame = (ImageView) progressDialog.findViewById(R.id.iv_frame_loading);
+        final AnimationDrawable frameAnimation = (AnimationDrawable) img_loading_frame.getBackground();
+        img_loading_frame.post(new Runnable() {
+            @Override
+            public void run() {
+                frameAnimation.start();
+            }
+        });
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+
+    }
+
+    public void progressSET(String message) {
+
+        if (progressDialog == null || !progressDialog.isShowing()) {
+            return;
+        }
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+    }
+
+    public void progressOFF() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
