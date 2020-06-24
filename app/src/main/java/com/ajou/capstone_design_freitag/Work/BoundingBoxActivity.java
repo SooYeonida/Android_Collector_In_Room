@@ -34,11 +34,10 @@ public class BoundingBoxActivity extends AppCompatActivity {
 
     private CustomViewPager viewPager;
     private BoundingBoxPagerAdapter pagerAdapter;
-    private static String preLabel;
-    private static String labelName;
-    private static String problemId;
-    private static List<StringBuffer> coordinate = new ArrayList<>();
-    private static List<String> classList = new ArrayList<>();
+    private String labelName;
+    private String problemId;
+    private List<StringBuffer> coordinate = new ArrayList<>();
+    private List<String> classList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class BoundingBoxActivity extends AppCompatActivity {
         getProblemTask.execute();
     }
 
-    static class GetProblemTask extends AsyncTask<Void, Void, String> {
+    private class GetProblemTask extends AsyncTask<Void, Void, String> {
         private WeakReference<BoundingBoxActivity> activityReference;
 
         ViewPager viewPager;
@@ -117,7 +116,7 @@ public class BoundingBoxActivity extends AppCompatActivity {
             });
         }
 
-        private static class BoundingBoxTask extends AsyncTask<Void,Void,Boolean>{
+        private class BoundingBoxTask extends AsyncTask<Void,Void,Boolean>{
             private WeakReference<BoundingBoxActivity> activityReference;
 
             @Override
@@ -125,6 +124,10 @@ public class BoundingBoxActivity extends AppCompatActivity {
                 Boolean result = null;
 
                 try {
+                    System.out.println("제출된 좌표:"+coordinate.toString());
+                    System.out.println("제출된 아이디:"+problemId);
+                    System.out.println("제출된 라벨:"+classList.toString());
+
                     result = RESTAPI.getInstance().boundingBoxWork(coordinate,problemId,classList);
                 } catch (Exception e) {
                     e.printStackTrace();

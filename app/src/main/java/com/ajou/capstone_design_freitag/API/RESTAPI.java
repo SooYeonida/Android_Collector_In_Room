@@ -75,6 +75,7 @@ public class RESTAPI {
                 User.getUserinstance().setUserID(userID);
                 User.getUserinstance().setUserPwd(userPassword);
                 token = result.get("Authorization").get(0);
+                System.out.println(token);
                 if(result.get("reward") == null) {
                     return LOGIN_SUCCESS;
                 } else {
@@ -580,6 +581,8 @@ public class RESTAPI {
         JSONObject jsonBody = new JSONObject();
         for(int i=0;i<coordinateList.size();i++) {
             jsonBody.put(className.get(i), coordinateList.get(i).toString());
+            System.out.println("파라미터에 넣어지는 클래스이름: "+className.get(i));
+            System.out.println("파라미터에 넣어지는 박스좌표:"+coordinateList.get(i).toString());
         }
 
         String url = baseURL+"/api/work/boundingbox";

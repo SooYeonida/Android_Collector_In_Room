@@ -142,6 +142,7 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //결제페이지로 이동.
 
             }
         });

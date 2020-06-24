@@ -70,9 +70,9 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
     static LinearLayout boundingBoxQuestionLayout;
 
     //답제출
-    static StringBuffer answer = new StringBuffer();
-    static List<String> problemId = new ArrayList<>();
-    static List<StringBuffer> classAnswers = new ArrayList<>();
+    StringBuffer answer;
+    List<String> problemId = new ArrayList<>();
+    List<StringBuffer> classAnswers = new ArrayList<>();
     static int currentPage;
 
     public ClassificationPagerAdapter(ClassificationActivity classificationActivity, List<ProblemWithClass> problemWithClassList){
@@ -133,6 +133,7 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
                         @Override
                         public void onClick(View v) {
                             currentPage = position;
+                            answer = new StringBuffer();
                             answer.append(radioButton.getText().toString());
                         }
                     });
@@ -261,11 +262,8 @@ public void uploadUserAnswer(StringBuffer answer) {
             problemId.remove(Integer.toString(problemList.get(currentPage -1).getProblem().getProblemId()));
             classAnswers.remove(currentPage -1);
         }
-    System.out.println("현재페이지: "+currentPage);
-    System.out.println("등록되는 답: "+answer.toString());
     classAnswers.add(answer);
-    answer.delete(0,answer.length());
-    System.out.println("아이디: "+problemList.get(currentPage -1).getProblem().getProblemId());
+    System.out.println("현재까지 classAnswer: "+classAnswers.toString());
     problemId.add(Integer.toString(problemList.get(currentPage -1).getProblem().getProblemId()));
     Toast.makeText(mContext, "작업 등록 성공", Toast.LENGTH_LONG).show();
 }
@@ -275,11 +273,13 @@ public void classificationWorkDone(){
     classificationTask.execute();
 }
 
-private static class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
+private class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
     @Override
     protected Boolean doInBackground(Void... voids) {
         Boolean result = null;
         try {
+            System.out.println("분류 답:"+classAnswers.toString());
+            System.out.println("분류 문제아이디: "+problemId.toString());
             result = RESTAPI.getInstance().classificationWork(classAnswers,problemId);
         } catch (IOException e) {
             e.printStackTrace();
@@ -307,7 +307,7 @@ private static class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
         downloadDataTask.execute(problemList.get(position-1).getProblem().getBucketName(),problemList.get(position-1).getProblem().getObjectName(),outputStream,dataType,position);
     }
 
-    private static class DownloadDataTask extends AsyncTask<Object, Void, Boolean>{
+    private class DownloadDataTask extends AsyncTask<Object, Void, Boolean>{
         String dataType;
         int position;
         protected Boolean doInBackground(Object... dataInfos) {
@@ -418,6 +418,7 @@ private static class ClassificationTask extends AsyncTask<Void,Void,Boolean>{
                             @Override
                             public void onClick(View v) {
                                 currentPage = position;
+                                answer = new StringBuffer();
                                 answer.append(boxId.getText().toString());
                                 answer.append(" ");
                             }

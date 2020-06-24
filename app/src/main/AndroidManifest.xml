@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".UI.mypage.CheckValidatedDataActivity"></activity>
+        <activity android:name=".UI.mypage.FinalPaymentActivity"></activity>
+        <activity android:name=".UI.mypage.CheckValidatedDataActivity" />
         <activity android:name=".Work.BoundingBoxActivity" />
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
         <activity android:name=".WebViewActivity" />
