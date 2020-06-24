@@ -440,10 +440,12 @@ public class RESTAPI {
         HttpClient httpClient = new DefaultHttpClient();
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
         for(int i = 0; i < inputStreams.size(); i++) {
             System.out.println("filename:"+ fileNames.get(i));
             builder.addBinaryBody("files", inputStreams.get(i), ContentType.create(contentType), UrlEscapers.urlFragmentEscaper().escape(fileNames.get(i)));
         }
+        builder.addTextBody("className",classname);
         HttpPost httpPost = new HttpPost(baseURL + "/api/work/collection");
         httpPost.setHeader("Authorization", token);
         httpPost.setHeader("bucketName", Project.getProjectinstance().getBucketName());
