@@ -25,7 +25,7 @@ public class User {
     private int visit;
     private String totalPoint;
     private int point;
-    private int accuracy;
+    private double accuracy;
     private String level;
     private int bank;
 
@@ -116,11 +116,11 @@ public class User {
         this.point = point;
     }
 
-    public int getAccuracy() {
+    public double getAccuracy() {
         return accuracy;
     }
 
-    public void setAccuracy(int accuracy) {
+    public void setAccuracy(double accuracy) {
         this.accuracy = accuracy;
     }
 

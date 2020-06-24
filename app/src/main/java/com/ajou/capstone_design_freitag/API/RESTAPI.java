@@ -1,7 +1,5 @@
 package com.ajou.capstone_design_freitag.API;
 
-import android.widget.BaseAdapter;
-
 import com.ajou.capstone_design_freitag.UI.dto.LabellingWorkHistory;
 import com.ajou.capstone_design_freitag.UI.dto.Project;
 import com.ajou.capstone_design_freitag.UI.dto.User;
@@ -44,9 +42,9 @@ public class RESTAPI {
     public static final int REGISTER_VALIDATION_FAIL = 1;
     public static final int REGISTER_FAIL = 2;
 
-    public static final int PAYMENT_SUCCESS = 0;
-    public static final int PAYMENT_NOT_REGISTERED_ACCOUNT_FAIL = 1;
-    public static final int PAYMENT_FAIL = 2;
+    public static final int TRANSACTION_SUCCESS = 0;
+    public static final int TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL = 1;
+    public static final int TRANSACTION_FAIL = 2;
 
     private static final String clientID = "R9zNr3OIJNyJfj8pbMnBATU9OF6RtGb7Ih63xAdq";
     private static RESTAPI instance = null;
@@ -175,6 +173,10 @@ public class RESTAPI {
         User.getUserinstance().setAffiliation(user.getAffiliation());
         user.setUserID(jsonObject.getString("username"));
         User.getUserinstance().setUserID(user.getUserID());
+        user.setPoint(jsonObject.getInt("userPoint"));
+        User.getUserinstance().setPoint(user.getPoint());
+        user.setAccuracy(jsonObject.getDouble("userAccuracy"));
+        User.getUserinstance().setAccuracy(user.getAccuracy());
         //level임의로
         user.setLevel("starter");
 
@@ -308,14 +310,14 @@ public class RESTAPI {
         result = pointPayment.getHeader().get("payment").get(0);
 
         if(result.equals("success")) {
-            return PAYMENT_SUCCESS;
+            return TRANSACTION_SUCCESS;
         } else {
             try {
                 state = pointPayment.getHeader().get("state").get(0);
-                return PAYMENT_NOT_REGISTERED_ACCOUNT_FAIL;
+                return TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL;
             } catch (Exception e) {
                 e.printStackTrace();
-                return PAYMENT_FAIL;
+                return TRANSACTION_FAIL;
             }
         }
     }
@@ -680,9 +682,9 @@ public class RESTAPI {
         result = terminatePoint.getHeader().get("payment").get(0);
         if(result.equals("fail")){
             System.out.println("terminate project fail");
-            return PAYMENT_FAIL;
+            return TRANSACTION_FAIL;
         }
-        return PAYMENT_SUCCESS;
+        return TRANSACTION_SUCCESS;
     }
 
     public int terminateAccount(String projectId) throws Exception {
@@ -696,13 +698,33 @@ public class RESTAPI {
             System.out.println("account payment fail");
             try {
                 state = terminateAccount.getHeader().get("state").get(0);
-                return PAYMENT_NOT_REGISTERED_ACCOUNT_FAIL;
+                return TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL;
             } catch (Exception e) {
                 e.printStackTrace();
-                return PAYMENT_FAIL;
+                return TRANSACTION_FAIL;
             }
         }
-        return PAYMENT_SUCCESS;
+        return TRANSACTION_SUCCESS;
     }
 
+    public Integer exchange(int amount) throws Exception {
+        APICaller pointExchange  = new APICaller("PUT",baseURL+"/api/mypage/exchange");
+        pointExchange.setHeader("Authorization",token);
+        pointExchange.setHeader("amount", String.valueOf(amount));
+        pointExchange.request();
+        String result = null;
+        result = pointExchange.getHeader().get("exchange").get(0);
+
+        if(result.equals("success")) {
+            return TRANSACTION_SUCCESS;
+        } else {
+            try {
+                state = pointExchange.getHeader().get("state").get(0);
+                return TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return TRANSACTION_FAIL;
+            }
+        }
+    }
 }

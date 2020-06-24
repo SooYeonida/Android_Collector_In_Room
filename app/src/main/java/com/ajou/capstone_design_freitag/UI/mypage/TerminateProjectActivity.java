@@ -150,7 +150,7 @@ public class TerminateProjectActivity extends AppCompatActivity {
                 return;
             }
 
-            if(result == RESTAPI.PAYMENT_SUCCESS) {
+            if(result == RESTAPI.TRANSACTION_SUCCESS) {
                 Toast.makeText(activity, "프로젝트가 성공적으로 종료되었습니다.", Toast.LENGTH_LONG).show();
                 activity.setResult(RESULT_OK);
                 activity.finish();
@@ -188,13 +188,13 @@ public class TerminateProjectActivity extends AppCompatActivity {
                 return;
             }
 
-            if(result == RESTAPI.PAYMENT_SUCCESS) {
+            if(result == RESTAPI.TRANSACTION_SUCCESS) {
                 Toast.makeText(activity, "프로젝트가 성공적으로 종료되었습니다.", Toast.LENGTH_LONG).show();
                 activity.setResult(RESULT_OK);
                 activity.finish();
-            } else if(result == RESTAPI.PAYMENT_FAIL) {
+            } else if(result == RESTAPI.TRANSACTION_FAIL) {
                 Toast.makeText(activity, "프로젝트 종료가 실패했습니다.", Toast.LENGTH_LONG).show();
-            } else if(result == RESTAPI.PAYMENT_NOT_REGISTERED_ACCOUNT_FAIL) {
+            } else if(result == RESTAPI.TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL) {
                 Toast.makeText(activity, "계좌등록이 필요합니다.", Toast.LENGTH_LONG).show();
                 String url = RESTAPI.getInstance().getRegisterOpenBankingURL();
                 Intent intent = new Intent(activity.getApplicationContext(), WebViewActivity.class);

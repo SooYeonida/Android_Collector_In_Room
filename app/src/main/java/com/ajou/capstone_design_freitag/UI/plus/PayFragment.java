@@ -108,12 +108,12 @@ public class PayFragment extends Fragment {
                 return;
             }
 
-            if(result == RESTAPI.PAYMENT_SUCCESS) {
+            if(result == RESTAPI.TRANSACTION_SUCCESS) {
                 ((MainActivity)fragment.getActivity()).goToHome();
                 Toast.makeText(fragment.getActivity(), "결제 성공", Toast.LENGTH_SHORT).show();
-            } else if(result == RESTAPI.PAYMENT_FAIL) {
+            } else if(result == RESTAPI.TRANSACTION_FAIL) {
                 Toast.makeText(fragment.getActivity(), "결제에 실패했습니다. 다른 결제 수단을 선택해주세요.", Toast.LENGTH_SHORT).show();
-            } else if(result == RESTAPI.PAYMENT_NOT_REGISTERED_ACCOUNT_FAIL) {
+            } else if(result == RESTAPI.TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL) {
                 Toast.makeText(fragment.getContext(), "계좌등록이 필요합니다.", Toast.LENGTH_LONG).show();
                 String url = RESTAPI.getInstance().getRegisterOpenBankingURL();
                 Intent intent = new Intent(fragment.getContext(), WebViewActivity.class);

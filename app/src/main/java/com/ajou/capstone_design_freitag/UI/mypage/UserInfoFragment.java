@@ -1,4 +1,5 @@
 package com.ajou.capstone_design_freitag.UI.mypage;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -17,7 +18,10 @@ import com.ajou.capstone_design_freitag.UI.dto.User;
 
 import org.json.JSONException;
 
+import static android.app.Activity.RESULT_OK;
+
 public class UserInfoFragment extends Fragment {
+    private static final int POINT_EXCHANGE_REQUEST_CODE = 100;
 
     Button update;
     Button exchange;
@@ -80,7 +84,7 @@ public class UserInfoFragment extends Fragment {
                 userPhoneNumber.setText(user.getPhonenumber());
                 userAffiliation.setText(user.getAffiliation());
                 userLevel.setText(user.getLevel());
-                userPoint.setText("0"); //포인트 안받아와서 일단은 이렇게 해놓음
+                userPoint.setText(String.valueOf(user.getPoint())); //포인트 안받아와서 일단은 이렇게 해놓음
             }
 
         };
@@ -94,7 +98,19 @@ public class UserInfoFragment extends Fragment {
     }
 
     public void exchangePoint(View view){
+        Intent intent = new Intent(this.getContext(), PointExchaneActivity.class);
+        intent.putExtra("point", Integer.parseInt(userPoint.getText().toString()));
+        startActivityForResult(intent, POINT_EXCHANGE_REQUEST_CODE);
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == POINT_EXCHANGE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                getMyPage(null);
+            }
+        }
     }
 
 }
