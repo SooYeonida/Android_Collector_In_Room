@@ -139,6 +139,11 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
 
         Button end;
         end = findViewById(R.id.work_end);
+        if(project.getStatus().equals("진행중") || project.getStatus().equals("검증대기") || project.getStatus().equals("검증완료")) {
+            end.setVisibility(View.VISIBLE);
+        } else {
+            end.setVisibility(View.GONE);
+        }
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
