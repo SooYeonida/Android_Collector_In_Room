@@ -4,27 +4,38 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
+import com.ajou.capstone_design_freitag.UI.dto.BoundingBoxDto;
 import com.ajou.capstone_design_freitag.UI.dto.ClassDto;
 import com.ajou.capstone_design_freitag.UI.dto.Problem;
 import com.ajou.capstone_design_freitag.UI.dto.ProblemWithClass;
 import com.ajou.capstone_design_freitag.UI.dto.Project;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BoundingBoxActivity extends AppCompatActivity {
 
@@ -34,10 +45,19 @@ public class BoundingBoxActivity extends AppCompatActivity {
 
     private CustomViewPager viewPager;
     private BoundingBoxPagerAdapter pagerAdapter;
-    private String labelName;
-    private String problemId;
-    private List<StringBuffer> coordinate = new ArrayList<>();
-    private List<String> classList = new ArrayList<>();
+
+    private String label = null;
+    private int problemId;
+    private List<BoundingBoxDto> finalAnswer = new ArrayList<>();
+    private String coordinate = null;
+
+    String file_extension;
+    static File file;
+    OutputStream outputStream;
+
+    List<Bitmap> bitmapList = new ArrayList<>();
+    List<Problem> problemList = new ArrayList<>();
+    Map<Integer,Uri> positionUri = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +65,10 @@ public class BoundingBoxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bounding_box);
         Intent intent = getIntent();
         project = intent.getParcelableExtra("project");
+        Problem problem = new Problem();
+        problem.setBucketName(project.getBucketName());
+        problem.setObjectName(project.getExampleContent());
+        problemList.add(problem);
         Project.getProjectinstance().setBucketName(project.getBucketName());
         Project.getProjectinstance().setProjectId(project.getProjectId());
         viewPager = (CustomViewPager) findViewById(R.id.viewPager);
@@ -54,11 +78,11 @@ public class BoundingBoxActivity extends AppCompatActivity {
     public void getProblem() {
         BoundingBoxActivity.GetProblemTask getProblemTask = new BoundingBoxActivity.GetProblemTask(this);
         getProblemTask.execute();
+
     }
 
-    private class GetProblemTask extends AsyncTask<Void, Void, String> {
+    private class GetProblemTask extends AsyncTask<Void, Void, Boolean> {
         private WeakReference<BoundingBoxActivity> activityReference;
-
         ViewPager viewPager;
         BoundingBoxPagerAdapter pagerAdapter;
         List<ProblemWithClass> problemWithClassList;
@@ -71,109 +95,77 @@ public class BoundingBoxActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(Void... info) {
-            String result;
+        protected Boolean doInBackground(Void... params) {
             try {
-                result = RESTAPI.getInstance().getBoundingBoxProblems();
-                System.out.println("바운딩박스 문제: " + result);
-                return result;
+                if(problemJsonParse(getBoundingBoxProblems())) {
+                    if (problemWithClassList.size() == 5) {
+                        System.out.println("json parse pass");
+                        if (getResult(project.getBucketName(), project.getExampleContent(),0)) {
+                            InputStream inputStream = new FileInputStream(file);
+                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                            bitmapList.add(bitmap);
+                            System.out.println("example pass");
+                            for (int i = 0; i < problemWithClassList.size(); i++) {
+                                if (getResult(problemWithClassList.get(i).getProblem().getBucketName(), problemWithClassList.get(i).getProblem().getObjectName(),i+1)) {
+                                    InputStream inputStream2 = new FileInputStream(file);
+                                    positionUri.put(i+1, Uri.fromFile(file));
+                                    Bitmap bitmap2 = BitmapFactory.decodeStream(inputStream2);
+                                    bitmapList.add(bitmap2);
+                                }
+                            }
+                            return true;
+                        }
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            return false;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            try {
-                jsonParse(result);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+        protected void onPostExecute(Boolean result) {
             final BoundingBoxActivity activity = getActivity();
             if (activity == null) {
                 return;
             }
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    pagerAdapter = new BoundingBoxPagerAdapter(activity, problemWithClassList, project, new BoundingBoxPagerAdapter.OnRadioCheckedChanged() {
+                    pagerAdapter = new BoundingBoxPagerAdapter(activity, problemWithClassList,bitmapList, project,positionUri, new BoundingBoxPagerAdapter.OnRadioCheckedChanged() {
                         @Override
-                        public void onRadioCheckedChanged(String label,int problem) {
-                            labelName = label;
-                            problemId = Integer.toString(problem);
+                        public void onRadioCheckedChanged(String labelName,int problem) {
+                            label = labelName;
+                            System.out.println("label:"+label);
+                            problemId = problem;
                         }
                     }, new BoundingBoxPagerAdapter.RegisterListener() {
                         @Override
                         public void clickBtn() {
-                            BoundingBoxTask boundingBoxTask = new BoundingBoxTask(getActivity());
+                            //완료버튼 눌렀을 경우
+                            BoundingBoxTask boundingBoxTask = new BoundingBoxTask();
                             boundingBoxTask.execute();
                         }
                     });
                     viewPager.setAdapter(pagerAdapter);
-                }
-            });
         }
 
-        private class BoundingBoxTask extends AsyncTask<Void,Void,Boolean>{
-            private WeakReference<BoundingBoxActivity> activityReference;
-
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                Boolean result = null;
-
-                try {
-                    System.out.println("제출된 좌표:"+coordinate.toString());
-                    System.out.println("제출된 아이디:"+problemId);
-                    System.out.println("제출된 라벨:"+classList.toString());
-
-                    result = RESTAPI.getInstance().boundingBoxWork(coordinate,problemId,classList);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return result;
+        private Boolean getResult(String bucketName,String objectName,int position) {
+            file_extension = FilenameUtils.getExtension(objectName);
+            file = new File("/data/data/com.ajou.capstone_design_freitag/files/project_classification"+position+"." + file_extension);
+            try {
+                outputStream = new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
-            public BoundingBoxTask(BoundingBoxActivity context) {
-                activityReference = new WeakReference<>(context);
-            }
-
-            BoundingBoxActivity getActivity() {
-                BoundingBoxActivity activity = activityReference.get();
-                if (activity == null || activity.isFinishing()) {
-                    return null;
-                }
-                return activity;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result){
-                final BoundingBoxActivity activity = getActivity();
-                if(result !=true){
-                   activity.runOnUiThread(new Runnable()
-                    {
-                        public void run()
-                        {
-                            Toast.makeText(activity, "바운딩박스 작업 실패", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-                else{
-                    activity.runOnUiThread(new Runnable()
-                    {
-                        public void run()
-                        {
-                            Toast.makeText(activity, "바운딩박스 작업 성공", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-                classList.clear();
-                coordinate.clear();
-            }
+            return RESTAPI.getInstance().downloadObject(bucketName,objectName,outputStream);
         }
 
-        public void jsonParse(String list) throws JSONException {
+
+        private String getBoundingBoxProblems() throws Exception {
+            String result = RESTAPI.getInstance().getBoundingBoxProblems();
+            System.out.println("바운딩 문제: "+result);
+            return result;
+        }
+
+        public boolean problemJsonParse(String list) throws JSONException {
             JSONArray jsonArray = new JSONArray(list);
             for (int i = 0; i < jsonArray.length(); i++) {
                 ProblemWithClass problemWithClass = new ProblemWithClass();
@@ -206,6 +198,7 @@ public class BoundingBoxActivity extends AppCompatActivity {
 
                 problemWithClassList.add(problemWithClass);
             }
+            return true;
         }
 
         private BoundingBoxActivity getActivity() {
@@ -215,14 +208,45 @@ public class BoundingBoxActivity extends AppCompatActivity {
             }
             return activity;
         }
+
     }
+
+    private class BoundingBoxTask extends AsyncTask<Void,Void,Boolean>{
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Boolean result = null;
+
+            try {
+                for(int i=0;i<finalAnswer.size();i++) {
+                    result = RESTAPI.getInstance().boundingBoxWork(finalAnswer.get(i).getCoordinates(),finalAnswer.get(i).getProblemId(),finalAnswer.get(i).getClassName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result){
+            if(result !=true){
+                System.out.println("바운딩 작업 실패");
+            }
+            else{
+                System.out.println("바운딩 작업 성공");
+                finish();
+            }
+        }
+    }
+
 
     public void mOnClick(View v) {
         int position;
         switch (v.getId()) {
             case R.id.btn_previous://이전버튼 클릭
                 position = viewPager.getCurrentItem();//현재 보여지는 아이템의 위치를 리턴
-                viewPager.setCurrentItem(position - 1, true);
+                //viewPager.setCurrentItem(position - 1, true);
                 break;
             case R.id.btn_next://다음버튼 클릭
                 position = viewPager.getCurrentItem();//현재 보여지는 아이템의 위치를 리턴
@@ -233,33 +257,23 @@ public class BoundingBoxActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // handle result of CropImageActivity
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                // ((ImageView) findViewById(R.id.quick_start_cropped_image)).setImageURI(result.getUri());
-                Toast.makeText(
-                        this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG)
-                        .show();
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
-            }
-        } else if (requestCode == CropImage.BOUNDING_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CropImage.BOUNDING_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 float[] result = data.getFloatArrayExtra("rect");
                 StringBuffer stringBuffer = new StringBuffer();
-                stringBuffer.append(result[0]);
+                stringBuffer.append(result[0]/800);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[1]);
+                stringBuffer.append(result[1]/600);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[4]);
+                stringBuffer.append(result[4]/800);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[5]);
-
-                    classList.add(labelName);
-                    coordinate.add(stringBuffer);
-
+                stringBuffer.append(result[5]/600);
+                BoundingBoxDto boundingBoxDto = new BoundingBoxDto();
+                boundingBoxDto.setClassName(label);
+                boundingBoxDto.setProblemId(problemId);
+                boundingBoxDto.setCoordinates(stringBuffer.toString());
+                finalAnswer.add(boundingBoxDto);
             }
         }
     }
