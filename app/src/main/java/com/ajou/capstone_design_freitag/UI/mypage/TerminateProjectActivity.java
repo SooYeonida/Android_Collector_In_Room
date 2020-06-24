@@ -184,6 +184,10 @@ public class TerminateProjectActivity extends AppCompatActivity {
                 return;
             }
 
+            if(result == null){
+                return;
+            }
+
             if(result == RESTAPI.PAYMENT_SUCCESS) {
                 Toast.makeText(activity, "프로젝트가 성공적으로 종료되었습니다.", Toast.LENGTH_LONG).show();
                 activity.setResult(RESULT_OK);

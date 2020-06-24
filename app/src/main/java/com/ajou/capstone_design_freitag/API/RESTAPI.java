@@ -299,7 +299,7 @@ public class RESTAPI {
     }
 
 
-    public boolean payment(String method) throws Exception {
+    public int payment(String method) throws Exception {
         APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/" + method + "/payment");
         pointPayment.setHeader("Authorization",token);
         pointPayment.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
@@ -308,9 +308,15 @@ public class RESTAPI {
         result = pointPayment.getHeader().get("payment").get(0);
 
         if(result.equals("success")) {
-            return true;
+            return PAYMENT_SUCCESS;
         } else {
-            return false;
+            try {
+                state = pointPayment.getHeader().get("state").get(0);
+                return PAYMENT_NOT_REGISTERED_ACCOUNT_FAIL;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return PAYMENT_FAIL;
+            }
         }
     }
 
