@@ -142,8 +142,9 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //결제페이지로 이동.
-
+                Intent intent = new Intent(getApplicationContext(), TerminateProjectActivity.class);
+                intent.putExtra("project",project);
+                startActivity(intent);
             }
         });
 
@@ -152,7 +153,7 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
         validatedDataDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CheckValidatedDataActivity .class);
+                Intent intent = new Intent(getApplicationContext(), CheckValidatedDataActivity.class);
                 intent.putExtra("project",project);
                 startActivity(intent);
             }

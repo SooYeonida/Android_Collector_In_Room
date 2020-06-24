@@ -647,28 +647,27 @@ public class RESTAPI {
         return list;
     }
 
-    public String terminateProject() throws Exception {
+    public Integer terminateProject(String projectId) throws Exception {
         APICaller terminateProject = new APICaller("GET",baseURL+"/api/project/terminate");
         terminateProject.setHeader("Authorization",token);
-        terminateProject.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminateProject.setQueryParameter("projectId",projectId);
         terminateProject.request();
-        String finalCost;
         String result;
-        finalCost = terminateProject.getHeader().get("finalCost").get(0);
         result = terminateProject.getHeader().get("project").get(0);
         if(result.equals("fail")){
             System.out.println("terminate project fail");
         }
-        return finalCost;
+        String finalCost = terminateProject.getHeader().get("finalCost").get(0);
+        return Integer.parseInt(finalCost);
     }
 
-    public Boolean terminatePoint() throws Exception {
+    public boolean terminatePoint(String projectId) throws Exception {
         APICaller terminatePoint = new APICaller("GET",baseURL+"/api/project/terminate/point");
         terminatePoint.setHeader("Authorization",token);
-        terminatePoint.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminatePoint.setQueryParameter("projectId",projectId);
         terminatePoint.request();
         String result;
-        result = terminatePoint.getHeader().get("project").get(0);
+        result = terminatePoint.getHeader().get("payment").get(0);
         if(result.equals("fail")){
             System.out.println("terminate project fail");
             return false;
@@ -676,10 +675,10 @@ public class RESTAPI {
         return true;
     }
 
-    public Boolean terminateAccount() throws Exception {
+    public boolean terminateAccount(String projectId) throws Exception {
         APICaller terminateAccount = new APICaller("GET",baseURL+"/api/project/terminate/account");
         terminateAccount.setHeader("Authorization",token);
-        terminateAccount.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminateAccount.setQueryParameter("projectId",projectId);
         terminateAccount.request();
         String result;
         result = terminateAccount.getHeader().get("payment").get(0);
