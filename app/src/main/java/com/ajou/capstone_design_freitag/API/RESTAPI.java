@@ -44,6 +44,10 @@ public class RESTAPI {
     public static final int REGISTER_VALIDATION_FAIL = 1;
     public static final int REGISTER_FAIL = 2;
 
+    public static final int PAYMENT_SUCCESS = 0;
+    public static final int PAYMENT_NOT_REGISTERED_ACCOUNT_FAIL = 1;
+    public static final int PAYMENT_FAIL = 2;
+
     private static final String clientID = "R9zNr3OIJNyJfj8pbMnBATU9OF6RtGb7Ih63xAdq";
     private static RESTAPI instance = null;
     private String baseURL = "http://10.0.2.2:8080";
@@ -661,7 +665,7 @@ public class RESTAPI {
         return Integer.parseInt(finalCost);
     }
 
-    public boolean terminatePoint(String projectId) throws Exception {
+    public int terminatePoint(String projectId) throws Exception {
         APICaller terminatePoint = new APICaller("GET",baseURL+"/api/project/terminate/point");
         terminatePoint.setHeader("Authorization",token);
         terminatePoint.setQueryParameter("projectId",projectId);
@@ -670,12 +674,12 @@ public class RESTAPI {
         result = terminatePoint.getHeader().get("payment").get(0);
         if(result.equals("fail")){
             System.out.println("terminate project fail");
-            return false;
+            return PAYMENT_FAIL;
         }
-        return true;
+        return PAYMENT_SUCCESS;
     }
 
-    public boolean terminateAccount(String projectId) throws Exception {
+    public int terminateAccount(String projectId) throws Exception {
         APICaller terminateAccount = new APICaller("GET",baseURL+"/api/project/terminate/account");
         terminateAccount.setHeader("Authorization",token);
         terminateAccount.setQueryParameter("projectId",projectId);
@@ -684,9 +688,15 @@ public class RESTAPI {
         result = terminateAccount.getHeader().get("payment").get(0);
         if(result.equals("fail")){
             System.out.println("account payment fail");
-            return false;
+            try {
+                state = terminateAccount.getHeader().get("state").get(0);
+                return PAYMENT_NOT_REGISTERED_ACCOUNT_FAIL;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return PAYMENT_FAIL;
+            }
         }
-        return true;
+        return PAYMENT_SUCCESS;
     }
 
 }
