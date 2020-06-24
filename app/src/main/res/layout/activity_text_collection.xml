@@ -283,19 +283,6 @@ android:layout_height="match_parent" tools:context=".Work.TextCollectionActivity
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical">
-        <LinearLayout
-            android:id="@+id/quesiton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/answer">
-        </LinearLayout>
 
     </LinearLayout>
 

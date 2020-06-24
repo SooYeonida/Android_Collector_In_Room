@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="*바운딩박스 문제마다 작업 결과를 등록해야 작업이 완료됩니다."
+            android:text="*다음 페이지로 넘어가면 수정할 수 없습니다. 신중히 답해주세요*"
             android:textColor="#F2F34D4D"
             android:fontFamily="@font/jejugothic"
             android:layout_marginTop="20dp"/>
@@ -119,15 +119,7 @@
             android:layout_height="50dp"
             android:src="@drawable/boundingbox2"
             android:layout_gravity="center"/>
-        <Button
-            android:id="@+id/boundingbox_upload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="#8028ADFC"
-            android:text="작업 결과 등록"
-            android:fontFamily="@font/tmonmonsori"/>
+
         <Button
             android:id="@+id/boundingbox_done"
             android:layout_width="wrap_content"

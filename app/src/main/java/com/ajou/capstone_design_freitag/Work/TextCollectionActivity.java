@@ -52,7 +52,6 @@ public class TextCollectionActivity extends AppCompatActivity {
 
     private static final int COLLECTION_TEXT_REQUEST_CODE = 100;
 
-    //파일 이름 뒤에 붙일 string 모
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     AppCompatDialog progressDialog;
@@ -169,6 +168,7 @@ public class TextCollectionActivity extends AppCompatActivity {
                 classCheck = false;
                 selectFile.setVisibility(View.VISIBLE);
                 selectUser.setVisibility(View.GONE);
+                setLayout.setVisibility(View.GONE);
             }
         });
 
@@ -178,6 +178,7 @@ public class TextCollectionActivity extends AppCompatActivity {
                 classCheck = true;
                 selectFile.setVisibility(View.GONE);
                 selectUser.setVisibility(View.VISIBLE);
+                setLayout.setVisibility(View.VISIBLE);
             }
         });
 

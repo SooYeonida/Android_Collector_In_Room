@@ -1,19 +1,24 @@
 package com.ajou.capstone_design_freitag.UI.plus;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,6 +128,8 @@ public class ProjectMakeFragment extends Fragment {
     int editTextNum=0;
     private List<EditText> questionList = new ArrayList<>();
     private List<EditText> answerList = new ArrayList<>();
+
+    static AppCompatDialog progressDialog;
 
     public static ProjectMakeFragment newInstance(String worktype) {
         ProjectMakeFragment fragment = new ProjectMakeFragment();
@@ -401,6 +408,7 @@ public class ProjectMakeFragment extends Fragment {
     private void makeProject(View view){
         MakeProjectTask makeProjectTask = new MakeProjectTask(this);
         makeProjectTask.execute();
+        progressON(getActivity(),"Loading..");
     }
 
     private void createNewClass(View view) { //프로젝트 생성할때 클래스 입력
@@ -612,6 +620,7 @@ public class ProjectMakeFragment extends Fragment {
                         System.out.println("create class pass");
                         if(sendExampleData()) {
                             System.out.println("upload example data pass");
+                            progressOFF();
                             if(worktype.equals("labelling")) {
                                 if(sendLabellingData()) {
                                     System.out.println("upload labelling datas pass");
@@ -777,6 +786,61 @@ public class ProjectMakeFragment extends Fragment {
                 return null;
             }
             return fragment;
+        }
+    }
+
+    public void progressON(Activity activity, String message) {
+
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressSET(message);
+        } else {
+
+            progressDialog = new AppCompatDialog(activity);
+            progressDialog.setCancelable(false);
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            progressDialog.setContentView(R.layout.layout_dialog);
+            progressDialog.show();
+
+        }
+
+
+        final ImageView img_loading_frame = (ImageView) progressDialog.findViewById(R.id.iv_frame_loading);
+        final AnimationDrawable frameAnimation = (AnimationDrawable) img_loading_frame.getBackground();
+        img_loading_frame.post(new Runnable() {
+            @Override
+            public void run() {
+                frameAnimation.start();
+            }
+        });
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+
+    }
+
+    public void progressSET(String message) {
+
+        if (progressDialog == null || !progressDialog.isShowing()) {
+            return;
+        }
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+    }
+
+    public static void progressOFF() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
     }
 }
