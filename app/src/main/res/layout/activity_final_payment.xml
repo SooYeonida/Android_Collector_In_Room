@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.mypage.FinalPaymentActivity"
     android:orientation="vertical">
 
     <LinearLayout
@@ -76,4 +75,14 @@
         android:background="@drawable/pay_account"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"/>
+
+    <Button
+        android:id="@+id/final_payment_free_terminate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="프로젝트 종료"
+        android:visibility="gone" />
+
 </LinearLayout>

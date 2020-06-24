@@ -3,6 +3,7 @@ package com.ajou.capstone_design_freitag.UI.mypage;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,16 +27,15 @@ public class TerminateProjectActivity extends AppCompatActivity {
     private TextView finalPaymentPayOrRefund;
     private Button finalPaymentByPoint;
     private Button finalPaymentByAccount;
+    private Button finalPaymentFreeTerminate;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_final_payment);
 
-        setContentView(R.layout.activity_check_validated_data);
         Intent intent = getIntent();
         project = intent.getParcelableExtra("project");
-
-        setContentView(R.layout.activity_final_payment);
 
         finalPaymentProjectName = findViewById(R.id.final_payment_project_name);
         finalPaymentIfTerminate = findViewById(R.id.final_payment_if_terminate);
@@ -54,6 +54,11 @@ public class TerminateProjectActivity extends AppCompatActivity {
         finalPaymentByAccount.setOnClickListener(view -> {
             AccountPaymentTask accountPaymentTask = new AccountPaymentTask(this);
             accountPaymentTask.execute();
+        });
+        finalPaymentFreeTerminate = findViewById(R.id.final_payment_free_terminate);
+        finalPaymentFreeTerminate.setOnClickListener(view -> {
+            PointPaymentTask pointPaymentTask = new PointPaymentTask(this);
+            pointPaymentTask.execute();
         });
     }
 
@@ -111,16 +116,26 @@ public class TerminateProjectActivity extends AppCompatActivity {
                 TextView finalPaymentIfTerminate = activity.finalPaymentIfTerminate;
                 TextView finalPaymentCost = activity.finalPaymentCost;
                 TextView finalPaymentPayOrRefund = activity.finalPaymentPayOrRefund;
+                Button finalPaymentByPoint = activity.finalPaymentByPoint;
+                Button finalPaymentByAccount = activity.finalPaymentByAccount;
+                Button finalPaymentFreeTerminate = activity.finalPaymentFreeTerminate;
 
                 finalPaymentProjectName.setText(project.getProjectName());
-                if(result >= 0) {
+                if(result > 0) {
                     finalPaymentIfTerminate.setText("를 종료하려면");
                     finalPaymentCost.setText(result + "원");
                     finalPaymentPayOrRefund.setText("을 추가로 결제해야 합니다.");
-                } else {
+                } else if(result < 0) {
                     finalPaymentIfTerminate.setText("를 종료하면");
                     finalPaymentCost.setText(-result + "원");
                     finalPaymentPayOrRefund.setText("이 환급됩니다.");
+                } else {
+                    finalPaymentIfTerminate.setText("은");
+                    finalPaymentCost.setText("추가비용 없이");
+                    finalPaymentPayOrRefund.setText("종료할 수 있습니다.");
+                    finalPaymentByPoint.setVisibility(View.GONE);
+                    finalPaymentByAccount.setVisibility(View.GONE);
+                    finalPaymentFreeTerminate.setVisibility(View.VISIBLE);
                 }
             }
         }
