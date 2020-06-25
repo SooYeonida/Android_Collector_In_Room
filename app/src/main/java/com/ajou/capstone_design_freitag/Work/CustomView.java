@@ -16,12 +16,24 @@ public class CustomView extends View{
     private List<String> rect;
     private List<String> label;
     Bitmap myBitmap;
+    boolean isVertical;
+    int width;
+    int height;
 
     public void setLabel(List<String> label) {
         this.label = label;
     }
     public void setBitmap(Bitmap bitmap) {
         this.myBitmap = bitmap;
+        if((float)myBitmap.getWidth() / myBitmap.getHeight() < (float)4 / 3) {
+            isVertical = true;
+            width = myBitmap.getWidth() * 600 / myBitmap.getHeight();
+            height = 600;
+        } else {
+            isVertical = false;
+            width = 800;
+            height = myBitmap.getHeight() * 800 / myBitmap.getWidth();
+        }
     }
     public void setRect(List<String> rect) {
         this.rect = rect;
@@ -32,8 +44,15 @@ public class CustomView extends View{
     protected void onDraw(Canvas canvas){
         if(myBitmap!=null){
             canvas.drawColor(Color.TRANSPARENT);
-//            Bitmap resizeImgBitmap = Bitmap.createScaledBitmap(myBitmap, x, y, true);
-            canvas.drawBitmap(myBitmap, 0, 0, null);
+
+            Bitmap resizeImgBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, true);
+            if(isVertical){
+                canvas.drawBitmap(resizeImgBitmap, 400 - width / 2, 0, null);
+            } else {
+                canvas.drawBitmap(resizeImgBitmap, 0, 300 - height / 2, null);
+            }
+            System.out.println(width);
+            System.out.println(height);
             for(int i=0;i<rect.size()/4;i++) {
                 Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -44,8 +63,12 @@ public class CustomView extends View{
                 text.setTextSize(50);
                 setFocusable(true);
 
-                canvas.drawRect(Float.parseFloat(rect.get(i*4)),Float.parseFloat(rect.get(i*4+1)),Float.parseFloat(rect.get(i*4+2)),Float.parseFloat(rect.get(i*4+3)), paint);
-                canvas.drawText(label.get(i),Float.parseFloat(rect.get(i*4)),Float.parseFloat(rect.get(i*4+1)), text);
+                float left = Float.parseFloat(rect.get(i * 4)) * 800;
+                float top = Float.parseFloat(rect.get(i * 4 + 1)) * 600;
+                float right = Float.parseFloat(rect.get(i * 4 + 2)) * 800;
+                float bottom = Float.parseFloat(rect.get(i * 4 + 3)) * 600;
+                canvas.drawRect(left, top, right, bottom, paint);
+                canvas.drawText(label.get(i), left, top, text);
             }
         }
     }
@@ -65,7 +88,7 @@ public class CustomView extends View{
 
     @Override
     protected void onMeasure(int widthMeasureSpec,int heightMeasureSpec){
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec),MeasureSpec.getSize(heightMeasureSpec));//캔버스 사이즈 지정해줘
+        setMeasuredDimension(800, 600);//캔버스 사이즈 지정해줘
         //setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec),MeasureSpec.getSize(heightMeasureSpec));
     }
 

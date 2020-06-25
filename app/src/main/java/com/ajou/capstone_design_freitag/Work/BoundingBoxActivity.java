@@ -271,13 +271,31 @@ public class BoundingBoxActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 float[] result = data.getFloatArrayExtra("rect");
                 StringBuffer stringBuffer = new StringBuffer();
-                stringBuffer.append(result[0]/800);
+                float left = result[0];
+                float top = result[1];
+                float right = result[2];
+                float bottom = result[3];
+                float width = result[4];
+                float height = result[5];
+
+                if(width / height < (float)4 / 3) {
+                    float delta = (height * 4 / 3 - width) / 2;
+                    left += delta;
+                    right += delta;
+                    width = height * 4 / 3;
+                } else {
+                    float delta = (width * 3 / 4 - height) / 2;
+                    top += delta;
+                    bottom += delta;
+                    height = width * 3 / 4;
+                }
+                stringBuffer.append(left / width);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[1]/600);
+                stringBuffer.append(top / height);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[4]/800);
+                stringBuffer.append(right / width);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[5]/600);
+                stringBuffer.append(bottom / height);
                 BoundingBoxDto boundingBoxDto = new BoundingBoxDto();
                 boundingBoxDto.setClassName(label);
                 boundingBoxDto.setProblemId(problemId);
