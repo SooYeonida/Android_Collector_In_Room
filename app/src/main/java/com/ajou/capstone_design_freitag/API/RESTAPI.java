@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +41,10 @@ public class RESTAPI {
     public static final int REGISTER_SUCCESS = 0;
     public static final int REGISTER_VALIDATION_FAIL = 1;
     public static final int REGISTER_FAIL = 2;
+
+    public static final int TRANSACTION_SUCCESS = 0;
+    public static final int TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL = 1;
+    public static final int TRANSACTION_FAIL = 2;
 
     private static final String clientID = "R9zNr3OIJNyJfj8pbMnBATU9OF6RtGb7Ih63xAdq";
     private static RESTAPI instance = null;
@@ -61,17 +67,34 @@ public class RESTAPI {
         return instance;
     }
 
+    public static String SHA256(String str){
+        String SHA = "";
+        try{
+            MessageDigest sh = MessageDigest.getInstance("SHA-256");
+            sh.update(str.getBytes());
+            byte byteData[] = sh.digest();
+            StringBuffer sb = new StringBuffer();
+            for(int i = 0 ; i < byteData.length ; i++){
+                sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+            }
+            SHA = sb.toString();
+        }catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+        return SHA;
+    }
+
     public int login(String userID, String userPassword) {
         APICaller login = new APICaller("POST", baseURL + "/api/login");
         login.setQueryParameter("userId", userID);
-        login.setQueryParameter("userPassword", userPassword);
+        login.setQueryParameter("userPassword", SHA256(userPassword));
         Map<String, List<String>> result;
         try {
             login.request();
             result = login.getHeader();
             if(result.get("login").get(0).equals("success")) {
                 User.getUserinstance().setUserID(userID);
-                User.getUserinstance().setUserPwd(userPassword);
+                User.getUserinstance().setUserPwd(SHA256(userPassword));
                 token = result.get("Authorization").get(0);
                 System.out.println(token);
                 if(result.get("reward") == null) {
@@ -91,7 +114,7 @@ public class RESTAPI {
     public int signup(String userId, String userPassword, String userName, String userPhone, String userEmail, String userAffiliation) {
         APICaller signup = new APICaller("POST", baseURL + "/api/signup");
         signup.setQueryParameter("userId", userId);
-        signup.setQueryParameter("userPassword", userPassword);
+        signup.setQueryParameter("userPassword", SHA256(userPassword));
         signup.setQueryParameter("userName", userName);
         signup.setQueryParameter("userPhone", userPhone);
         signup.setQueryParameter("userEmail", userEmail);
@@ -150,6 +173,10 @@ public class RESTAPI {
         User.getUserinstance().setAffiliation(user.getAffiliation());
         user.setUserID(jsonObject.getString("username"));
         User.getUserinstance().setUserID(user.getUserID());
+        user.setPoint(jsonObject.getInt("userPoint"));
+        User.getUserinstance().setPoint(user.getPoint());
+        user.setAccuracy(jsonObject.getDouble("userAccuracy"));
+        User.getUserinstance().setAccuracy(user.getAccuracy());
         //level임의로
         user.setLevel("starter");
 
@@ -273,7 +300,7 @@ public class RESTAPI {
         return false;
     }
 
-    public boolean payment(String method) throws Exception {
+    public int payment(String method) throws Exception {
         APICaller pointPayment  = new APICaller("GET",baseURL+"/api/project/" + method + "/payment");
         pointPayment.setHeader("Authorization",token);
         pointPayment.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
@@ -282,9 +309,15 @@ public class RESTAPI {
         result = pointPayment.getHeader().get("payment").get(0);
 
         if(result.equals("success")) {
-            return true;
+            return TRANSACTION_SUCCESS;
         } else {
-            return false;
+            try {
+                state = pointPayment.getHeader().get("state").get(0);
+                return TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return TRANSACTION_FAIL;
+            }
         }
     }
 
@@ -635,47 +668,72 @@ public class RESTAPI {
         return list;
     }
 
-    public String terminateProject() throws Exception {
+    public Integer terminateProject(String projectId) throws Exception {
         APICaller terminateProject = new APICaller("GET",baseURL+"/api/project/terminate");
         terminateProject.setHeader("Authorization",token);
-        terminateProject.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminateProject.setQueryParameter("projectId",projectId);
         terminateProject.request();
-        String finalCost;
         String result;
-        finalCost = terminateProject.getHeader().get("finalCost").get(0);
         result = terminateProject.getHeader().get("project").get(0);
         if(result.equals("fail")){
             System.out.println("terminate project fail");
         }
-        return finalCost;
+        String finalCost = terminateProject.getHeader().get("finalCost").get(0);
+        return Integer.parseInt(finalCost);
     }
 
-    public Boolean terminatePoint() throws Exception {
+    public int terminatePoint(String projectId) throws Exception {
         APICaller terminatePoint = new APICaller("GET",baseURL+"/api/project/terminate/point");
         terminatePoint.setHeader("Authorization",token);
-        terminatePoint.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminatePoint.setQueryParameter("projectId",projectId);
         terminatePoint.request();
         String result;
-        result = terminatePoint.getHeader().get("project").get(0);
+        result = terminatePoint.getHeader().get("payment").get(0);
         if(result.equals("fail")){
             System.out.println("terminate project fail");
-            return false;
+            return TRANSACTION_FAIL;
         }
-        return true;
+        return TRANSACTION_SUCCESS;
     }
 
-    public Boolean terminateAccount() throws Exception {
+    public int terminateAccount(String projectId) throws Exception {
         APICaller terminateAccount = new APICaller("GET",baseURL+"/api/project/terminate/account");
         terminateAccount.setHeader("Authorization",token);
-        terminateAccount.setQueryParameter("projectId",Project.getProjectinstance().getProjectId());
+        terminateAccount.setQueryParameter("projectId",projectId);
         terminateAccount.request();
         String result;
         result = terminateAccount.getHeader().get("payment").get(0);
         if(result.equals("fail")){
             System.out.println("account payment fail");
-            return false;
+            try {
+                state = terminateAccount.getHeader().get("state").get(0);
+                return TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return TRANSACTION_FAIL;
+            }
         }
-        return true;
+        return TRANSACTION_SUCCESS;
     }
 
+    public Integer exchange(int amount) throws Exception {
+        APICaller pointExchange  = new APICaller("PUT",baseURL+"/api/mypage/exchange");
+        pointExchange.setHeader("Authorization",token);
+        pointExchange.setHeader("amount", String.valueOf(amount));
+        pointExchange.request();
+        String result = null;
+        result = pointExchange.getHeader().get("exchange").get(0);
+
+        if(result.equals("success")) {
+            return TRANSACTION_SUCCESS;
+        } else {
+            try {
+                state = pointExchange.getHeader().get("state").get(0);
+                return TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return TRANSACTION_FAIL;
+            }
+        }
+    }
 }

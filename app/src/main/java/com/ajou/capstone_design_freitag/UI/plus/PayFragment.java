@@ -1,5 +1,6 @@
 package com.ajou.capstone_design_freitag.UI.plus;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -16,6 +17,7 @@ import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.MainActivity;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.UI.dto.Project;
+import com.ajou.capstone_design_freitag.WebViewActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -75,7 +77,7 @@ public class PayFragment extends Fragment {
         pointPayTask.execute();
     }
 
-    private static class PayTask extends AsyncTask<Void, Void,Boolean > {
+    private static class PayTask extends AsyncTask<Void, Void,Integer > {
         private WeakReference<PayFragment> fragmentReference;
         private final String method;
 
@@ -85,8 +87,8 @@ public class PayFragment extends Fragment {
         }
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
-            boolean result = false;
+        protected Integer doInBackground(Void... voids) {
+            Integer result = null;
             try {
                 result = RESTAPI.getInstance().payment(method);
             } catch (Exception e) {
@@ -96,16 +98,27 @@ public class PayFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(Integer result) {
             PayFragment fragment = getFragment();
             if(fragment == null)
                 return;
 
-            if(result) {
+
+            if(result == null){
+                return;
+            }
+
+            if(result == RESTAPI.TRANSACTION_SUCCESS) {
                 ((MainActivity)fragment.getActivity()).goToHome();
                 Toast.makeText(fragment.getActivity(), "결제 성공", Toast.LENGTH_SHORT).show();
-            } else {
+            } else if(result == RESTAPI.TRANSACTION_FAIL) {
                 Toast.makeText(fragment.getActivity(), "결제에 실패했습니다. 다른 결제 수단을 선택해주세요.", Toast.LENGTH_SHORT).show();
+            } else if(result == RESTAPI.TRANSACTION_NOT_REGISTERED_ACCOUNT_FAIL) {
+                Toast.makeText(fragment.getContext(), "계좌등록이 필요합니다.", Toast.LENGTH_LONG).show();
+                String url = RESTAPI.getInstance().getRegisterOpenBankingURL();
+                Intent intent = new Intent(fragment.getContext(), WebViewActivity.class);
+                intent.putExtra("URL", url);
+                fragment.getActivity().startActivity(intent);
             }
         }
 

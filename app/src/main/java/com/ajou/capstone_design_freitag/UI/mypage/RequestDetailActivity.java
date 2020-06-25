@@ -27,10 +27,11 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 
 public class RequestDetailActivity extends AppCompatActivity implements OnChartValueSelectedListener {
+    private static final int TERMINATE_PROJECT_REQUEST_CODE = 100;
 
     Project project;
     PieChart pieChart;
-
+    Button end;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,13 +138,18 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
         pieChart.setData(data);
         pieChart.setOnChartValueSelectedListener(this);
 
-        Button end;
         end = findViewById(R.id.work_end);
+        if(project.getStatus().equals("진행중") || project.getStatus().equals("검증대기") || project.getStatus().equals("검증완료")) {
+            end.setVisibility(View.VISIBLE);
+        } else {
+            end.setVisibility(View.GONE);
+        }
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //결제페이지로 이동.
-
+                Intent intent = new Intent(getApplicationContext(), TerminateProjectActivity.class);
+                intent.putExtra("project",project);
+                startActivityForResult(intent, TERMINATE_PROJECT_REQUEST_CODE);
             }
         });
 
@@ -152,7 +158,7 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
         validatedDataDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CheckValidatedDataActivity .class);
+                Intent intent = new Intent(getApplicationContext(), CheckValidatedDataActivity.class);
                 intent.putExtra("project",project);
                 startActivity(intent);
             }
@@ -179,6 +185,16 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
     @Override
     public void onNothingSelected() {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TERMINATE_PROJECT_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                end.setVisibility(View.GONE);
+            }
+        }
     }
 
 }
