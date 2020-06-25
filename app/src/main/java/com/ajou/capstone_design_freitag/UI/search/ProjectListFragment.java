@@ -42,26 +42,14 @@ public class ProjectListFragment extends Fragment {
     String workType = "";
     String dataType = "";
     String subject = "";
-    String difficulty = "-1";
 
     LinearLayout datatype;
-    LinearLayout worktype;
 
     EditText search_subject;
-    RadioGroup group_difficulty;
-    RadioButton difficulty_0;
-    RadioButton difficulty_1;
-    RadioButton difficulty_2;
-    RadioButton difficulty_3;
-    RadioButton difficulty_4;
-    RadioButton difficulty_5;
     RadioGroup group_datatype;
     RadioButton image;
     RadioButton text;
     RadioButton audio;
-    RadioGroup group_worktype;
-    RadioButton bounding_box;
-    RadioButton classification;
     Button searchButton;
 
     public static ProjectListFragment newInstance(String worktype) {
@@ -89,7 +77,6 @@ public class ProjectListFragment extends Fragment {
         listView = view.findViewById(R.id.project_list);
 
         datatype = view.findViewById(R.id.radiogroup_datatype);
-        worktype = view.findViewById(R.id.radiogroup_worktype);
         searchButton = view.findViewById(R.id.project_search);
 
         search_subject = view.findViewById(R.id.search_subject);
@@ -97,55 +84,21 @@ public class ProjectListFragment extends Fragment {
         image = view.findViewById(R.id.data_type_image);
         text = view.findViewById(R.id.data_type_text);
         audio = view.findViewById(R.id.data_type_audio);
-        group_worktype = view.findViewById(R.id.radioGroup_labelling_work_type);
-        bounding_box = view.findViewById(R.id.labelling_boundingbox);
-        classification = view.findViewById(R.id.labelling_classification);
-        group_difficulty = view.findViewById(R.id.radioGroup_difficulty);
-        difficulty_0 = view.findViewById(R.id.difficulty_0);
-        difficulty_1 = view.findViewById(R.id.difficulty_1);
-        difficulty_2 = view.findViewById(R.id.difficulty_2);
-        difficulty_3 = view.findViewById(R.id.difficulty_3);
-        difficulty_4 = view.findViewById(R.id.difficulty_4);
-        difficulty_5 = view.findViewById(R.id.difficulty_5);
-
+        View line = view.findViewById(R.id.search_line);
         if(button_result.equals("수집")){//수집 버튼 누르면
-            worktype.setVisibility(View.GONE);
             workType = "collection";
             projectList(view);
         }
         else{//라벨링
             datatype.setVisibility(View.GONE);
             search_subject.setVisibility(View.GONE);
+            searchButton.setVisibility(View.GONE);
+            line.setVisibility(View.GONE);
             workType = "labelling";
             projectList(view);
         }
 
         subject = search_subject.getText().toString();
-        group_difficulty.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case(R.id.difficulty_0):
-                        difficulty = difficulty_0.getText().toString();
-                        break;
-                    case(R.id.difficulty_1):
-                        difficulty = difficulty_1.getText().toString();
-                        break;
-                    case(R.id.difficulty_2):
-                        difficulty = difficulty_2.getText().toString();
-                        break;
-                    case(R.id.difficulty_3):
-                        difficulty = difficulty_3.getText().toString();
-                        break;
-                    case(R.id.difficulty_4):
-                        difficulty = difficulty_4.getText().toString();
-                        break;
-                    case(R.id.difficulty_5):
-                        difficulty = difficulty_5.getText().toString();
-                        break;
-                }
-            }
-        });
 
         group_datatype.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -164,19 +117,6 @@ public class ProjectListFragment extends Fragment {
             }
         });
 
-        group_worktype.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case(R.id.labelling_boundingbox):
-                        dataType = "boundingBox";
-                        break;
-                    case(R.id.labelling_classification):
-                        dataType = "classification";
-                        break;
-                }
-            }
-        });
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,7 +154,7 @@ public class ProjectListFragment extends Fragment {
             protected List<Project> doInBackground(String... projectinfos) {
                 List<Project> result = new ArrayList<Project>();
                 try {
-                    result = RESTAPI.getInstance().projectList(projectinfos[0],projectinfos[1],projectinfos[2],projectinfos[3]);
+                    result = RESTAPI.getInstance().projectList(projectinfos[0],projectinfos[1],projectinfos[2]);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -249,7 +189,7 @@ public class ProjectListFragment extends Fragment {
                 setListViewHeightBasedOnChildren(listView);
             }
         };
-        collectionListTask.execute(workType,dataType,subject,difficulty);
+        collectionListTask.execute(workType,dataType,subject);
     }
 
 

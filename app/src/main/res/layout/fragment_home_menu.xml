@@ -74,8 +74,7 @@ android:id="@+id/fragment_home">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginTop="5dp"
-            android:dividerHeight="4dp"/>
+            android:layout_marginTop="5dp" />
     </LinearLayout>
 </ScrollView>
 </RelativeLayout>

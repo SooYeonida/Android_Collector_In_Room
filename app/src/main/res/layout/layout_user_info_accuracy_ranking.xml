@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="horizontal"
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
+
+<ImageView
+    android:id="@+id/user_image_accuracy"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:adjustViewBounds="true"
+    android:maxWidth="55dp"
+    android:maxHeight="55dp"
+    android:scaleType="centerInside"/>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_weight="4">
+    <TextView
+        android:id="@+id/user_name_accuracy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="user_name"
+        android:textSize="18sp"
+        android:fontFamily="@font/jejugothic"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="정확도:"
+            android:textSize="15sp"
+            android:fontFamily="@font/jejugothic"/>
+
+        <TextView
+            android:id="@+id/user_accuracy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="user_accuracy"
+            android:textSize="14sp"
+            android:fontFamily="@font/jejugothic"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="푼 문제 수:"
+            android:textSize="15sp"
+            android:fontFamily="@font/jejugothic"/>
+
+        <TextView
+            android:id="@+id/user_num_problem_accuracy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="user_num_problems"
+            android:textSize="14sp"
+            android:fontFamily="@font/jejugothic"/>
+    </LinearLayout>
+
+</LinearLayout>
+
+</LinearLayout>

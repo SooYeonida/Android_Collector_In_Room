@@ -25,9 +25,19 @@ public class User {
     private int visit;
     private String totalPoint;
     private int point;
-    private double accuracy;
+    private float accuracy;
     private String level;
     private int bank;
+
+    private String numOfProblems;
+
+    public String getNumOfProblems() {
+        return numOfProblems;
+    }
+
+    public void setNumOfProblems(String numOfProblems) {
+        this.numOfProblems = numOfProblems;
+    }
 
     public Drawable getUserIcon() {
         return userIcon;
@@ -116,11 +126,11 @@ public class User {
         this.point = point;
     }
 
-    public double getAccuracy() {
+    public float getAccuracy() {
         return accuracy;
     }
 
-    public void setAccuracy(double accuracy) {
+    public void setAccuracy(float accuracy) {
         this.accuracy = accuracy;
     }
 
@@ -139,7 +149,5 @@ public class User {
     public void setBank(int bank) {
         this.bank = bank;
     }
-
-
 
 }

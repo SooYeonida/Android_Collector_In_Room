@@ -13,12 +13,13 @@ import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.UI.dto.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class RankingAdapter extends BaseAdapter {
+public class PointRankingAdapter extends BaseAdapter {
 
     private ArrayList<User> rankingArrayList = new ArrayList<User>();
 
-    public RankingAdapter(ArrayList<User> rankingList)
+    public PointRankingAdapter(ArrayList<User> rankingList)
     {
         if (rankingList == null) {
             rankingArrayList = new ArrayList<User>() ;
@@ -41,18 +42,20 @@ public class RankingAdapter extends BaseAdapter {
 
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.layout_user_info_ranking,parent,false);
+            convertView = inflater.inflate(R.layout.layout_user_info_point_ranking,parent,false);
         }
 
         ImageView userIconView = (ImageView) convertView.findViewById(R.id.user_image);
         TextView userNameView = (TextView) convertView.findViewById(R.id.user_name);
         TextView userPointView = (TextView) convertView.findViewById(R.id.user_point);
+        TextView userNumOfProblems = convertView.findViewById(R.id.user_num_problem);
 
         User ranking = rankingArrayList.get(position);
 
         userIconView.setImageDrawable(ranking.getUserIcon());
         userNameView.setText(ranking.getUserID());
         userPointView.setText(ranking.getTotalPoint());
+        userNumOfProblems.setText(ranking.getNumOfProblems());
 
         return convertView;
     }
@@ -67,8 +70,8 @@ public class RankingAdapter extends BaseAdapter {
         return rankingArrayList.get(position);
     }
 
-    public void addItem(User user){
-        rankingArrayList.add(user);
+    public void addList(List<User> user){
+        rankingArrayList= (ArrayList<User>) user;
     }
 
     public void removeAll(){rankingArrayList.removeAll(rankingArrayList);}

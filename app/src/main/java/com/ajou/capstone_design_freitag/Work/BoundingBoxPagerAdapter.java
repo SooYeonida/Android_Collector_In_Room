@@ -2,9 +2,7 @@ package com.ajou.capstone_design_freitag.Work;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,24 +14,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 
-import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.UI.dto.ProblemWithClass;
 import com.ajou.capstone_design_freitag.UI.dto.Project;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import org.apache.commons.io.FilenameUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +29,6 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
     private BoundingBoxActivity boundingBoxActivity;
     private static Context mContext;
     private List<ProblemWithClass> problemList;
-    static File file;
-    OutputStream outputStream;
 
     static TextView projectName;
     static TextView wayContent;
@@ -54,18 +39,21 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
     static ImageView boundingImage;
 
     Project project;
+    List<Bitmap> bitmaps;
+    Map<Integer,Uri> uriListMap;
     String label = null;
-    static Map<Integer,Uri> positionUri = new HashMap<>();
     static int currentPosition;
 
     private OnRadioCheckedChanged mOnRadioCheckedChanged;
     private RegisterListener mregisterListener;
 
-    public BoundingBoxPagerAdapter(BoundingBoxActivity boundingBoxActivity, List<ProblemWithClass> problemWithClassList,
-                                   Project projectInfo, OnRadioCheckedChanged onRadioCheckedChanged, RegisterListener registerListener){
+    public BoundingBoxPagerAdapter(BoundingBoxActivity boundingBoxActivity, List<ProblemWithClass> problemWithClassList,List<Bitmap> bitmapList,
+                                   Project projectInfo,Map<Integer,Uri> uriMap, OnRadioCheckedChanged onRadioCheckedChanged, RegisterListener registerListener){
         this.boundingBoxActivity = boundingBoxActivity;
         mContext = boundingBoxActivity.getApplicationContext();
         project = projectInfo;
+        bitmaps = bitmapList;
+        uriListMap = uriMap;
         this.mOnRadioCheckedChanged = onRadioCheckedChanged;
         this.mregisterListener = registerListener;
         if(problemWithClassList==null){
@@ -103,8 +91,7 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
             requester.setText(project.getUserId());
             classListView.setText(project.getClass_list().toString());
 
-            BoundingBoxPagerAdapter.DownloadDataTask downloadDataTask = new BoundingBoxPagerAdapter.DownloadDataTask();
-            downloadDataTask.execute(project.getBucketName(),project.getExampleContent(),outputStream,"예시");
+            exampleContent.setImageBitmap(bitmaps.get(position));
 
             container.addView(view);
             return view;
@@ -139,15 +126,8 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
                     classList.addView(radioButton);
                 }
 
-                String file_extension = FilenameUtils.getExtension(problemList.get(position-1).getProblem().getObjectName());
-                file = new File("/data/data/com.ajou.capstone_design_freitag/files/project_boundingbox"+position+"." + file_extension);
-                positionUri.put(position,Uri.fromFile(file));
-                try {
-                    outputStream = new FileOutputStream(file);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                getBoundingBoxData(position, "바운딩박스");
+                //bitmap = Bitmap.createScaledBitmap(bitmap, 800, 600, true);
+                boundingImage.setImageBitmap(bitmaps.get(position));
             }
             container.addView(view);
 
@@ -156,9 +136,9 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
                 @Override
                 public void onClick(View v) {
                     mOnRadioCheckedChanged.onRadioCheckedChanged(label,problemList.get(position-1).getProblem().getProblemId());
-                    CropImage.activity(positionUri.get(position))
+                    CropImage.activity(uriListMap.get(position))
                             .setGuidelines(CropImageView.Guidelines.ON)
-                            .setActivityTitle("My Crop")
+                            .setActivityTitle("Bounding Box")
                             .setCropShape(CropImageView.CropShape.RECTANGLE)
                             .setCropMenuCropButtonTitle("Done")
                             .setCropMenuCropButtonIcon(R.drawable.boundingbox)
@@ -167,31 +147,21 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
                 }
             });
 
-            Button next = view.findViewById(R.id.boundingbox_upload);
             Button done = view.findViewById(R.id.boundingbox_done);
             done.setVisibility(View.GONE);
             if (position ==5){
                 done.setVisibility(View.VISIBLE);
             }
-            next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mregisterListener.clickBtn();
-                }
-            });
+
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mregisterListener.clickBtn();
                     boundingBoxActivity.finish();
                 }
             });
             return view;
         }
-    }
-
-    private void getBoundingBoxData(int position, String dataType) {
-        BoundingBoxPagerAdapter.DownloadDataTask downloadDataTask = new BoundingBoxPagerAdapter.DownloadDataTask();
-        downloadDataTask.execute(problemList.get(position-1).getProblem().getBucketName(),problemList.get(position-1).getProblem().getObjectName(),outputStream,dataType);
     }
 
     @Override
@@ -208,50 +178,5 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return (view == (View)object);
     }
-
-    private static class DownloadDataTask extends AsyncTask<Object, Void, Boolean>{
-        String dataType;
-        protected Boolean doInBackground(Object... dataInfos) {
-            Boolean result = RESTAPI.getInstance().downloadObject((String)dataInfos[0],(String)dataInfos[1],(OutputStream)dataInfos[2]);
-            dataType = (String)dataInfos[3];
-            return result;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if(!result){
-                System.out.println("문제 데이터 다운로드 실패");
-            }
-            else
-            {
-                System.out.println("문제 데이터 다운로드 성공");
-                InputStream inputStream = null;
-                try {
-                    inputStream = new FileInputStream(file);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                if(dataType.equals("바운딩박스")) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream).copy(Bitmap.Config.ARGB_8888, true);
-                    //bitmap = Bitmap.createScaledBitmap(bitmap, 800, 600, true);
-                    boundingImage.setImageBitmap(bitmap);
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(dataType.equals("예시")){
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    exampleContent.setImageBitmap(bitmap);
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-
 
 }
