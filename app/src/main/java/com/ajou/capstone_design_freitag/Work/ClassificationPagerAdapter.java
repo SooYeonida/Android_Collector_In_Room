@@ -142,14 +142,12 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
                     else{
                         radioButton.setText(problemList.get(position-1).getClassNameList().get(i).getClassName());
                     }
-                    if(problemList.get(position-1).getClassNameList().size()>5){
                         if(i<=5){
                             classList.addView(radioButton);
                         }
                         else{
                             classList2.addView(radioButton);
                         }
-                    }
                 }
 
                 work_num.setText(Integer.toString(position));
