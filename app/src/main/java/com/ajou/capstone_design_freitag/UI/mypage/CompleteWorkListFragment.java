@@ -93,7 +93,7 @@ public class CompleteWorkListFragment extends Fragment {
                     work.setProjectName(jsonObject.getString("projectName"));
                     work.setProjectWorkType(jsonObject.getString("projectWorkType"));
                     work.setProjectDataType(jsonObject.getString("projectDataType"));
-                    work.setProjectStatus(jsonObject.getString("projectStatus"));
+                    work.setProjectStatus(jsonObject.getString("problemStatus"));
                     work.setProblemId(Integer.parseInt(jsonObject.getString("problemId")));
                     workHistoryList.add(work);
                 }

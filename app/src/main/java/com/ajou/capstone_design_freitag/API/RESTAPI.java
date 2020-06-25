@@ -739,10 +739,11 @@ public class RESTAPI {
     }
 
     public void cancelLabelling() {
-        APICaller pointExchange  = new APICaller("PUT",baseURL+"/api/work/cancel");
-        pointExchange.setHeader("Authorization",token);
+        APICaller cancelLabelling  = new APICaller("PUT",baseURL+"/api/work/cancel");
+        cancelLabelling.setHeader("Authorization",token);
+        cancelLabelling.setHeader("workHistory", String.valueOf(LabellingWorkHistory.getInstance().getHistoryId()));
         try {
-            pointExchange.request();
+            cancelLabelling.request();
         } catch (IOException e) {
             e.printStackTrace();
         }

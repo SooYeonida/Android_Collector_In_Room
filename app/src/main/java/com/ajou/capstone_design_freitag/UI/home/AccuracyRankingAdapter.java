@@ -45,7 +45,7 @@ public class AccuracyRankingAdapter extends BaseAdapter {
 
         userIconView.setImageDrawable(ranking.getUserIcon());
         userNameView.setText(ranking.getUserID());
-        userAccuracy.setText(Float.toString(ranking.getAccuracy()));
+        userAccuracy.setText(Float.toString(ranking.getAccuracy()*100)+"%");
         userNumOfProblems.setText(ranking.getNumOfProblems());
 
         return convertView;
