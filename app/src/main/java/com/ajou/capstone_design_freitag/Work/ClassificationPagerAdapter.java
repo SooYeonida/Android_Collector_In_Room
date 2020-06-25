@@ -123,6 +123,7 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
                 TextView labelTextView = view.findViewById(R.id.labelTextView);
 
                 RadioGroup classList = view.findViewById(R.id.classification_radio_group);
+                RadioGroup classList2 = view.findViewById(R.id.classification_radio_group2);
                 for (int i = 0; i < problemList.get(position-1).getClassNameList().size()+1; i++) {
                     final RadioButton radioButton = new RadioButton(mContext);
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -141,8 +142,14 @@ public class ClassificationPagerAdapter extends androidx.viewpager.widget.PagerA
                     else{
                         radioButton.setText(problemList.get(position-1).getClassNameList().get(i).getClassName());
                     }
-                    radioButton.setId(i);
-                    classList.addView(radioButton);
+                    if(problemList.get(position-1).getClassNameList().size()>5){
+                        if(i<=5){
+                            classList.addView(radioButton);
+                        }
+                        else{
+                            classList2.addView(radioButton);
+                        }
+                    }
                 }
 
                 work_num.setText(Integer.toString(position));

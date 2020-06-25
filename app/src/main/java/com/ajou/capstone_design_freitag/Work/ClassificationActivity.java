@@ -1,12 +1,19 @@
 package com.ajou.capstone_design_freitag.Work;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
@@ -42,12 +49,15 @@ public class ClassificationActivity extends AppCompatActivity {
     List<InputStream> inputStreamList = new ArrayList<>();
     List<Uri> uriList = new ArrayList<>();
 
+    AppCompatDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classification);
         viewPager = (CustomViewPager) findViewById(R.id.viewPager) ;
         getProblem();
+        progressON(this,"Loading..");
     }
 
     public void getProblem(){
@@ -95,9 +105,9 @@ public class ClassificationActivity extends AppCompatActivity {
             if (activity == null) {
                 return;
             }
+            progressOFF();
             pagerAdapter = new ClassificationPagerAdapter(activity, problemWithClassList,inputStreamList,fileExtensionList,uriList) ;
             viewPager.setAdapter(pagerAdapter) ;
-
         }
 
         private Boolean getResult(String bucketName,String objectName,int position) {
@@ -199,4 +209,58 @@ public class ClassificationActivity extends AppCompatActivity {
         }
     }
 
+    public void progressON(Activity activity, String message) {
+
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressSET(message);
+        } else {
+
+            progressDialog = new AppCompatDialog(activity);
+            progressDialog.setCancelable(false);
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            progressDialog.setContentView(R.layout.layout_dialog);
+            progressDialog.show();
+
+        }
+
+
+        final ImageView img_loading_frame = (ImageView) progressDialog.findViewById(R.id.iv_frame_loading);
+        final AnimationDrawable frameAnimation = (AnimationDrawable) img_loading_frame.getBackground();
+        img_loading_frame.post(new Runnable() {
+            @Override
+            public void run() {
+                frameAnimation.start();
+            }
+        });
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+
+    }
+
+    public void progressSET(String message) {
+
+        if (progressDialog == null || !progressDialog.isShowing()) {
+            return;
+        }
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+    }
+
+    public void progressOFF() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
 }

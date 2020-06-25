@@ -153,16 +153,6 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
             }
         });
 
-        Button validatedDataDetail;
-        validatedDataDetail = findViewById(R.id.validatedDataDetail);
-        validatedDataDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CheckValidatedDataActivity.class);
-                intent.putExtra("project",project);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override

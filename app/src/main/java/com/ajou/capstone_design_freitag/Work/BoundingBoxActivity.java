@@ -1,15 +1,23 @@
 package com.ajou.capstone_design_freitag.Work;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
@@ -38,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BoundingBoxActivity extends AppCompatActivity {
-
     static Project project;
 
     static List<ProblemWithClass> problemWithClassList = new ArrayList<>();
@@ -59,6 +66,8 @@ public class BoundingBoxActivity extends AppCompatActivity {
     List<Problem> problemList = new ArrayList<>();
     Map<Integer,Uri> positionUri = new HashMap<>();
 
+    AppCompatDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +82,7 @@ public class BoundingBoxActivity extends AppCompatActivity {
         Project.getProjectinstance().setProjectId(project.getProjectId());
         viewPager = (CustomViewPager) findViewById(R.id.viewPager);
         getProblem();
+        progressON(this,"Loading..");
     }
 
     public void getProblem() {
@@ -129,6 +139,7 @@ public class BoundingBoxActivity extends AppCompatActivity {
             if (activity == null) {
                 return;
             }
+                    progressOFF();
                     pagerAdapter = new BoundingBoxPagerAdapter(activity, problemWithClassList,bitmapList, project,positionUri, new BoundingBoxPagerAdapter.OnRadioCheckedChanged() {
                         @Override
                         public void onRadioCheckedChanged(String labelName,int problem) {
@@ -216,7 +227,6 @@ public class BoundingBoxActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... voids) {
             Boolean result = null;
-
             try {
                 for(int i=0;i<finalAnswer.size();i++) {
                     result = RESTAPI.getInstance().boundingBoxWork(finalAnswer.get(i).getCoordinates(),finalAnswer.get(i).getProblemId(),finalAnswer.get(i).getClassName());
@@ -224,7 +234,6 @@ public class BoundingBoxActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return result;
         }
 
@@ -277,4 +286,59 @@ public class BoundingBoxActivity extends AppCompatActivity {
             }
         }
     }
+    public void progressON(Activity activity, String message) {
+
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressSET(message);
+        } else {
+
+            progressDialog = new AppCompatDialog(activity);
+            progressDialog.setCancelable(false);
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            progressDialog.setContentView(R.layout.layout_dialog);
+            progressDialog.show();
+
+        }
+
+
+        final ImageView img_loading_frame = (ImageView) progressDialog.findViewById(R.id.iv_frame_loading);
+        final AnimationDrawable frameAnimation = (AnimationDrawable) img_loading_frame.getBackground();
+        img_loading_frame.post(new Runnable() {
+            @Override
+            public void run() {
+                frameAnimation.start();
+            }
+        });
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+
+    }
+
+    public void progressSET(String message) {
+
+        if (progressDialog == null || !progressDialog.isShowing()) {
+            return;
+        }
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+    }
+
+    public void progressOFF() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
 }
