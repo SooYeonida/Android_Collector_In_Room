@@ -112,6 +112,8 @@ public class BoundingBoxActivity extends AppCompatActivity {
                                     positionUri.put(i+1, Uri.fromFile(file));
                                     Bitmap bitmap2 = BitmapFactory.decodeStream(inputStream2);
                                     bitmapList.add(bitmap2);
+                                } else {
+                                    return false;
                                 }
                             }
                             return true;

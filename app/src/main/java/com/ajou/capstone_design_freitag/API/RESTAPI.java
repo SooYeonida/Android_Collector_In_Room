@@ -426,7 +426,7 @@ public class RESTAPI {
         return project_list;
     }
 
-    public Boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
+    public boolean downloadObject(String bucketName, String obejctName, OutputStream outputStream) {
         String url = "http://kr.object.ncloudstorage.com/" + bucketName + "/" + UrlEscapers.urlFragmentEscaper().escape(obejctName.replace(" ", "%20"));
         String accessKey = "sQG5BeaHcnvvqK4FI01A";
         String secretKey = "mvNVjSac240XvnrK4qF39HpoMvvtMQMzUnnNHaRV";

@@ -79,6 +79,8 @@ public class ClassificationActivity extends AppCompatActivity {
                             if (getResult(problemWithClassList.get(i).getProblem().getBucketName(), problemWithClassList.get(i).getProblem().getObjectName(),i+1)) {
                                 InputStream inputStream = new FileInputStream(file);
                                 inputStreamList.add(inputStream);
+                            } else {
+                                return false;
                             }
                         }
                         return true;
