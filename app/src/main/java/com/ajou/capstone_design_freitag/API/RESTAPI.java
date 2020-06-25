@@ -736,4 +736,14 @@ public class RESTAPI {
             }
         }
     }
+
+    public void cancelLabelling() {
+        APICaller pointExchange  = new APICaller("PUT",baseURL+"/api/work/cancel");
+        pointExchange.setHeader("Authorization",token);
+        try {
+            pointExchange.request();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
