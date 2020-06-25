@@ -3,6 +3,7 @@ package com.ajou.capstone_design_freitag.Work;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
+import com.ajou.capstone_design_freitag.PopupActivity;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.UI.dto.BoundingBoxDto;
 import com.ajou.capstone_design_freitag.UI.dto.ClassDto;
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassificationActivity extends AppCompatActivity {
+    private static final int POP_UP_REQUEST_CODE = 101;
+
     List<ProblemWithClass> problemWithClassList = new ArrayList<>();
 
     private CustomViewPager viewPager ;
@@ -205,6 +209,33 @@ public class ClassificationActivity extends AppCompatActivity {
                 position = viewPager.getCurrentItem();//현재 보여지는 아이템의 위치를 리턴
                 viewPager.setCurrentItem(position + 1, true);
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, PopupActivity.class);
+        intent.putExtra("msg", "작업을 중단하시겠습니까?");
+        startActivityForResult(intent, POP_UP_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == POP_UP_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                CancelTask cancelTask = new CancelTask();
+                cancelTask.execute();
+                finish();
+            }
+        }
+    }
+
+    static class CancelTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            RESTAPI.getInstance().cancelLabelling();
+            return null;
         }
     }
 

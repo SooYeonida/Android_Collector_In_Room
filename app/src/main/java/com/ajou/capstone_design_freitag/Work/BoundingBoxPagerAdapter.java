@@ -143,6 +143,7 @@ public class BoundingBoxPagerAdapter  extends androidx.viewpager.widget.PagerAda
                             .setCropMenuCropButtonTitle("Done")
                             .setCropMenuCropButtonIcon(R.drawable.boundingbox)
                             .setAsBoundingBoxSelector()
+                            .setOriginalSize(bitmaps.get(position).getWidth(), bitmaps.get(position).getHeight())
                             .start(boundingBoxActivity);
                 }
             });

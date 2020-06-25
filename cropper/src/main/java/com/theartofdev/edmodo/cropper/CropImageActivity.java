@@ -265,7 +265,15 @@ public class CropImageActivity extends AppCompatActivity
       setResult(null, null, 1);
     } else if(mOptions.boundingBox) {
       Intent returnIntent = new Intent();
-      returnIntent.putExtra("rect", mCropImageView.getCropPoints());
+      float[] cropPoints = mCropImageView.getCropPoints();
+      float[] rect = new float[6];
+      rect[0] = cropPoints[0];
+      rect[1] = cropPoints[1];
+      rect[2] = cropPoints[4];
+      rect[3] = cropPoints[5];
+      rect[4] = mOptions.originalWidth;
+      rect[5] = mOptions.originalHeight;
+      returnIntent.putExtra("rect", rect);
       setResult(RESULT_OK, returnIntent);
       finish();
     } else {

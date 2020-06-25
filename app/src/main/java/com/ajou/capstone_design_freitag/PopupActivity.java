@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.ajou.capstone_design_freitag.Work.AudioCollectionActivity;
 import com.ajou.capstone_design_freitag.Work.ImageCollectionActivity;
@@ -16,8 +17,9 @@ import com.ajou.capstone_design_freitag.UI.dto.Project;
 
 public class PopupActivity extends AppCompatActivity {
 
-    String type;
-    Project project;
+    TextView popupText;
+
+    String msg;
     Button yes;
     Button no;
 
@@ -27,33 +29,22 @@ public class PopupActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_popup);
         Intent intent = getIntent();
-        type = intent.getStringExtra("type");
-        project = intent.getParcelableExtra("project"); //리스트에서 사용자가 선택한 프로젝트 정보 받아옴
+        msg = intent.getStringExtra("msg");
         yes = findViewById(R.id.yes);
         no = findViewById(R.id.no);
+
+        popupText = findViewById(R.id.popup_text);
+        popupText.setText(msg);
     }
 
     public void yes(View view){
-        if(type.equals("image")) {
-            Intent intent = new Intent(getApplicationContext(), ImageCollectionActivity.class);
-            intent.putExtra("project", project);
-            startActivity(intent);
-        }
-        else if(type.equals("audio")){
-            Intent intent = new Intent(getApplicationContext(), AudioCollectionActivity.class);
-            intent.putExtra("project", project);
-            startActivity(intent);
-        }
-        else if(type.equals("text")){
-            Intent intent = new Intent(getApplicationContext(), TextCollectionActivity.class);
-            intent.putExtra("project", project);
-            startActivity(intent);
-        }
-    }
-    public void no(View view){
+        setResult(RESULT_OK);
         finish();
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-        startActivity(intent);
+    }
+
+    public void no(View view){
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
     @Override

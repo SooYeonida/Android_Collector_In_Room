@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
+import com.ajou.capstone_design_freitag.PopupActivity;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.UI.dto.BoundingBoxDto;
 import com.ajou.capstone_design_freitag.UI.dto.ClassDto;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BoundingBoxActivity extends AppCompatActivity {
+    private static final int POP_UP_REQUEST_CODE = 101;
 
     static Project project;
 
@@ -265,25 +267,64 @@ public class BoundingBoxActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, PopupActivity.class);
+        intent.putExtra("msg", "작업을 중단하시겠습니까?");
+        startActivityForResult(intent, POP_UP_REQUEST_CODE);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.BOUNDING_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 float[] result = data.getFloatArrayExtra("rect");
                 StringBuffer stringBuffer = new StringBuffer();
-                stringBuffer.append(result[0]/800);
+                float left = result[0];
+                float top = result[1];
+                float right = result[2];
+                float bottom = result[3];
+                float width = result[4];
+                float height = result[5];
+
+                if(width / height < (float)4 / 3) {
+                    float delta = (height * 4 / 3 - width) / 2;
+                    left += delta;
+                    right += delta;
+                    width = height * 4 / 3;
+                } else {
+                    float delta = (width * 3 / 4 - height) / 2;
+                    top += delta;
+                    bottom += delta;
+                    height = width * 3 / 4;
+                }
+                stringBuffer.append(left / width);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[1]/600);
+                stringBuffer.append(top / height);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[4]/800);
+                stringBuffer.append(right / width);
                 stringBuffer.append(" ");
-                stringBuffer.append(result[5]/600);
+                stringBuffer.append(bottom / height);
                 BoundingBoxDto boundingBoxDto = new BoundingBoxDto();
                 boundingBoxDto.setClassName(label);
                 boundingBoxDto.setProblemId(problemId);
                 boundingBoxDto.setCoordinates(stringBuffer.toString());
                 finalAnswer.add(boundingBoxDto);
             }
+        } else if (requestCode == POP_UP_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                CancelTask cancelTask = new CancelTask();
+                cancelTask.execute();
+                finish();
+            }
+        }
+    }
+
+    static class CancelTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            RESTAPI.getInstance().cancelLabelling();
+            return null;
         }
     }
 }
