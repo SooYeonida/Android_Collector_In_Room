@@ -51,6 +51,7 @@ import java.util.List;
 public class TextCollectionActivity extends AppCompatActivity {
 
     private static final int COLLECTION_TEXT_REQUEST_CODE = 100;
+    private static final int POP_UP_REQUEST_CODE = 101;
 
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -335,9 +336,8 @@ public class TextCollectionActivity extends AppCompatActivity {
                 progressOFF();
                 Toast.makeText(context, "수집 작업 텍스트 업로드 성공", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(context, PopupActivity.class);
-                intent.putExtra("type","text");
-                intent.putExtra("project", project);
-                startActivity(intent);
+                intent.putExtra("msg","작업을 계속 하시겠습니까?");
+                startActivityForResult(intent, POP_UP_REQUEST_CODE);
             } else {
                 progressOFF();
                 Toast.makeText(context, "수집 작업 텍스트 업로드 실패", Toast.LENGTH_LONG).show();
@@ -464,6 +464,13 @@ public class TextCollectionActivity extends AppCompatActivity {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+        } else if (requestCode == POP_UP_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                finish();
+                startActivity(getIntent());
+            } else {
+                finish();
+            }
         }
     }
 }

@@ -954,6 +954,12 @@ public final class CropImage {
       mOptions.allowFlipping = false;
       return this;
     }
+
+    public ActivityBuilder setOriginalSize(int width, int height) {
+      mOptions.originalWidth = width;
+      mOptions.originalHeight = height;
+      return this;
+    }
   }
   // endregion
 

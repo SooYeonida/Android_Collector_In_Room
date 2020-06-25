@@ -48,6 +48,7 @@ public class ImageCollectionActivity extends AppCompatActivity {
 
     private static final int COLLECTION_IMAGE_REQUEST_CODE = 100;
     private static final int COLLECTION_IMAGE_CAPTURE_REQUEST_CODE = 101;
+    private static final int POP_UP_REQUEST_CODE = 102;
 
     TextView projectName;
     TextView wayContent;
@@ -229,9 +230,8 @@ public class ImageCollectionActivity extends AppCompatActivity {
                             progressOFF();
                             Toast.makeText(getApplicationContext(), "수집 작업 이미지 업로드 성공", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
-                            intent.putExtra("type","image");
-                            intent.putExtra("project", project);
-                            startActivity(intent);
+                            intent.putExtra("msg","작업을 계속 하시겠습니까?");
+                            startActivityForResult(intent, POP_UP_REQUEST_CODE);
                         } else {
                             progressOFF();
                             Toast.makeText(getApplicationContext(), "수집 작업 이미지 업로드 실패", Toast.LENGTH_LONG).show();
@@ -271,8 +271,8 @@ public class ImageCollectionActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK) {
-            if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
+        if (requestCode == COLLECTION_IMAGE_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
                 ClipData clipData = data.getClipData();
                 classList.add(classname);
                 System.out.println(classname + ":" + clipData.getItemCount());
@@ -287,11 +287,13 @@ public class ImageCollectionActivity extends AppCompatActivity {
                         }
                     }
                 }
-            } else if (requestCode == COLLECTION_IMAGE_CAPTURE_REQUEST_CODE) {
+            }
+        } else if (requestCode == COLLECTION_IMAGE_CAPTURE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
                 try {
                     String dirPath = getCacheDir().getAbsolutePath() + "/freitag";
                     File dir = new File(dirPath);
-                    if(!dir.exists()) {
+                    if (!dir.exists()) {
                         dir.mkdir();
                     }
                     String filePath = dirPath + "/" + UUID.randomUUID() + ".jpg";
@@ -305,6 +307,13 @@ public class ImageCollectionActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        } else if (requestCode == POP_UP_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                finish();
+                startActivity(getIntent());
+            } else {
+                finish();
             }
         }
     }

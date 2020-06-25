@@ -7,15 +7,18 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.Activity;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
+import com.ajou.capstone_design_freitag.PopupActivity;
 import com.ajou.capstone_design_freitag.R;
 import com.ajou.capstone_design_freitag.UI.dto.BoundingBoxDto;
 import com.ajou.capstone_design_freitag.UI.dto.ClassDto;
@@ -38,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassificationActivity extends AppCompatActivity {
+    private static final int POP_UP_REQUEST_CODE = 101;
+
     List<ProblemWithClass> problemWithClassList = new ArrayList<>();
 
     private CustomViewPager viewPager ;
@@ -88,6 +93,8 @@ public class ClassificationActivity extends AppCompatActivity {
                             if (getResult(problemWithClassList.get(i).getProblem().getBucketName(), problemWithClassList.get(i).getProblem().getObjectName(),i+1)) {
                                 InputStream inputStream = new FileInputStream(file);
                                 inputStreamList.add(inputStream);
+                            } else {
+                                return false;
                             }
                         }
                         return true;
@@ -105,9 +112,16 @@ public class ClassificationActivity extends AppCompatActivity {
             if (activity == null) {
                 return;
             }
+
             progressOFF();
-            pagerAdapter = new ClassificationPagerAdapter(activity, problemWithClassList,inputStreamList,fileExtensionList,uriList) ;
-            viewPager.setAdapter(pagerAdapter) ;
+            if(result) {
+                pagerAdapter = new ClassificationPagerAdapter(activity, problemWithClassList,inputStreamList,fileExtensionList,uriList) ;
+                viewPager.setAdapter(pagerAdapter) ;
+            } else {
+                Toast.makeText(activity, "문제를 받는데 실패했습니다.", Toast.LENGTH_LONG).show();
+                activity.finish();
+            }
+
         }
 
         private Boolean getResult(String bucketName,String objectName,int position) {
@@ -263,4 +277,31 @@ public class ClassificationActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, PopupActivity.class);
+        intent.putExtra("msg", "작업을 중단하시겠습니까?");
+        startActivityForResult(intent, POP_UP_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == POP_UP_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                CancelTask cancelTask = new CancelTask();
+                cancelTask.execute();
+                finish();
+            }
+        }
+    }
+
+    static class CancelTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            RESTAPI.getInstance().cancelLabelling();
+            return null;
+        }
+    }
+
 }

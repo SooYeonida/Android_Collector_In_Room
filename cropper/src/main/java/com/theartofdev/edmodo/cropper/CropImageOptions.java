@@ -224,6 +224,10 @@ public class CropImageOptions implements Parcelable {
 
   public boolean boundingBox;
 
+  public int originalWidth;
+
+  public int originalHeight;
+
   /** Init options with defaults. */
   public CropImageOptions() {
 
@@ -286,6 +290,9 @@ public class CropImageOptions implements Parcelable {
 
     cropMenuCropButtonIcon = 0;
 
+    originalWidth = 0;
+    originalHeight = 0;
+
     boundingBox = false;
   }
 
@@ -340,6 +347,8 @@ public class CropImageOptions implements Parcelable {
     cropMenuCropButtonTitle = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
     cropMenuCropButtonIcon = in.readInt();
     boundingBox = in.readByte() != 0;
+    originalWidth = in.readInt();
+    originalHeight = in.readInt();
   }
 
   @Override
@@ -393,6 +402,8 @@ public class CropImageOptions implements Parcelable {
     TextUtils.writeToParcel(cropMenuCropButtonTitle, dest, flags);
     dest.writeInt(cropMenuCropButtonIcon);
     dest.writeByte((byte) (boundingBox ? 1 : 0));
+    dest.writeInt(originalWidth);
+    dest.writeInt(originalHeight);
   }
 
   @Override

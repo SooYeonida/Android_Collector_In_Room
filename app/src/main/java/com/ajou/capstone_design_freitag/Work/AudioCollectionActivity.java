@@ -53,6 +53,7 @@ import java.util.StringTokenizer;
 public class AudioCollectionActivity extends AppCompatActivity {
     private static final int COLLECTION_AUDIO_REQUEST_CODE =100;
     private static final int ADD_AUDIO = 1001;
+    private static final int POP_UP_REQUEST_CODE = 102;
     private static final int REQUEST_ID_PERMISSIONS = 1;
 
     TextView projectName;
@@ -389,9 +390,8 @@ public class AudioCollectionActivity extends AppCompatActivity {
                     progressOFF();
                     Toast.makeText(context, "수집 작업 오디오 업로드 완료",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
-                    intent.putExtra("type","audio");
-                    intent.putExtra("project", project);
-                    startActivity(intent);
+                    intent.putExtra("msg","작업을 계속 하시겠습니까?");
+                    startActivityForResult(intent, POP_UP_REQUEST_CODE);
                 }
                 else{
                     progressOFF();
@@ -441,6 +441,13 @@ public class AudioCollectionActivity extends AppCompatActivity {
                     }
                     Toast.makeText(AudioCollectionActivity.this, "Audio stored at " + path, Toast.LENGTH_LONG).show();
                 }
+            }
+        } else if (requestCode == POP_UP_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                finish();
+                startActivity(getIntent());
+            } else {
+                finish();
             }
         }
     }
