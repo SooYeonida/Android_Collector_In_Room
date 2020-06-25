@@ -87,13 +87,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="진행 상태:"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textColor="#E91E63"/>
         <TextView
             android:id="@+id/status_workhistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="project_status"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textColor="#E91E63"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -175,13 +175,6 @@
         android:fontFamily="@font/tmonmonsori"
         android:textColor="@color/colorBlue"
         android:textSize="25sp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" 의"
-        android:fontFamily="@font/tmonmonsori"
-        android:layout_gravity="center"
-        android:textSize="20sp"/>
     </LinearLayout>
 
     <TextView
@@ -191,14 +184,6 @@
         android:fontFamily="@font/tmonmonsori"
         android:layout_gravity="center"
         android:textSize="20sp"/>
-        <TextView
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="검증 완료된 데이터를 클릭하면 데이터를 확인 할 수 있습니다."
-            android:fontFamily="@font/jejugothic"
-            android:layout_gravity="center"
-            android:textSize="10sp"/>
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/piechart"

@@ -117,11 +117,21 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
 
         ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
 
-        if(project.getProgressData()!=0){
-            yValues.add(new PieEntry(project.getProgressData()-project.getValidationData(),"진행 중인 데이터"));
+        if(project.getTotalData()==project.getValidationData()){
+            yValues.add(new PieEntry(project.getValidationData(), "검증 완료된 데이터"));
         }
-        yValues.add(new PieEntry(project.getValidationData(),"검증 완료된 데이터"));
-        yValues.add(new PieEntry(project.getTotalData()-project.getProgressData(),"진행 전 데이터"));
+        else if(project.getTotalData()==project.getProgressData()){
+            yValues.add(new PieEntry(project.getProgressData(),"진행 중인 데이터"));
+        }
+        else if(project.getTotalData()==(project.getTotalData()-project.getProgressData())){
+            yValues.add(new PieEntry(project.getTotalData()-project.getProgressData(),"진행 전 데이터"));
+        }
+        else{
+            yValues.add(new PieEntry(project.getTotalData()-project.getProgressData(),"진행 전 데이터"));
+            yValues.add(new PieEntry(project.getProgressData()-project.getValidationData(),"진행 중인 데이터"));
+            yValues.add(new PieEntry(project.getValidationData(), "검증 완료된 데이터"));
+        }
+
 
 
         pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
@@ -162,14 +172,6 @@ public class RequestDetailActivity extends AppCompatActivity implements OnChartV
         Log.i("VAL SELECTED",
                 "Value: " + e.getY() + ", index: " + h.getX()
                         + ", DataSet index: " + h.getDataSetIndex());
-        switch ((int) h.getX()){
-            case 1:
-                System.out.println("검증완료");
-                Intent intent = new Intent(getApplicationContext(), CheckValidatedDataActivity .class);
-                intent.putExtra("project",project);
-                startActivity(intent);
-                break;
-        }
     }
 
     @Override
