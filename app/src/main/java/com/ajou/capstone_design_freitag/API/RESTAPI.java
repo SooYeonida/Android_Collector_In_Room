@@ -175,7 +175,7 @@ public class RESTAPI {
         User.getUserinstance().setUserID(user.getUserID());
         user.setPoint(jsonObject.getInt("userPoint"));
         User.getUserinstance().setPoint(user.getPoint());
-        user.setAccuracy(jsonObject.getDouble("userAccuracy"));
+        user.setAccuracy((float)jsonObject.getDouble("userAccuracy"));
         User.getUserinstance().setAccuracy(user.getAccuracy());
         //level임의로
         user.setLevel("starter");
@@ -476,7 +476,8 @@ public class RESTAPI {
             System.out.println("filename:"+ fileNames.get(i));
             builder.addBinaryBody("files", inputStreams.get(i), ContentType.create(contentType), UrlEscapers.urlFragmentEscaper().escape(fileNames.get(i)));
         }
-        builder.addTextBody("className",classname);
+        System.out.println("classname:" + classname);
+        builder.addTextBody("className",classname,ContentType.MULTIPART_FORM_DATA.withCharset("UTF-8"));
         HttpPost httpPost = new HttpPost(baseURL + "/api/work/collection");
         httpPost.setHeader("Authorization", token);
         httpPost.setHeader("bucketName", Project.getProjectinstance().getBucketName());
