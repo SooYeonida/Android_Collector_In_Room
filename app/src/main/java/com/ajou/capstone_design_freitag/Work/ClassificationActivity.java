@@ -3,6 +3,7 @@ package com.ajou.capstone_design_freitag.Work;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -14,10 +15,17 @@ import com.ajou.capstone_design_freitag.UI.dto.ClassDto;
 import com.ajou.capstone_design_freitag.UI.dto.Problem;
 import com.ajou.capstone_design_freitag.UI.dto.ProblemWithClass;
 
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +35,12 @@ public class ClassificationActivity extends AppCompatActivity {
 
     private CustomViewPager viewPager ;
     private ClassificationPagerAdapter pagerAdapter ;
+
+    static File file;
+    OutputStream outputStream;
+    List<String> fileExtensionList = new ArrayList<>();
+    List<InputStream> inputStreamList = new ArrayList<>();
+    List<Uri> uriList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +55,8 @@ public class ClassificationActivity extends AppCompatActivity {
         getProblemTask.execute();
     }
 
-    static class GetProblemTask extends AsyncTask<Void, Void, String> {
+    private class GetProblemTask extends AsyncTask<Void, Void, Boolean> {
         private WeakReference<ClassificationActivity> activityReference;
-
         ViewPager viewPager ;
         ClassificationPagerAdapter pagerAdapter ;
         List<ProblemWithClass> problemWithClassList;
@@ -54,42 +67,58 @@ public class ClassificationActivity extends AppCompatActivity {
             pagerAdapter = context.pagerAdapter;
             problemWithClassList = context.problemWithClassList;
         }
-
         @Override
-        protected String doInBackground(Void... info) {
-            String result;
+        protected Boolean doInBackground(Void... params) {
+
             try {
-                result = RESTAPI.getInstance().getClassificationProblems("classification");
-                System.out.println("분류 문제: "+result);
-                return result;
+                if(problemJsonParse(getClassificationProblems())) {
+                    if (problemWithClassList.size() == 5) {
+                        System.out.println("json parse pass");
+                        for (int i = 0; i < problemWithClassList.size(); i++) {
+                            if (getResult(problemWithClassList.get(i).getProblem().getBucketName(), problemWithClassList.get(i).getProblem().getObjectName(),i+1)) {
+                                InputStream inputStream = new FileInputStream(file);
+                                inputStreamList.add(inputStream);
+                            }
+                        }
+                        return true;
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            return false;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            try {
-                jsonParse(result);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+        protected void onPostExecute(Boolean result) {
             final ClassificationActivity activity = getActivity();
             if (activity == null) {
                 return;
             }
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    pagerAdapter = new ClassificationPagerAdapter(activity, problemWithClassList) ;
-                    viewPager.setAdapter(pagerAdapter) ;
-                }
-            });
+            pagerAdapter = new ClassificationPagerAdapter(activity, problemWithClassList,inputStreamList,fileExtensionList,uriList) ;
+            viewPager.setAdapter(pagerAdapter) ;
+
         }
 
-        public void jsonParse(String list) throws JSONException {
+        private Boolean getResult(String bucketName,String objectName,int position) {
+            String file_extension = FilenameUtils.getExtension(objectName);
+            fileExtensionList.add(file_extension);
+            file = new File("/data/data/com.ajou.capstone_design_freitag/files/project_classification"+position+"." + file_extension);
+            uriList.add(Uri.fromFile(file));
+            try {
+                outputStream = new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return RESTAPI.getInstance().downloadObject(bucketName,objectName,outputStream);
+        }
+
+        private String getClassificationProblems() throws Exception {
+            String result = RESTAPI.getInstance().getClassificationProblems("classification");
+            System.out.println("분류 문제: "+result);
+            return result;
+        }
+        public boolean problemJsonParse(String list) throws JSONException {
             JSONArray jsonArray = new JSONArray(list);
             for(int i=0;i<jsonArray.length();i++){
                 ProblemWithClass problemWithClass = new ProblemWithClass();
@@ -144,6 +173,7 @@ public class ClassificationActivity extends AppCompatActivity {
 
                 problemWithClassList.add(problemWithClass);
             }
+            return true;
         }
 
         private ClassificationActivity getActivity() {
@@ -160,7 +190,7 @@ public class ClassificationActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.btn_previous_classification://이전버튼 클릭
                 position = viewPager.getCurrentItem();//현재 보여지는 아이템의 위치를 리턴
-                viewPager.setCurrentItem(position - 1, true);
+                //viewPager.setCurrentItem(position - 1, true);
                 break;
             case R.id.btn_next_classification://다음버튼 클릭
                 position = viewPager.getCurrentItem();//현재 보여지는 아이템의 위치를 리턴
