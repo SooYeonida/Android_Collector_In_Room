@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
@@ -95,8 +96,14 @@ public class ClassificationActivity extends AppCompatActivity {
             if (activity == null) {
                 return;
             }
-            pagerAdapter = new ClassificationPagerAdapter(activity, problemWithClassList,inputStreamList,fileExtensionList,uriList) ;
-            viewPager.setAdapter(pagerAdapter) ;
+
+            if(result) {
+                pagerAdapter = new ClassificationPagerAdapter(activity, problemWithClassList,inputStreamList,fileExtensionList,uriList) ;
+                viewPager.setAdapter(pagerAdapter) ;
+            } else {
+                Toast.makeText(activity, "문제를 받는데 실패했습니다.", Toast.LENGTH_LONG).show();
+                activity.finish();
+            }
 
         }
 

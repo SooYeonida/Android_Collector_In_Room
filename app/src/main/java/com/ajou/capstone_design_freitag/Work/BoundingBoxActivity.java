@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ajou.capstone_design_freitag.API.RESTAPI;
 import com.ajou.capstone_design_freitag.R;
@@ -129,22 +130,28 @@ public class BoundingBoxActivity extends AppCompatActivity {
             if (activity == null) {
                 return;
             }
-                    pagerAdapter = new BoundingBoxPagerAdapter(activity, problemWithClassList,bitmapList, project,positionUri, new BoundingBoxPagerAdapter.OnRadioCheckedChanged() {
-                        @Override
-                        public void onRadioCheckedChanged(String labelName,int problem) {
-                            label = labelName;
-                            System.out.println("label:"+label);
-                            problemId = problem;
-                        }
-                    }, new BoundingBoxPagerAdapter.RegisterListener() {
-                        @Override
-                        public void clickBtn() {
-                            //완료버튼 눌렀을 경우
-                            BoundingBoxTask boundingBoxTask = new BoundingBoxTask();
-                            boundingBoxTask.execute();
-                        }
-                    });
-                    viewPager.setAdapter(pagerAdapter);
+
+            if(result) {
+                pagerAdapter = new BoundingBoxPagerAdapter(activity, problemWithClassList,bitmapList, project,positionUri, new BoundingBoxPagerAdapter.OnRadioCheckedChanged() {
+                    @Override
+                    public void onRadioCheckedChanged(String labelName,int problem) {
+                        label = labelName;
+                        System.out.println("label:"+label);
+                        problemId = problem;
+                    }
+                }, new BoundingBoxPagerAdapter.RegisterListener() {
+                    @Override
+                    public void clickBtn() {
+                        //완료버튼 눌렀을 경우
+                        BoundingBoxTask boundingBoxTask = new BoundingBoxTask();
+                        boundingBoxTask.execute();
+                    }
+                });
+                viewPager.setAdapter(pagerAdapter);
+            } else {
+                Toast.makeText(activity, "문제를 받는데 실패했습니다.", Toast.LENGTH_LONG).show();
+                activity.finish();
+            }
         }
 
         private Boolean getResult(String bucketName,String objectName,int position) {
