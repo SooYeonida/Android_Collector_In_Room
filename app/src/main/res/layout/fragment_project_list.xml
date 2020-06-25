@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/fragment_project_list">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+            <EditText
+                android:id="@+id/search_subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="주제별 검색"
+                android:inputType="text"
+                android:maxLines="1"
+                android:drawableLeft="@drawable/ic_search_black_24dp"/>
+
+            <LinearLayout
+                android:id="@+id/radiogroup_datatype"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="데이터타입"
+                    android:fontFamily="@font/tmonmonsori" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_datatype"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <RadioButton
+                        android:id="@+id/data_type_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="이미지" />
+
+                    <RadioButton
+                        android:id="@+id/data_type_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="텍스트" />
+
+                    <RadioButton
+                        android:id="@+id/data_type_audio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="음성" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/project_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="#8028ADFC"
+                android:text="search" />
+
+            <View
+                android:id="@+id/search_line"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_centerInParent="true"
+                android:background="#80242525"/>
+
+            <ListView
+                android:id="@+id/project_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start" />
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

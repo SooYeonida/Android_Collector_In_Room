@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        style="@style/loginCard"
+        app:cardCornerRadius="@dimen/loginCardRadius"
+        android:elevation="5dp"
+        android:layout_gravity="center"
+        android:background="@color/whiteCardColor"
+        android:id="@+id/fragment_my_page_update"
+        android:layout_marginTop="10dp">
+
+    <ScrollView
+        style="@style/parent">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+       android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="5dp">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/collector_in_room" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:id="@+id/user_name_mypage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="user name"
+                android:fontFamily="@font/tmonmonsori"
+                android:textSize="30sp"
+                android:textColor="#020202"
+                android:layout_marginLeft="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="님의"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="20sp"
+                    android:textColor="#020202"
+                    android:fontFamily="@font/tmonmonsori"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="마이페이지 입니다"
+                android:textSize="20sp"
+                android:textColor="#020202"
+                android:fontFamily="@font/tmonmonsori"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="2dp"
+           android:layout_centerInParent="true"
+           android:background="@color/grayBackGround"
+           android:layout_marginTop="20dp"/>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:gravity="center"
+           android:layout_marginTop="10dp">
+
+           <ImageView
+               android:layout_width="45dp"
+               android:layout_height="match_parent"
+               android:gravity="center"
+               android:src="@drawable/point"/>
+
+           <TextView
+               android:id="@+id/user_point_mypage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="user point"
+               android:fontFamily="@font/tmonmonsori"
+               android:textColor="#DF0101"
+               android:textSize="25sp" />
+
+           <Button
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="포인트 환전"
+               android:textSize="15sp"
+               android:id="@+id/exchange_point_btn"
+               android:layout_marginLeft="5dp"
+               android:fontFamily="@font/tmonmonsori"/>
+
+       </LinearLayout>
+
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="2dp"
+           android:layout_centerInParent="true"
+           android:background="@color/grayBackGround"
+           android:layout_marginTop="20dp"/>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:gravity="center"
+           android:layout_marginTop="10dp">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:fontFamily="@font/tmonmonsori"
+               android:gravity="center"
+               android:text="작업 정확도:"
+               android:textSize="25sp" />
+           <TextView
+               android:id="@+id/user_accuracy_mypage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:gravity="center"
+               android:paddingLeft="5dp"
+               android:text="user level"
+               android:fontFamily="@font/tmonmonsori"
+               android:textColor="#2196F3"
+               android:textSize="25sp" />
+
+       </LinearLayout>
+
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="2dp"
+           android:layout_centerInParent="true"
+           android:background="@color/grayBackGround"
+           android:layout_marginTop="20dp"/>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:gravity="center"
+           android:layout_marginTop="10dp">
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="이메일:"
+               android:fontFamily="@font/tmonmonsori"
+               android:textSize="25sp" />
+
+           <TextView
+               android:id="@+id/user_email_mypage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:layout_marginLeft="5dp"
+               android:text="user email"
+
+               android:textSize="20sp" />
+       </LinearLayout>
+
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="2dp"
+           android:layout_centerInParent="true"
+           android:background="@color/grayBackGround"
+           android:layout_marginTop="20dp"/>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:gravity="center"
+           android:layout_marginTop="10dp">
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="휴대전화:"
+               android:fontFamily="@font/tmonmonsori"
+               android:textSize="25sp" />
+
+           <TextView
+               android:id="@+id/user_phone_mypage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="user phone"
+               android:layout_marginLeft="5dp"
+               android:textSize="20sp" />
+       </LinearLayout>
+
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="2dp"
+           android:layout_centerInParent="true"
+           android:background="@color/grayBackGround"
+           android:layout_marginTop="20dp"/>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:gravity="center"
+           android:layout_marginTop="10dp">
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="소속기관:"
+               android:fontFamily="@font/tmonmonsori"
+               android:textSize="25sp" />
+
+           <TextView
+               android:id="@+id/user_affiliation_mypage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="user affiliation"
+               android:textSize="20sp"
+               android:layout_marginLeft="5dp"/>
+       </LinearLayout>
+
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="2dp"
+           android:layout_centerInParent="true"
+           android:background="@color/grayBackGround"
+           android:layout_marginTop="20dp"/>
+
+           <Button
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="개인정보 수정"
+               android:textSize="15sp"
+               android:id="@+id/update_user_info_btn"
+               android:layout_gravity="center"
+               android:layout_marginTop="15dp"
+               android:fontFamily="@font/tmonmonsori"/>
+   </LinearLayout>
+    </ScrollView>
+</androidx.cardview.widget.CardView>

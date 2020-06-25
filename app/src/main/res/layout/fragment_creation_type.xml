@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:gravity="center"
+tools:context=".UI.plus.CreationTypeFragment"
+android:layout_weight="1">
+
+<Button
+    android:id="@+id/creation_collection_project"
+    android:layout_width="270dp"
+    android:layout_height="130dp"
+    android:background="@drawable/button_background"
+    android:gravity="right"
+    android:paddingTop="50dp"
+    android:paddingRight="30dp"
+    android:text="수집 작업 의뢰"
+    android:textColor="#272424"
+    android:textSize="20sp"
+    android:fontFamily="@font/tmonmonsori" />
+
+<Button
+    android:id="@+id/creation_labelling_project"
+    android:layout_width="270dp"
+    android:layout_height="130dp"
+    android:layout_marginTop="30dp"
+    android:background="@drawable/button_background"
+    android:gravity="right"
+    android:paddingTop="50dp"
+    android:paddingRight="20dp"
+    android:text="라벨링 작업 의뢰"
+    android:textColor="#272424"
+    android:textSize="20sp"
+    android:fontFamily="@font/tmonmonsori" />
+
+<!--<Button-->
+<!--    android:id="@+id/creation_colla_project"-->
+<!--    android:layout_width="270dp"-->
+<!--    android:layout_height="130dp"-->
+<!--    android:layout_marginTop="30dp"-->
+<!--    android:background="@drawable/button_background"-->
+<!--    android:gravity="right"-->
+<!--    android:paddingTop="45dp"-->
+<!--    android:paddingRight="50dp"-->
+<!--    android:text="수집 + 라벨링 &#10; 프로젝트 의뢰"-->
+<!--    android:textColor="#272424"-->
+<!--    android:textSize="18sp"-->
+<!--    android:fontFamily="@font/tmonmonsori" />-->
+
+</LinearLayout>

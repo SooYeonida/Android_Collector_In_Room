@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     style="@style/loginParent"
-    tools:context="com.ajou.capstone_design_freitag.MainActivity">
+    tools:context="com.ajou.capstone_design_freitag.LoginActivity">
     <ScrollView
         style="@style/parent">
         <RelativeLayout
@@ -36,17 +36,33 @@
                 <TextView
                     style="@style/headerText"
                     android:layout_gravity="center"
-                    android:text="App Snipp"
-                    android:layout_marginTop="40dp"/>
-                <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/login_view_flipper"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" >
+                    android:text="방구석 수집가"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/tmonmonsori"
+                    android:textSize="30dp"/>
 
-                    <include layout="@layout/layout_login" />
-                    <include layout="@layout/layout_register" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                </ViewFlipper>
+                    <include
+                        android:id="@+id/layout_login"
+                        layout="@layout/layout_login" />
+
+                    <include
+                        android:id="@+id/layout_register"
+                        layout="@layout/layout_register"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/layout_register_openbanking"
+                        layout="@layout/layout_register_openbanking"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+                </LinearLayout>
+
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

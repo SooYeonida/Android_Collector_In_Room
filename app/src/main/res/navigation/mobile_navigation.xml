@@ -7,19 +7,25 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.ajou.capstone_design_freitag.ui.home.HomeFragment"
+        android:name="com.ajou.capstone_design_freitag.UI.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.ajou.capstone_design_freitag.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_search"
+        android:name="com.ajou.capstone_design_freitag.UI.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.ajou.capstone_design_freitag.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_plus"
+        android:name="com.ajou.capstone_design_freitag.UI.plus.PlusFragment"
+        android:label="@string/title_plus"
+        tools:layout="@layout/fragment_plus" />
+
+    <fragment
+        android:id="@+id/navigation_my_page"
+        android:name="com.ajou.capstone_design_freitag.UI.mypage.MyPageFragment"
+        android:label="@string/title_my_page"
+        tools:layout="@layout/fragment_my_page" />
 </navigation>

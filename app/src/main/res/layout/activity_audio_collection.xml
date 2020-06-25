@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Work.AudioCollectionActivity">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="음성 수집 작업"
+            android:textColor="#020202"
+            android:textSize="35sp"
+            android:fontFamily="@font/tmonmonsori" />
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/collector_in_room" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_centerInParent="true"
+        android:background="@color/grayBackGround"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:fontFamily="@font/jejugothic"
+        android:textColor="#80565858"
+        android:text="*음성 수집 작업은 주어진 수집 데이터 목록에 해당하는 &#10; 음성을 업로드하는 작업입니다. "/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_centerInParent="true"
+        android:background="@color/grayBackGround"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/audio_collection_project_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="작업 이름"
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="작업 의뢰자:"
+            android:textSize="15sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:id="@+id/audio_collection_work_requester"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="requester"
+            android:fontFamily="@font/jejugothic"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="&lt;데이터 라벨 목록&gt;"
+            android:textSize="15sp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <TextView
+            android:id="@+id/audio_classlist_project_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:text="클래스"
+            android:fontFamily="@font/jejugothic"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80CCCECF"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="작업 진행 방법 "
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori"/>
+    <TextView
+        android:id="@+id/audio_collection_way_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="waycontent"
+        android:layout_marginTop="5dp"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80CCCECF"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="작업 조건"
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori" />
+
+    <TextView
+        android:id="@+id/audio_collection_condition_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="conditioncontent"
+        android:layout_marginTop="5dp"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80CCCECF"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="작업 예시"
+        android:textSize="20sp"
+        android:fontFamily="@font/tmonmonsori" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play"
+            android:layout_marginTop="10dp"/>
+
+        <ImageView
+            android:id="@+id/pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pause"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerInParent="true"
+        android:background="#80242525"/>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioGroup_class_list_audio"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+        </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="*오디오 등록버튼을 눌러야 작업이 완료됩니다. 버튼을 꼭 눌러주세요*"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/jejugothic"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_attach_file_black_24dp"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="음성 파일 선택"
+            android:gravity="center"
+            android:fontFamily="@font/tmonmonsori"/>
+        <Button
+            android:id="@+id/collection_audio_select"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/ic_add_box_black_24dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_voice_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="음성 녹음"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/tmonmonsori"/>
+        <Button
+            android:id="@+id/collection_audio_record"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/ic_add_box_black_24dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/collection_audio_uri"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text=""
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/delete_audio_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#B69AE3"
+        android:text="파일 삭제"
+        android:fontFamily="@font/tmonmonsori"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/collection_upload_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="#8028ADFC"
+            android:text="오디오 등록"
+            android:fontFamily="@font/tmonmonsori"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+</ScrollView>

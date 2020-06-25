@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginTop="130dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="페이지를 넘기면"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:fontFamily="@font/tmonmonsori"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="문제가 시작됩니다!"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:fontFamily="@font/tmonmonsori"/>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/worker"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="사용자의 정확도를 판단하는 문제도 있으니 신중하게 답해주세요!"
+        android:fontFamily="@font/tmonmonsori"
+        android:textColor="@color/colorPlaybackIndicator"/>
+    </LinearLayout>
+</LinearLayout>

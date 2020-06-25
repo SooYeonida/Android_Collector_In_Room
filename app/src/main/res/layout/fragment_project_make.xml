@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.plus.ProjectMakeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+        
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/workTypeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/tmonmonsori"
+            android:gravity="center"
+            android:textColor="#020202"
+            android:textSize="35sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="작업 의뢰"
+            android:textColor="#020202"
+            android:textSize="35sp"
+            android:fontFamily="@font/tmonmonsori" />
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/collector_in_room" />
+    </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_centerInParent="true"
+            android:background="@color/grayBackGround"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:fontFamily="@font/jejugothic"
+            android:textColor="#80565858"
+            android:text="이 페이지는 의뢰자가 방구석수집가에게 &#10; 의뢰하고자 하는 작업을 생성하는 공간입니다."/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_centerInParent="true"
+            android:background="@color/grayBackGround"
+            android:layout_marginTop="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="작업명:"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <EditText
+                android:id="@+id/projectName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="작업 이름을 입력해주세요"
+                android:textSize="15sp"
+                android:inputType="textMultiLine"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/collectionTypeLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="수집 데이터 타입"
+            android:fontFamily="@font/tmonmonsori"/>
+
+        <RadioGroup
+            android:id="@+id/collectionTypeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/collectionImageRadioButton"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="이미지"
+                android:fontFamily="@font/jejugothic"/>
+
+            <RadioButton
+                android:id="@+id/collectionTextRadioButton"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="텍스트"
+                android:fontFamily="@font/jejugothic"/>
+
+            <RadioButton
+                android:id="@+id/collectionAudioRadioButton"
+                android:layout_width="164dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="음성"
+                android:fontFamily="@font/jejugothic"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/labelingTypeLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="라벨링 작업 타입"
+            android:fontFamily="@font/tmonmonsori"/>
+
+        <RadioGroup
+            android:id="@+id/labelingTypeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/labelingClassificationRadioButton"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="분류"
+                android:fontFamily="@font/jejugothic" />
+
+            <RadioButton
+                android:id="@+id/labelingBoundingboxRadioButton"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="바운딩박스"
+                android:fontFamily="@font/jejugothic"/>
+        </RadioGroup>
+    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/textUploadWayLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="예시 데이 업로드 방법"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <RadioGroup
+                android:id="@+id/textUploadWayRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/userInputExampleTextRadioButton"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="직접 입력"
+                    android:fontFamily="@font/jejugothic"/>
+
+                <RadioButton
+                    android:id="@+id/uploadTextRadioButton"
+                    android:layout_width="114dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="파일 업로드"
+                    android:fontFamily="@font/jejugothic"/>
+
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/uploadExampleDataLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="*예시 데이터 업로드*"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <Button
+                android:id="@+id/uploadExampleDataButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#8028ADFC"
+                android:fontFamily="@font/tmonmonsori"
+                android:text="파일 업로드" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/make_example_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/make_example_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/make_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/play"
+                android:layout_marginTop="10dp"/>
+
+            <ImageView
+                android:id="@+id/make_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pause"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+
+
+        <SeekBar
+            android:id="@+id/make_seekbar"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/userInputExampleTextLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/tmonmonsori"
+                    android:layout_marginTop="5dp"
+                    android:text="예시 데이터 입력:" />
+                    <Button
+                        android:id="@+id/make_example_text_user"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/ic_add_box_black_24dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/question_and_answer_make"
+                android:orientation="vertical">
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/classLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:text="데이터 라벨:"
+                    android:fontFamily="@font/tmonmonsori"/>
+
+                <Button
+                    android:id="@+id/createNewClassButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:backgroundTint="#8028ADFC"
+                    android:fontFamily="@font/tmonmonsori"
+                    android:text="입력칸 생성" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="주제:"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <EditText
+                android:id="@+id/subjectEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="주제"
+                android:textSize="15sp"
+                android:inputType="textMultiLine"
+                android:maxLines="3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="데이터 개수:"
+                android:fontFamily="@font/tmonmonsori"/>
+            <EditText
+                android:id="@+id/totalDataEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="데이터 개수"
+                android:textSize="15sp"
+                android:inputType="numberDecimal"
+                android:maxLines="3" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="설명:"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <EditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="작업 설명을 입력하세요"
+                android:textSize="15sp"
+                android:inputType="textMultiLine"
+                android:maxLines="10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="방법:"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <EditText
+                android:id="@+id/wayEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="작업 방법을 입력하세요"
+                android:textSize="15sp"
+                android:inputType="textMultiLine"
+                android:maxLines="10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="조건:"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <EditText
+                android:id="@+id/conditionEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="작업 조건을 입력하세요"
+                android:textSize="15sp"
+                android:inputType="textMultiLine"
+                android:maxLines="5" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/uploadLabelingDataLinearLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="*라벨링 데이터 업로드*"
+                android:fontFamily="@font/tmonmonsori"/>
+
+            <Button
+                android:id="@+id/uploadLabelingDataButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#8028ADFC"
+                android:fontFamily="@font/tmonmonsori"
+                android:text="파일 업로드" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/makeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#8028ADFC"
+            android:fontFamily="@font/tmonmonsori"
+            android:text="작업 생성" />
+
+    </LinearLayout>
+</ScrollView>
