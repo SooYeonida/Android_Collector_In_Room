@@ -67,6 +67,7 @@ public class PointExchaneActivity extends AppCompatActivity {
             int amount = 0;
             if(!pointExchangeAmount.getText().toString().equals("")) {
                 amount = Integer.parseInt(pointExchangeAmount.getText().toString());
+                System.out.println("amount:"+amount);
                 Integer result;
                 try {
                     result = RESTAPI.getInstance().exchange(amount);

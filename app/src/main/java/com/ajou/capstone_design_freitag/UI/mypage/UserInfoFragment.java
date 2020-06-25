@@ -83,7 +83,7 @@ public class UserInfoFragment extends Fragment {
                 userEmail.setText(user.getEmail());
                 userPhoneNumber.setText(user.getPhonenumber());
                 userAffiliation.setText(user.getAffiliation());
-                userAccuracy.setText(String.format("%.2f %%", user.getAccuracy()));
+                userAccuracy.setText(String.format("%.2f %%", user.getAccuracy()*100));
                 userPoint.setText(String.valueOf(user.getPoint())); //포인트 안받아와서 일단은 이렇게 해놓음
             }
 

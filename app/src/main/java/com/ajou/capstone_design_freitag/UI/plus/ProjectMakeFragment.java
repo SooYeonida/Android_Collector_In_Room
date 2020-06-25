@@ -633,7 +633,7 @@ public class ProjectMakeFragment extends Fragment {
                     }
                 }
             }
-
+            progressOFF();
             return false;
         }
 
